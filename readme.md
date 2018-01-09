@@ -21,15 +21,14 @@ Consist of err_code and err_info just as follow,
 
 And each module's readme should list all of err_code's mean, at usual please set 0x0 as success and 0xff as other error as follow,
 
-"0x00": succ
-"0x01": input params error
-"0x02": error 1
-"0x03": error 2
+* "0x00": succ
+* "0x01": input params error
+* "0x02": error 1
+* "0x03": error 2
 .
 .
 .
-"0x..": error x
-"0xff": other error
+* "0x..": error x
+* "0xff": other error
 
-"""
 
