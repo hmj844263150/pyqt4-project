@@ -25,9 +25,7 @@ And each module's readme should list all of err_code's mean, at usual please set
 * "0x01": input params error
 * "0x02": error 1
 * "0x03": error 2
-.
-.
-.
+* ...
 * "0x..": error x
 * "0xff": other error
 
