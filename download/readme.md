@@ -7,6 +7,8 @@ operation:  0:read mac, 1:load to ram, 2:burn cus_mac, 3:load to flash(without c
 
 "{\"config\":\"config/setting.ini\", \"operation\":\"0\"}"
 
+option: ,\"cus_mac\":\"2c3ae808000f\" -- use for burn custom mac
+
 P.s: ",\"DEBUG\":\"1\"" :  for output debug info
 
 # output:
