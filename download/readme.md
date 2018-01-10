@@ -1,7 +1,7 @@
 # input:
 
 config:     path of the setting file
-operation:  0:read mac, 1:load to ram, 2:burn cus_mac, 3:load to flash(without check)
+operation:  0:read mac, 1:load to ram, 2:burn cus_mac, 3:load to flash, 4:efuse check
 
 ## example:
 
@@ -25,4 +25,3 @@ err_read_mac = "0x06"
 err_burn_mac = "0x07"
 err_check_efuse = "0x08"
 err_other   = "0xff"
-"""
