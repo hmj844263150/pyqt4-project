@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<test_case>
+	<CASE>
+		<CASE_NAME>FREQ_OFFSET</CASE_NAME>
+			<CASE_ITEMS>
+				<CASE_ITEM>
+					<CASE_ITEM_NAME>r0</CASE_ITEM_NAME>
+					<UPPER>15</UPPER>
+					<LOWER>-15</LOWER>
+				</CASE_ITEM>
+				<CASE_ITEM>
+					<CASE_ITEM_NAME>r1</CASE_ITEM_NAME>
+					<UPPER>15</UPPER>
+					<LOWER>-15</LOWER>
+				</CASE_ITEM>
+				<CASE_ITEM>
+					<CASE_ITEM_NAME>r2</CASE_ITEM_NAME>
+					<UPPER>15</UPPER>
+					<LOWER>-15</LOWER>
+				</CASE_ITEM>
+				<CASE_ITEM>
+					<CASE_ITEM_NAME>r3</CASE_ITEM_NAME>
+					<UPPER>15</UPPER>
+					<LOWER>-15</LOWER>
+				</CASE_ITEM>
+		</CASE_ITEMS>
+	</CASE>
+</test_case>
