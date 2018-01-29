@@ -82,7 +82,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;MAC:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;     MAC:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textInteractionFlags">
        <set>Qt::TextBrowserInteraction</set>
@@ -175,7 +175,7 @@ p, li { white-space: pre-wrap; }
 background-color: rgb(0, 170, 255);</string>
       </property>
       <property name="text">
-       <string notr="true"> IDLE</string>
+       <string notr="true">IDLE</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -194,12 +194,12 @@ background-color: rgb(0, 170, 255);</string>
        </rect>
       </property>
      </widget>
-     <widget class="QPushButton" name="pbLog1">
+     <widget class="MyPushButton" name="pbLog1">
       <property name="geometry">
        <rect>
-        <x>188</x>
+        <x>198</x>
         <y>62</y>
-        <width>51</width>
+        <width>41</width>
         <height>21</height>
        </rect>
       </property>
@@ -214,7 +214,7 @@ background-color: rgb(200, 200, 200);</string>
      <widget class="QLabel" name="lbMAC1">
       <property name="geometry">
        <rect>
-        <x>50</x>
+        <x>87</x>
         <y>63</y>
         <width>111</width>
         <height>20</height>
@@ -227,16 +227,6 @@ background-color: rgb(200, 200, 200);</string>
       </property>
       <property name="text">
        <string>2c3ae8080000</string>
-      </property>
-     </widget>
-     <widget class="QTextBrowser" name="tbLog1_2">
-      <property name="geometry">
-       <rect>
-        <x>256</x>
-        <y>187</y>
-        <width>227</width>
-        <height>251</height>
-       </rect>
       </property>
      </widget>
      <widget class="QTextBrowser" name="textBrowser_6">
@@ -259,16 +249,16 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;MAC:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;     MAC:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textInteractionFlags">
        <set>Qt::TextBrowserInteraction</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbMAC1_2">
+     <widget class="QLabel" name="lbMAC2">
       <property name="geometry">
        <rect>
-        <x>294</x>
+        <x>331</x>
         <y>63</y>
         <width>111</width>
         <height>20</height>
@@ -283,7 +273,7 @@ p, li { white-space: pre-wrap; }
        <string>2c3ae8080000</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="leStatus1_2">
+     <widget class="QLineEdit" name="leStatus2">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -348,12 +338,12 @@ background-color: rgb(255, 255, 0);</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="pbLog1_2">
+     <widget class="MyPushButton" name="pbLog2">
       <property name="geometry">
        <rect>
-        <x>432</x>
+        <x>442</x>
         <y>62</y>
-        <width>51</width>
+        <width>41</width>
         <height>21</height>
        </rect>
       </property>
@@ -396,16 +386,6 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:22pt;&quot;&gt;DUT2&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
-     <widget class="QTextBrowser" name="tbLog1_3">
-      <property name="geometry">
-       <rect>
-        <x>499</x>
-        <y>187</y>
-        <width>227</width>
-        <height>251</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QTextBrowser" name="textBrowser_8">
       <property name="enabled">
        <bool>false</bool>
@@ -426,16 +406,16 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;MAC:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;     MAC:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textInteractionFlags">
        <set>Qt::TextBrowserInteraction</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbMAC1_3">
+     <widget class="QLabel" name="lbMAC3">
       <property name="geometry">
        <rect>
-        <x>537</x>
+        <x>574</x>
         <y>63</y>
         <width>111</width>
         <height>20</height>
@@ -450,7 +430,7 @@ p, li { white-space: pre-wrap; }
        <string>2c3ae8080000</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="leStatus1_3">
+     <widget class="QLineEdit" name="leStatus3">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -515,12 +495,12 @@ background-color: rgb(0, 170, 0);</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="pbLog1_3">
+     <widget class="MyPushButton" name="pbLog3">
       <property name="geometry">
        <rect>
-        <x>675</x>
+        <x>685</x>
         <y>62</y>
-        <width>51</width>
+        <width>41</width>
         <height>21</height>
        </rect>
       </property>
@@ -563,16 +543,6 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:22pt;&quot;&gt;DUT3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
-     <widget class="QTextBrowser" name="tbLog1_4">
-      <property name="geometry">
-       <rect>
-        <x>742</x>
-        <y>187</y>
-        <width>227</width>
-        <height>251</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QTextBrowser" name="textBrowser_10">
       <property name="enabled">
        <bool>false</bool>
@@ -593,16 +563,16 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;MAC:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:11pt;&quot;&gt;     MAC:&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="textInteractionFlags">
        <set>Qt::TextBrowserInteraction</set>
       </property>
      </widget>
-     <widget class="QLabel" name="lbMAC1_4">
+     <widget class="QLabel" name="lbMAC4">
       <property name="geometry">
        <rect>
-        <x>780</x>
+        <x>817</x>
         <y>63</y>
         <width>111</width>
         <height>20</height>
@@ -617,7 +587,7 @@ p, li { white-space: pre-wrap; }
        <string>2c3ae8080000</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="leStatus1_4">
+     <widget class="QLineEdit" name="leStatus4">
       <property name="enabled">
        <bool>true</bool>
       </property>
@@ -682,12 +652,12 @@ background-color: rgb(255, 0, 0);</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QPushButton" name="pbLog1_4">
+     <widget class="MyPushButton" name="pbLog4">
       <property name="geometry">
        <rect>
-        <x>918</x>
+        <x>928</x>
         <y>62</y>
-        <width>51</width>
+        <width>41</width>
         <height>21</height>
        </rect>
       </property>
@@ -730,167 +700,119 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:22pt;&quot;&gt;DUT4&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
      </widget>
-     <zorder>textBrowser_4</zorder>
-     <zorder>textBrowser_5</zorder>
-     <zorder>leStatus1</zorder>
-     <zorder>tbLog1</zorder>
-     <zorder>pbLog1</zorder>
-     <zorder>lbMAC1</zorder>
-     <zorder>textBrowser_6</zorder>
-     <zorder>lbMAC1_2</zorder>
-     <zorder>leStatus1_2</zorder>
-     <zorder>pbLog1_2</zorder>
-     <zorder>textBrowser_7</zorder>
-     <zorder>textBrowser_8</zorder>
-     <zorder>lbMAC1_3</zorder>
-     <zorder>leStatus1_3</zorder>
-     <zorder>pbLog1_3</zorder>
-     <zorder>textBrowser_9</zorder>
-     <zorder>textBrowser_10</zorder>
-     <zorder>lbMAC1_4</zorder>
-     <zorder>leStatus1_4</zorder>
-     <zorder>pbLog1_4</zorder>
-     <zorder>textBrowser_11</zorder>
-     <zorder>tbLog1_3</zorder>
-     <zorder>tbLog1_2</zorder>
-     <zorder>tbLog1_4</zorder>
+     <widget class="QTextBrowser" name="tbLog2">
+      <property name="geometry">
+       <rect>
+        <x>256</x>
+        <y>187</y>
+        <width>227</width>
+        <height>251</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="tbLog3">
+      <property name="geometry">
+       <rect>
+        <x>499</x>
+        <y>187</y>
+        <width>227</width>
+        <height>251</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="tbLog4">
+      <property name="geometry">
+       <rect>
+        <x>742</x>
+        <y>187</y>
+        <width>227</width>
+        <height>251</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="MyPushButton" name="pbStart1">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>62</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 0, 0);
+background-color: rgb(200, 200, 200);</string>
+      </property>
+      <property name="text">
+       <string>START</string>
+      </property>
+     </widget>
+     <widget class="MyPushButton" name="pbStart2">
+      <property name="geometry">
+       <rect>
+        <x>256</x>
+        <y>62</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 0, 0);
+background-color: rgb(200, 200, 200);</string>
+      </property>
+      <property name="text">
+       <string>START</string>
+      </property>
+     </widget>
+     <widget class="MyPushButton" name="pbStart3">
+      <property name="geometry">
+       <rect>
+        <x>499</x>
+        <y>62</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 0, 0);
+background-color: rgb(200, 200, 200);</string>
+      </property>
+      <property name="text">
+       <string>START</string>
+      </property>
+     </widget>
+     <widget class="MyPushButton" name="pbStart4">
+      <property name="geometry">
+       <rect>
+        <x>742</x>
+        <y>62</y>
+        <width>41</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">border-color: rgb(0, 0, 0);
+background-color: rgb(200, 200, 200);</string>
+      </property>
+      <property name="text">
+       <string>START</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
       <string>Dut Config</string>
      </attribute>
-     <widget class="QTableWidget" name="tableWidget">
-      <property name="geometry">
-       <rect>
-        <x>500</x>
-        <y>0</y>
-        <width>481</width>
-        <height>441</height>
-       </rect>
-      </property>
-      <property name="autoFillBackground">
-       <bool>true</bool>
-      </property>
-      <property name="showGrid">
-       <bool>true</bool>
-      </property>
-      <property name="gridStyle">
-       <enum>Qt::SolidLine</enum>
-      </property>
-      <property name="sortingEnabled">
-       <bool>false</bool>
-      </property>
-      <property name="wordWrap">
-       <bool>true</bool>
-      </property>
-      <property name="cornerButtonEnabled">
-       <bool>true</bool>
-      </property>
-      <row>
-       <property name="text">
-        <string>DUT1_PORT1</string>
-       </property>
-       <property name="background">
-        <color>
-         <red>230</red>
-         <green>230</green>
-         <blue>230</blue>
-        </color>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT1_RATE1</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT1_PORT2</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT1_RATE2</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT2_PORT1</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT2_RATE1</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT2_PORT2</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT2_RATE2</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT3_PORT1</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT3_RATE1</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT3_PORT2</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT3_RATE2</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT4_PORT1</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT4_RATE1</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT4_PORT2</string>
-       </property>
-      </row>
-      <row>
-       <property name="text">
-        <string>DUT4_RATE2</string>
-       </property>
-      </row>
-      <column>
-       <property name="text">
-        <string>Value</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
-        <string>Descrip</string>
-       </property>
-      </column>
-     </widget>
      <widget class="QScrollArea" name="scrollArea">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="geometry">
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>501</width>
-        <height>441</height>
+        <width>984</width>
+        <height>446</height>
        </rect>
       </property>
       <property name="autoFillBackground">
@@ -904,8 +826,8 @@ p, li { white-space: pre-wrap; }
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>499</width>
-         <height>439</height>
+         <width>982</width>
+         <height>444</height>
         </rect>
        </property>
        <widget class="QTextBrowser" name="textBrowser_20">
@@ -914,10 +836,10 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>10</y>
+          <x>550</x>
+          <y>17</y>
           <width>231</width>
-          <height>101</height>
+          <height>95</height>
          </rect>
         </property>
         <property name="html">
@@ -926,29 +848,6 @@ p, li { white-space: pre-wrap; }
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="textInteractionFlags">
-         <set>Qt::TextBrowserInteraction</set>
-        </property>
-       </widget>
-       <widget class="QTextBrowser" name="textBrowser_21">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>115</y>
-          <width>231</width>
-          <height>101</height>
-         </rect>
-        </property>
-        <property name="html">
-         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'Arial Black'; font-size:10pt; font-weight:600;&quot;&gt;DUT2&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
         <property name="textInteractionFlags">
          <set>Qt::TextBrowserInteraction</set>
@@ -960,33 +859,10 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>220</y>
+          <x>550</x>
+          <y>120</y>
           <width>231</width>
-          <height>101</height>
-         </rect>
-        </property>
-        <property name="html">
-         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
-&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
-p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="textInteractionFlags">
-         <set>Qt::TextBrowserInteraction</set>
-        </property>
-       </widget>
-       <widget class="QTextBrowser" name="textBrowser_23">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
-        <property name="geometry">
-         <rect>
-          <x>10</x>
-          <y>325</y>
-          <width>231</width>
-          <height>101</height>
+          <height>95</height>
          </rect>
         </property>
         <property name="html">
@@ -1006,8 +882,8 @@ p, li { white-space: pre-wrap; }
         </property>
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>10</y>
+          <x>550</x>
+          <y>17</y>
           <width>231</width>
           <height>31</height>
          </rect>
@@ -1031,14 +907,14 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;DUT1&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
-       <widget class="QTextBrowser" name="textBrowser_25">
+       <widget class="QTextBrowser" name="textBrowser_26">
         <property name="enabled">
          <bool>true</bool>
         </property>
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>115</y>
+          <x>550</x>
+          <y>120</y>
           <width>231</width>
           <height>31</height>
          </rect>
@@ -1062,73 +938,57 @@ p, li { white-space: pre-wrap; }
 &lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;DUT2&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
         </property>
        </widget>
-       <widget class="QTextBrowser" name="textBrowser_26">
+       <widget class="QTextBrowser" name="textBrowser_23">
         <property name="enabled">
          <bool>true</bool>
         </property>
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>220</y>
+          <x>550</x>
+          <y>326</y>
           <width>231</width>
-          <height>31</height>
+          <height>95</height>
          </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>Arial Black</family>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(230, 230, 230);
-color: rgb(85, 0, 0);</string>
         </property>
         <property name="html">
          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial Black'; font-size:9pt; font-weight:600; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;DUT3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::TextBrowserInteraction</set>
         </property>
        </widget>
-       <widget class="QTextBrowser" name="textBrowser_27">
+       <widget class="QTextBrowser" name="textBrowser_21">
         <property name="enabled">
          <bool>true</bool>
         </property>
         <property name="geometry">
          <rect>
-          <x>10</x>
-          <y>325</y>
+          <x>550</x>
+          <y>223</y>
           <width>231</width>
-          <height>31</height>
+          <height>95</height>
          </rect>
-        </property>
-        <property name="font">
-         <font>
-          <family>Arial Black</family>
-          <weight>75</weight>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">background-color: rgb(230, 230, 230);
-color: rgb(85, 0, 0);</string>
         </property>
         <property name="html">
          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
-&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial Black'; font-size:9pt; font-weight:600; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;DUT4&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'SimSun'; font-size:9pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;br /&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::TextBrowserInteraction</set>
         </property>
        </widget>
        <widget class="QLabel" name="label_3">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>70</y>
+          <x>560</x>
+          <y>75</y>
           <width>71</width>
           <height>39</height>
          </rect>
@@ -1143,24 +1003,11 @@ p, li { white-space: pre-wrap; }
          <string>Rate1</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="leCOM">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>80</y>
-          <width>51</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="maxLength">
-         <number>10</number>
-        </property>
-       </widget>
        <widget class="QLabel" name="label_4">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>41</y>
+          <x>560</x>
+          <y>46</y>
           <width>41</width>
           <height>39</height>
          </rect>
@@ -1175,11 +1022,11 @@ p, li { white-space: pre-wrap; }
          <string>PORT1</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="cbComIndex">
+       <widget class="MyComboBox" name="cbPort1_1">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>50</y>
+          <x>590</x>
+          <y>55</y>
           <width>71</width>
           <height>21</height>
          </rect>
@@ -1189,12 +1036,17 @@ p, li { white-space: pre-wrap; }
           <string>--</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+        </item>
        </widget>
-       <widget class="QComboBox" name="cbComBaud">
+       <widget class="QComboBox" name="cbPortRate1_1">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>80</y>
+          <x>590</x>
+          <y>85</y>
           <width>71</width>
           <height>21</height>
          </rect>
@@ -1228,8 +1080,8 @@ p, li { white-space: pre-wrap; }
        <widget class="QLabel" name="label_6">
         <property name="geometry">
          <rect>
-          <x>130</x>
-          <y>42</y>
+          <x>670</x>
+          <y>47</y>
           <width>41</width>
           <height>39</height>
          </rect>
@@ -1247,8 +1099,8 @@ p, li { white-space: pre-wrap; }
        <widget class="QLabel" name="label_7">
         <property name="geometry">
          <rect>
-          <x>130</x>
-          <y>70</y>
+          <x>670</x>
+          <y>75</y>
           <width>71</width>
           <height>39</height>
          </rect>
@@ -1263,24 +1115,11 @@ p, li { white-space: pre-wrap; }
          <string>Rate2</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="leCOM_2">
+       <widget class="MyComboBox" name="cbPort1_2">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>80</y>
-          <width>51</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="maxLength">
-         <number>10</number>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="cbComIndex_2">
-        <property name="geometry">
-         <rect>
-          <x>160</x>
-          <y>50</y>
+          <x>700</x>
+          <y>55</y>
           <width>71</width>
           <height>21</height>
          </rect>
@@ -1290,12 +1129,17 @@ p, li { white-space: pre-wrap; }
           <string>--</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+        </item>
        </widget>
-       <widget class="QComboBox" name="cbComBaud_2">
+       <widget class="QComboBox" name="cbPortRate1_2">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>80</y>
+          <x>700</x>
+          <y>85</y>
           <width>71</width>
           <height>21</height>
          </rect>
@@ -1326,83 +1170,11 @@ p, li { white-space: pre-wrap; }
          </property>
         </item>
        </widget>
-       <widget class="QLabel" name="label_8">
+       <widget class="QLineEdit" name="lePortRate1_2">
         <property name="geometry">
          <rect>
-          <x>130</x>
-          <y>147</y>
-          <width>41</width>
-          <height>39</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>PORT2</string>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="cbComIndex_3">
-        <property name="geometry">
-         <rect>
-          <x>160</x>
-          <y>155</y>
-          <width>71</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <item>
-         <property name="text">
-          <string>--</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QLabel" name="label_9">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>175</y>
-          <width>71</width>
-          <height>39</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Rate1</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_10">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>146</y>
-          <width>41</width>
-          <height>39</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>PORT1</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="leCOM_3">
-        <property name="geometry">
-         <rect>
-          <x>160</x>
-          <y>185</y>
+          <x>700</x>
+          <y>85</y>
           <width>51</width>
           <height>21</height>
          </rect>
@@ -1411,128 +1183,24 @@ p, li { white-space: pre-wrap; }
          <number>10</number>
         </property>
        </widget>
-       <widget class="QLineEdit" name="leCOM_4">
+       <widget class="QLineEdit" name="lePortRate1_1">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>185</y>
+          <x>590</x>
+          <y>85</y>
           <width>51</width>
           <height>21</height>
          </rect>
         </property>
         <property name="maxLength">
          <number>10</number>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="cbComBaud_3">
-        <property name="geometry">
-         <rect>
-          <x>160</x>
-          <y>185</y>
-          <width>71</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <item>
-         <property name="text">
-          <string>9600</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>74880</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>115200</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>921600</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>custom</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QComboBox" name="cbComIndex_4">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>155</y>
-          <width>71</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <item>
-         <property name="text">
-          <string>--</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QComboBox" name="cbComBaud_4">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>185</y>
-          <width>71</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <item>
-         <property name="text">
-          <string>9600</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>74880</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>115200</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>921600</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>custom</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QLabel" name="label_11">
-        <property name="geometry">
-         <rect>
-          <x>130</x>
-          <y>175</y>
-          <width>71</width>
-          <height>39</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Rate2</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_12">
         <property name="geometry">
          <rect>
-          <x>130</x>
-          <y>252</y>
+          <x>670</x>
+          <y>150</y>
           <width>41</width>
           <height>39</height>
          </rect>
@@ -1547,11 +1215,11 @@ p, li { white-space: pre-wrap; }
          <string>PORT2</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="cbComIndex_5">
+       <widget class="MyComboBox" name="cbPort2_2">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>260</y>
+          <x>700</x>
+          <y>158</y>
           <width>71</width>
           <height>21</height>
          </rect>
@@ -1559,14 +1227,19 @@ p, li { white-space: pre-wrap; }
         <item>
          <property name="text">
           <string>--</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
          </property>
         </item>
        </widget>
        <widget class="QLabel" name="label_13">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>280</y>
+          <x>560</x>
+          <y>178</y>
           <width>71</width>
           <height>39</height>
          </rect>
@@ -1584,8 +1257,8 @@ p, li { white-space: pre-wrap; }
        <widget class="QLabel" name="label_14">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>251</y>
+          <x>560</x>
+          <y>149</y>
           <width>41</width>
           <height>39</height>
          </rect>
@@ -1600,37 +1273,11 @@ p, li { white-space: pre-wrap; }
          <string>PORT1</string>
         </property>
        </widget>
-       <widget class="QLineEdit" name="leCOM_5">
+       <widget class="QComboBox" name="cbPortRate2_2">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>290</y>
-          <width>51</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="maxLength">
-         <number>10</number>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="leCOM_6">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>290</y>
-          <width>51</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="maxLength">
-         <number>10</number>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="cbComBaud_5">
-        <property name="geometry">
-         <rect>
-          <x>160</x>
-          <y>290</y>
+          <x>700</x>
+          <y>188</y>
           <width>71</width>
           <height>21</height>
          </rect>
@@ -1661,11 +1308,11 @@ p, li { white-space: pre-wrap; }
          </property>
         </item>
        </widget>
-       <widget class="QComboBox" name="cbComIndex_6">
+       <widget class="MyComboBox" name="cbPort2_1">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>260</y>
+          <x>590</x>
+          <y>158</y>
           <width>71</width>
           <height>21</height>
          </rect>
@@ -1675,12 +1322,17 @@ p, li { white-space: pre-wrap; }
           <string>--</string>
          </property>
         </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+        </item>
        </widget>
-       <widget class="QComboBox" name="cbComBaud_6">
+       <widget class="QComboBox" name="cbPortRate2_1">
         <property name="geometry">
          <rect>
-          <x>50</x>
-          <y>290</y>
+          <x>590</x>
+          <y>188</y>
           <width>71</width>
           <height>21</height>
          </rect>
@@ -1711,11 +1363,37 @@ p, li { white-space: pre-wrap; }
          </property>
         </item>
        </widget>
+       <widget class="QLineEdit" name="lePortRate2_2">
+        <property name="geometry">
+         <rect>
+          <x>700</x>
+          <y>188</y>
+          <width>51</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="maxLength">
+         <number>10</number>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="lePortRate2_1">
+        <property name="geometry">
+         <rect>
+          <x>590</x>
+          <y>188</y>
+          <width>51</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="maxLength">
+         <number>10</number>
+        </property>
+       </widget>
        <widget class="QLabel" name="label_15">
         <property name="geometry">
          <rect>
-          <x>130</x>
-          <y>280</y>
+          <x>670</x>
+          <y>178</y>
           <width>71</width>
           <height>39</height>
          </rect>
@@ -1733,8 +1411,27 @@ p, li { white-space: pre-wrap; }
        <widget class="QLabel" name="label_16">
         <property name="geometry">
          <rect>
-          <x>130</x>
-          <y>357</y>
+          <x>560</x>
+          <y>384</y>
+          <width>71</width>
+          <height>39</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Rate1</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_17">
+        <property name="geometry">
+         <rect>
+          <x>560</x>
+          <y>355</y>
           <width>41</width>
           <height>39</height>
          </rect>
@@ -1746,29 +1443,14 @@ p, li { white-space: pre-wrap; }
          </sizepolicy>
         </property>
         <property name="text">
-         <string>PORT2</string>
+         <string>PORT1</string>
         </property>
        </widget>
-       <widget class="QComboBox" name="cbComIndex_7">
+       <widget class="QLabel" name="label_8">
         <property name="geometry">
          <rect>
-          <x>160</x>
-          <y>365</y>
-          <width>71</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <item>
-         <property name="text">
-          <string>--</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QLabel" name="label_17">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>385</y>
+          <x>560</x>
+          <y>281</y>
           <width>71</width>
           <height>39</height>
          </rect>
@@ -1786,138 +1468,8 @@ p, li { white-space: pre-wrap; }
        <widget class="QLabel" name="label_18">
         <property name="geometry">
          <rect>
-          <x>20</x>
-          <y>356</y>
-          <width>41</width>
-          <height>39</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>PORT1</string>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="leCOM_7">
-        <property name="geometry">
-         <rect>
-          <x>160</x>
-          <y>395</y>
-          <width>51</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="maxLength">
-         <number>10</number>
-        </property>
-       </widget>
-       <widget class="QLineEdit" name="leCOM_8">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>395</y>
-          <width>51</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <property name="maxLength">
-         <number>10</number>
-        </property>
-       </widget>
-       <widget class="QComboBox" name="cbComBaud_7">
-        <property name="geometry">
-         <rect>
-          <x>160</x>
-          <y>395</y>
-          <width>71</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <item>
-         <property name="text">
-          <string>9600</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>74880</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>115200</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>921600</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>custom</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QComboBox" name="cbComIndex_8">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>365</y>
-          <width>71</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <item>
-         <property name="text">
-          <string>--</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QComboBox" name="cbComBaud_8">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>395</y>
-          <width>71</width>
-          <height>21</height>
-         </rect>
-        </property>
-        <item>
-         <property name="text">
-          <string>9600</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>74880</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>115200</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>921600</string>
-         </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>custom</string>
-         </property>
-        </item>
-       </widget>
-       <widget class="QLabel" name="label_19">
-        <property name="geometry">
-         <rect>
-          <x>130</x>
-          <y>385</y>
+          <x>670</x>
+          <y>384</y>
           <width>71</width>
           <height>39</height>
          </rect>
@@ -1932,54 +1484,941 @@ p, li { white-space: pre-wrap; }
          <string>Rate2</string>
         </property>
        </widget>
-       <zorder>textBrowser_20</zorder>
+       <widget class="QComboBox" name="cbPortRate3_1">
+        <property name="geometry">
+         <rect>
+          <x>590</x>
+          <y>291</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>9600</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>74880</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>115200</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>921600</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>custom</string>
+         </property>
+        </item>
+       </widget>
+       <widget class="QLineEdit" name="lePortRate3_1">
+        <property name="geometry">
+         <rect>
+          <x>590</x>
+          <y>291</y>
+          <width>51</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="maxLength">
+         <number>10</number>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_9">
+        <property name="geometry">
+         <rect>
+          <x>560</x>
+          <y>252</y>
+          <width>41</width>
+          <height>39</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>PORT1</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_10">
+        <property name="geometry">
+         <rect>
+          <x>670</x>
+          <y>253</y>
+          <width>41</width>
+          <height>39</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>PORT2</string>
+        </property>
+       </widget>
+       <widget class="MyComboBox" name="cbPort3_1">
+        <property name="geometry">
+         <rect>
+          <x>590</x>
+          <y>261</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>--</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+        </item>
+       </widget>
+       <widget class="QLabel" name="label_19">
+        <property name="geometry">
+         <rect>
+          <x>670</x>
+          <y>356</y>
+          <width>41</width>
+          <height>39</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>PORT2</string>
+        </property>
+       </widget>
+       <widget class="QComboBox" name="cbPortRate4_2">
+        <property name="geometry">
+         <rect>
+          <x>700</x>
+          <y>394</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>9600</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>74880</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>115200</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>921600</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>custom</string>
+         </property>
+        </item>
+       </widget>
+       <widget class="MyComboBox" name="cbPort4_2">
+        <property name="geometry">
+         <rect>
+          <x>700</x>
+          <y>364</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>--</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+        </item>
+       </widget>
+       <widget class="QLineEdit" name="lePortRate4_2">
+        <property name="geometry">
+         <rect>
+          <x>700</x>
+          <y>394</y>
+          <width>51</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="maxLength">
+         <number>10</number>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_11">
+        <property name="geometry">
+         <rect>
+          <x>670</x>
+          <y>281</y>
+          <width>71</width>
+          <height>39</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Rate2</string>
+        </property>
+       </widget>
+       <widget class="MyComboBox" name="cbPort4_1">
+        <property name="geometry">
+         <rect>
+          <x>590</x>
+          <y>364</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>--</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+        </item>
+       </widget>
+       <widget class="QComboBox" name="cbPortRate4_1">
+        <property name="geometry">
+         <rect>
+          <x>590</x>
+          <y>394</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>9600</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>74880</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>115200</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>921600</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>custom</string>
+         </property>
+        </item>
+       </widget>
+       <widget class="QLineEdit" name="lePortRate4_1">
+        <property name="geometry">
+         <rect>
+          <x>590</x>
+          <y>394</y>
+          <width>51</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="maxLength">
+         <number>10</number>
+        </property>
+       </widget>
+       <widget class="QTextBrowser" name="textBrowser_27">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>550</x>
+          <y>326</y>
+          <width>231</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Arial Black</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(230, 230, 230);
+color: rgb(85, 0, 0);</string>
+        </property>
+        <property name="html">
+         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial Black'; font-size:9pt; font-weight:600; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;DUT4&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+       <widget class="QTextBrowser" name="textBrowser_25">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>550</x>
+          <y>223</y>
+          <width>231</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <family>Arial Black</family>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(230, 230, 230);
+color: rgb(85, 0, 0);</string>
+        </property>
+        <property name="html">
+         <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial Black'; font-size:9pt; font-weight:600; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt;DUT3&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        </property>
+       </widget>
+       <widget class="MyComboBox" name="cbPort3_2">
+        <property name="geometry">
+         <rect>
+          <x>700</x>
+          <y>261</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>--</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string/>
+         </property>
+        </item>
+       </widget>
+       <widget class="QPushButton" name="pbDutReset">
+        <property name="geometry">
+         <rect>
+          <x>820</x>
+          <y>320</y>
+          <width>131</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border-color: rgb(0, 0, 0);
+background-color: rgb(200, 200, 200);</string>
+        </property>
+        <property name="text">
+         <string>RESET</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="pbDutSubmit">
+        <property name="geometry">
+         <rect>
+          <x>820</x>
+          <y>370</y>
+          <width>131</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>15</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">border-color: rgb(0, 0, 0);
+background-color: rgb(200, 200, 200);</string>
+        </property>
+        <property name="text">
+         <string>SUBMIT</string>
+        </property>
+       </widget>
+       <widget class="QWidget" name="wgLocalConfig" native="true">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>17</y>
+          <width>521</width>
+          <height>251</height>
+         </rect>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);
+border-color: rgb(0, 0, 0);</string>
+        </property>
+        <widget class="QLabel" name="label_23">
+         <property name="geometry">
+          <rect>
+           <x>28</x>
+           <y>160</y>
+           <width>61</width>
+           <height>39</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>MPN NO.</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="leMPNNo">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>170</y>
+           <width>131</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="maxLength">
+          <number>10</number>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_25">
+         <property name="geometry">
+          <rect>
+           <x>28</x>
+           <y>201</y>
+           <width>61</width>
+           <height>39</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>FAC ID</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_20">
+         <property name="geometry">
+          <rect>
+           <x>28</x>
+           <y>41</y>
+           <width>61</width>
+           <height>39</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Chip Type</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_22">
+         <property name="geometry">
+          <rect>
+           <x>28</x>
+           <y>120</y>
+           <width>61</width>
+           <height>39</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>PO Number</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="leFWVer">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>90</y>
+           <width>131</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="maxLength">
+          <number>10</number>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="leFacPlan">
+         <property name="geometry">
+          <rect>
+           <x>340</x>
+           <y>91</y>
+           <width>131</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="maxLength">
+          <number>10</number>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_26">
+         <property name="geometry">
+          <rect>
+           <x>278</x>
+           <y>81</y>
+           <width>61</width>
+           <height>39</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Fac-Plan</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="leBatchId">
+         <property name="geometry">
+          <rect>
+           <x>340</x>
+           <y>50</y>
+           <width>131</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="maxLength">
+          <number>10</number>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="leFacId">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>210</y>
+           <width>131</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="maxLength">
+          <number>10</number>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_27">
+         <property name="geometry">
+          <rect>
+           <x>278</x>
+           <y>40</y>
+           <width>61</width>
+           <height>39</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Batch ID</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cbChipType">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>50</y>
+           <width>131</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <item>
+          <property name="text">
+           <string>WROOM-02</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>WROOM-32</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>WROVER</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>other</string>
+          </property>
+         </item>
+        </widget>
+        <widget class="QLineEdit" name="leChipType">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>50</y>
+           <width>111</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="maxLength">
+          <number>10</number>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_21">
+         <property name="geometry">
+          <rect>
+           <x>28</x>
+           <y>80</y>
+           <width>61</width>
+           <height>39</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>FW Verion</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="lePoNo">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>130</y>
+           <width>131</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="maxLength">
+          <number>10</number>
+         </property>
+        </widget>
+        <widget class="QTextBrowser" name="textBrowser_30">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>521</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial Black</family>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(230, 230, 230);
+color: rgb(85, 0, 0);</string>
+         </property>
+         <property name="html">
+          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial Black'; font-size:9pt; font-weight:600; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;LOCAL CONFIG&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+        <zorder>label_23</zorder>
+        <zorder>leMPNNo</zorder>
+        <zorder>label_25</zorder>
+        <zorder>label_20</zorder>
+        <zorder>label_22</zorder>
+        <zorder>leFacPlan</zorder>
+        <zorder>label_26</zorder>
+        <zorder>leBatchId</zorder>
+        <zorder>leFacId</zorder>
+        <zorder>label_27</zorder>
+        <zorder>cbChipType</zorder>
+        <zorder>label_21</zorder>
+        <zorder>lePoNo</zorder>
+        <zorder>leChipType</zorder>
+        <zorder>leFWVer</zorder>
+        <zorder>textBrowser_30</zorder>
+       </widget>
+       <widget class="QWidget" name="widgetCloud" native="true">
+        <property name="geometry">
+         <rect>
+          <x>20</x>
+          <y>280</y>
+          <width>521</width>
+          <height>141</height>
+         </rect>
+        </property>
+        <property name="autoFillBackground">
+         <bool>false</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">background-color: rgb(255, 255, 255);</string>
+        </property>
+        <widget class="QPushButton" name="pbCloudSync">
+         <property name="geometry">
+          <rect>
+           <x>230</x>
+           <y>50</y>
+           <width>41</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border-color: rgb(0, 0, 0);
+background-color: rgb(200, 200, 200);</string>
+         </property>
+         <property name="text">
+          <string>SYNC</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_28">
+         <property name="geometry">
+          <rect>
+           <x>30</x>
+           <y>40</y>
+           <width>61</width>
+           <height>39</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Config ID</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="leConfigId">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>50</y>
+           <width>131</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="maxLength">
+          <number>10</number>
+         </property>
+        </widget>
+        <widget class="QTextBrowser" name="textBrowser_31">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>521</width>
+           <height>31</height>
+          </rect>
+         </property>
+         <property name="font">
+          <font>
+           <family>Arial Black</family>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">background-color: rgb(230, 230, 230);
+color: rgb(85, 0, 0);</string>
+         </property>
+         <property name="html">
+          <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial Black'; font-size:9pt; font-weight:600; font-style:normal;&quot;&gt;
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;CLOUD CONFIG&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         </property>
+        </widget>
+       </widget>
+       <widget class="QComboBox" name="cbPortRate3_2">
+        <property name="geometry">
+         <rect>
+          <x>700</x>
+          <y>291</y>
+          <width>71</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <item>
+         <property name="text">
+          <string>9600</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>74880</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>115200</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>921600</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>custom</string>
+         </property>
+        </item>
+       </widget>
+       <widget class="QLineEdit" name="lePortRate3_2">
+        <property name="geometry">
+         <rect>
+          <x>700</x>
+          <y>291</y>
+          <width>51</width>
+          <height>21</height>
+         </rect>
+        </property>
+        <property name="maxLength">
+         <number>10</number>
+        </property>
+       </widget>
+       <zorder>widgetCloud</zorder>
+       <zorder>wgLocalConfig</zorder>
        <zorder>textBrowser_21</zorder>
-       <zorder>textBrowser_22</zorder>
        <zorder>textBrowser_23</zorder>
+       <zorder>textBrowser_20</zorder>
+       <zorder>textBrowser_22</zorder>
        <zorder>textBrowser_24</zorder>
-       <zorder>textBrowser_25</zorder>
        <zorder>textBrowser_26</zorder>
-       <zorder>textBrowser_27</zorder>
+       <zorder>label_11</zorder>
        <zorder>label_3</zorder>
        <zorder>label_4</zorder>
-       <zorder>cbComIndex</zorder>
-       <zorder>cbComBaud</zorder>
-       <zorder>leCOM</zorder>
+       <zorder>cbPort1_1</zorder>
+       <zorder>cbPortRate1_1</zorder>
        <zorder>label_6</zorder>
        <zorder>label_7</zorder>
-       <zorder>cbComIndex_2</zorder>
-       <zorder>cbComBaud_2</zorder>
-       <zorder>leCOM_2</zorder>
-       <zorder>label_8</zorder>
-       <zorder>cbComIndex_3</zorder>
-       <zorder>label_9</zorder>
-       <zorder>label_10</zorder>
-       <zorder>cbComBaud_3</zorder>
-       <zorder>cbComIndex_4</zorder>
-       <zorder>cbComBaud_4</zorder>
-       <zorder>label_11</zorder>
+       <zorder>cbPort1_2</zorder>
+       <zorder>cbPortRate1_2</zorder>
        <zorder>label_12</zorder>
-       <zorder>cbComIndex_5</zorder>
+       <zorder>cbPort2_2</zorder>
        <zorder>label_13</zorder>
        <zorder>label_14</zorder>
-       <zorder>cbComBaud_5</zorder>
-       <zorder>cbComIndex_6</zorder>
-       <zorder>cbComBaud_6</zorder>
+       <zorder>cbPortRate2_2</zorder>
+       <zorder>cbPort2_1</zorder>
+       <zorder>cbPortRate2_1</zorder>
        <zorder>label_15</zorder>
        <zorder>label_16</zorder>
-       <zorder>cbComIndex_7</zorder>
        <zorder>label_17</zorder>
+       <zorder>label_8</zorder>
+       <zorder>cbPortRate4_1</zorder>
        <zorder>label_18</zorder>
-       <zorder>cbComBaud_7</zorder>
-       <zorder>cbComIndex_8</zorder>
-       <zorder>cbComBaud_8</zorder>
+       <zorder>cbPortRate3_1</zorder>
+       <zorder>label_9</zorder>
+       <zorder>label_10</zorder>
+       <zorder>cbPort3_1</zorder>
        <zorder>label_19</zorder>
-       <zorder>leCOM_3</zorder>
-       <zorder>leCOM_4</zorder>
-       <zorder>leCOM_5</zorder>
-       <zorder>leCOM_6</zorder>
-       <zorder>leCOM_7</zorder>
-       <zorder>leCOM_8</zorder>
+       <zorder>cbPortRate4_2</zorder>
+       <zorder>cbPort4_2</zorder>
+       <zorder>cbPort4_1</zorder>
+       <zorder>textBrowser_27</zorder>
+       <zorder>textBrowser_25</zorder>
+       <zorder>cbPort3_2</zorder>
+       <zorder>pbDutReset</zorder>
+       <zorder>pbDutSubmit</zorder>
+       <zorder>lePortRate2_1</zorder>
+       <zorder>lePortRate2_2</zorder>
+       <zorder>lePortRate3_1</zorder>
+       <zorder>lePortRate1_1</zorder>
+       <zorder>lePortRate4_1</zorder>
+       <zorder>lePortRate4_2</zorder>
+       <zorder>lePortRate1_2</zorder>
+       <zorder>cbPortRate3_2</zorder>
+       <zorder>lePortRate3_2</zorder>
       </widget>
      </widget>
     </widget>
@@ -2275,7 +2714,7 @@ p, li { white-space: pre-wrap; }
            <string>0x33000000</string>
           </property>
           <property name="flags">
-           <set>ItemIsSelectable|ItemIsDragEnabled|ItemIsEnabled</set>
+           <set>ItemIsSelectable|ItemIsEditable|ItemIsDragEnabled|ItemIsEnabled</set>
           </property>
          </item>
         </item>
@@ -2498,7 +2937,7 @@ p, li { white-space: pre-wrap; }
        </item>
       </item>
      </widget>
-     <widget class="QPushButton" name="pbSubmit">
+     <widget class="QPushButton" name="pbTFSubmit">
       <property name="geometry">
        <rect>
         <x>840</x>
@@ -2520,7 +2959,7 @@ background-color: rgb(200, 200, 200);</string>
        <string>SUBMIT</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="pbReset">
+     <widget class="QPushButton" name="pbTFReset">
       <property name="geometry">
        <rect>
         <x>840</x>
@@ -2547,7 +2986,7 @@ background-color: rgb(200, 200, 200);</string>
      <attribute name="title">
       <string> Spec </string>
      </attribute>
-     <widget class="QTableWidget" name="tableWidget_5">
+     <widget class="QTableWidget" name="twThreshold">
       <property name="geometry">
        <rect>
         <x>-1</x>
@@ -2558,6 +2997,9 @@ background-color: rgb(200, 200, 200);</string>
       </property>
       <property name="autoFillBackground">
        <bool>true</bool>
+      </property>
+      <property name="editTriggers">
+       <set>QAbstractItemView::NoEditTriggers</set>
       </property>
       <property name="showGrid">
        <bool>true</bool>
@@ -2626,11 +3068,6 @@ background-color: rgb(200, 200, 200);</string>
       </column>
       <column>
        <property name="text">
-        <string>attion1</string>
-       </property>
-      </column>
-      <column>
-       <property name="text">
         <string>Item1</string>
        </property>
       </column>
@@ -2641,12 +3078,12 @@ background-color: rgb(200, 200, 200);</string>
       </column>
       <column>
        <property name="text">
-        <string>Item4</string>
+        <string>Item3</string>
        </property>
       </column>
       <column>
        <property name="text">
-        <string>Descrip</string>
+        <string>Item4</string>
        </property>
       </column>
      </widget>
@@ -2870,7 +3307,7 @@ p, li { white-space: pre-wrap; }
      <string>Ver_1.0.0</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_5">
+   <widget class="QLabel" name="lbPoNo">
     <property name="geometry">
      <rect>
       <x>369</x>
@@ -2889,7 +3326,7 @@ p, li { white-space: pre-wrap; }
      <string>c0392</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbMPN">
+   <widget class="QLabel" name="lbMPNNo">
     <property name="geometry">
      <rect>
       <x>369</x>
@@ -2908,7 +3345,7 @@ p, li { white-space: pre-wrap; }
      <string>hehe</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbStatus">
+   <widget class="QLabel" name="lbTotalStatus">
     <property name="geometry">
      <rect>
       <x>369</x>
@@ -2927,7 +3364,7 @@ p, li { white-space: pre-wrap; }
      <string>WORKING</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbPlanID">
+   <widget class="QLabel" name="lbFacPlan">
     <property name="geometry">
      <rect>
       <x>750</x>
@@ -2946,7 +3383,7 @@ p, li { white-space: pre-wrap; }
      <string>XXXX</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbBatchSid">
+   <widget class="QLabel" name="lbBatchId">
     <property name="geometry">
      <rect>
       <x>750</x>
@@ -2965,7 +3402,7 @@ p, li { white-space: pre-wrap; }
      <string>XXXX</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbFacID">
+   <widget class="QLabel" name="lbFacId">
     <property name="geometry">
      <rect>
       <x>750</x>
@@ -3044,7 +3481,7 @@ p, li { white-space: pre-wrap; }
      <enum>QFrame::Raised</enum>
     </property>
    </widget>
-   <widget class="QPushButton" name="pbStart">
+   <widget class="QPushButton" name="pbAllStart">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -3063,7 +3500,7 @@ p, li { white-space: pre-wrap; }
 background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="text">
-     <string>START</string>
+     <string>ALL START</string>
     </property>
    </widget>
    <zorder>fraLogo</zorder>
@@ -3077,17 +3514,17 @@ background-color: rgb(200, 200, 200);</string>
    <zorder>textEdit</zorder>
    <zorder>lbModuleType</zorder>
    <zorder>lbFWVer</zorder>
-   <zorder>label_5</zorder>
-   <zorder>lbMPN</zorder>
-   <zorder>lbStatus</zorder>
-   <zorder>lbPlanID</zorder>
-   <zorder>lbBatchSid</zorder>
-   <zorder>lbFacID</zorder>
+   <zorder>lbPoNo</zorder>
+   <zorder>lbMPNNo</zorder>
+   <zorder>lbTotalStatus</zorder>
+   <zorder>lbFacPlan</zorder>
+   <zorder>lbBatchId</zorder>
+   <zorder>lbFacId</zorder>
    <zorder>lbWorkStat</zorder>
    <zorder>lbServerStat</zorder>
    <zorder>label</zorder>
    <zorder>label_2</zorder>
-   <zorder>pbStart</zorder>
+   <zorder>pbAllStart</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
@@ -3105,8 +3542,16 @@ background-color: rgb(200, 200, 200);</string>
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
-     <string>Tools</string>
+     <string>Config</string>
     </property>
+    <widget class="QMenu" name="menuPosition">
+     <property name="title">
+      <string>Position</string>
+     </property>
+     <addaction name="actionLocal"/>
+     <addaction name="actionCloud"/>
+    </widget>
+    <addaction name="menuPosition"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -3118,7 +3563,35 @@ background-color: rgb(200, 200, 200);</string>
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionLocal">
+   <property name="text">
+    <string>Local</string>
+   </property>
+  </action>
+  <action name="actionCloud">
+   <property name="text">
+    <string>Cloud</string>
+   </property>
+  </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MyComboBox</class>
+   <extends>QComboBox</extends>
+   <header>my_widget.h</header>
+   <slots>
+    <signal>clicked(myComboBox)</signal>
+   </slots>
+  </customwidget>
+  <customwidget>
+   <class>MyPushButton</class>
+   <extends>QPushButton</extends>
+   <header>my_widget.h</header>
+   <slots>
+    <signal>clicked(QPushButton)</signal>
+   </slots>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="../icon/res.qrc"/>
  </resources>
