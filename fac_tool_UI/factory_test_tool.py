@@ -3,6 +3,8 @@ import os
 from factory_test_tool_ui import *
 import time
 import ConfigParser
+import serial
+import serial.tools.list_ports 
 from my_widget import *
 
 from PyQt4 import QtCore, QtGui
@@ -22,7 +24,7 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 class WarningBox(QtGui.QDialog):
-    def __init__(self,str_title,str_text,input_box_bool,list_bool):#####自己写一个warningbox
+    def __init__(self,str_title,str_text,input_box_bool,list_bool):##自己写一个warningbox
         super(WarningBox,self).__init__(parent = None)
         #self.setWindowFlags(QtCore.Qt.Popup)
         
@@ -79,7 +81,7 @@ class Filter(QtCore.QObject):
     def __init__(self):
         super(Filter, self).__init__()
         self.counter = 0
-    
+        
     def eventFilter(self, obj, event):
         #popupVisible = obj != self
         if event.type() == QtCore.QEvent.FocusOut:
@@ -100,8 +102,8 @@ class Filter(QtCore.QObject):
 
 class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     _SP_SIGN = '$$'
+    SIGNAL_PRINT = QtCore.pyqtSignal(str)
     DUT_NUM = 4
-    TEST_FLOW = {}
     DUT_PORTS = []
     DUT_RATES = []
     DUT_START_BTNS = []
@@ -122,10 +124,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 self.DUT_PORTS.append(eval('self.cbPort'+str(i)+'_'+str(j)))
                 self.DUT_RATES.append(eval('self.cbPortRate'+str(i)+'_'+str(j)))
                 eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(True)
-        self.CHIP_TYPE_NUM = self.cbChipType.maxCount()
-        self.BAUD_NUM = self.cbPortRate1_1.maxCount()
-        self.dut_reset('./config/dutConfig')
-
+        
     def _setup_signal(self):
         p = self.trwTestFlow.children()[0]
         QtCore.QObject.connect(self.trwTestFlow, QtCore.SIGNAL(_fromUtf8("itemChanged(QTreeWidgetItem*,int)")), self.testflow_check)
@@ -134,17 +133,25 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         QtCore.QObject.connect(self.pbAllStart, QtCore.SIGNAL(_fromUtf8("clicked()")), self.all_start)
         QtCore.QObject.connect(self.pbCloudSync, QtCore.SIGNAL(_fromUtf8("clicked()")), self.cloud_sync)
         QtCore.QObject.connect(self.pbDutReset, QtCore.SIGNAL(_fromUtf8("clicked()")), self.dut_reset)
-        QtCore.QObject.connect(self.pbDutSubmit, QtCore.SIGNAL(_fromUtf8("clicked()")), self._dut_submit)        
+        QtCore.QObject.connect(self.pbDutSubmit, QtCore.SIGNAL(_fromUtf8("clicked()")), self._dut_submit)
+        QtCore.QObject.connect(self.cbChipType, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.chip_type_change)
         for btn in self.DUT_START_BTNS: btn.clicked.connect(self.single_start)
         for btn in self.DUT_LOG_BTNS: btn.clicked.connect(self.pop_log)
         for cb in self.DUT_PORTS: cb.clicked.connect(self.change_port)
-        for cb in self.DUT_RATES: cb.clicked.connect(self.change_baud)
+        #for cb in self.DUT_RATES: QtCore.QObject.connect(cb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QComboBox,QString)")), self.change_baud)
+        self.SIGNAL_PRINT.connect(self.print_log)
         
         QtCore.QMetaObject.connectSlotsByName(self)
     
     def _test_init(self):
+        self.dut_config = {}
+        self.CHIP_TYPE_NUM = self.cbChipType.maxCount()
+        self.BAUD_NUM = self.cbPortRate1_1.maxCount()
+        self.dut_reset('./config/dutConfig') 
+        
+        self.test_flow = {}
         self._testflow_init()
-        self._threshold_init()
+        self._threshold_init()        
         
     def _threshold_init(self):
         import openpyxl
@@ -240,9 +247,9 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     
     def _testflow_general(self, fd, root, level_index):
         if(root.flags()&QtCore.Qt.ItemIsEditable):            
-            self.TEST_FLOW[str(root.parent().text(0))] = str(root.text(0))
+            self.test_flow[str(root.parent().text(0))] = str(root.text(0))
         else:
-            self.TEST_FLOW[str(root.text(0))] = root.checkState(0)
+            self.test_flow[str(root.text(0))] = root.checkState(0)
             
         fd.write("[%-12s%s%2d%s%2d%s%2d%s %s]\n"%(level_index, self._SP_SIGN, int(root.childCount()), self._SP_SIGN, 
                                           int(root.checkState(0) if(root.flags()&QtCore.Qt.ItemIsUserCheckable) else -1), self._SP_SIGN, 
@@ -307,51 +314,55 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         pass
     
     def change_port(self, cb_port):
-        print cb_port.currentIndex()
+        port_list = list(serial.tools.list_ports.comports())
+        cb_port.clear()
+        for port in port_list:
+            print port[0]
+            cb_port.addItem(_fromUtf8(port[0]))
         cb_port.showPopup()
         
     def change_baud(self, cb_baud):
-        print cb_baud.currentIndex()
-        cb_baud.showPopup()
+        pass
         
     def cloud_sync(self):
         pass
     
     def dut_reset(self, file_path='./config/dutConfig'):
         conf = ConfigParser.ConfigParser()
-        #try:
-        conf.read(file_path)
-        index = self.cbChipType.findText(conf.get('common_conf', 'CHIP_TYPE'))
-        if index >= 0:
-            self.cbChipType.setCurrentIndex(index)  
-            self.leChipType.setHidden(True)
-        else:
-            self.cbChipType.setCurrentIndex(self.CHIP_TYPE_NUM-1)
-            self.leChipType.setText(conf.get('common_conf', 'CHIP_TYPE'))
-            self.leChipType.setHidden(False)
-        self.leFWVer.setText(conf.get('common_conf', 'FW_VER'))
-        self.lePoNo.setText(conf.get('common_conf', 'PO_NO'))
-        self.leMPNNo.setText(conf.get('common_conf', 'MPN_NO'))
-        self.leFacId.setText(conf.get('common_conf', 'FAC_SID'))
-        self.leBatchId.setText(conf.get('common_conf', 'BATCH_SID'))
-        self.leFacPlan.setText(conf.get('common_conf', 'FAC_PlAN'))
-        self.leConfigId.setText(conf.get('common_conf', 'CLOUD_NO'))
-        for i in xrange(1, self.DUT_NUM+1):
-            for j in xrange(1, 3):
-                eval('self.cbPort'+str(i)+'_'+str(j)).setItemText(0, conf.get('DUT'+str(i), 'PORT'+str(j)))
-                index = eval('self.cbPortRate'+str(i)+'_'+str(j)).findText(conf.get('DUT'+str(i), 'RATE'+str(j)))
-                if index >= 0:
-                    eval('self.cbPortRate'+str(i)+'_'+str(j)).setCurrentIndex(index)
-                    eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(True)
-                else:
-                    eval('self.cbPortRate'+str(i)+'_'+str(j)).setCurrentIndex(self.BAUD_NUM-1)
-                    eval('self.lePortRate'+str(i)+'_'+str(j)).setText(conf.get('DUT'+str(i), 'RATE'+str(j)))
-                    eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(False)           
+        try:
+            conf.read(file_path)
+            index = self.cbChipType.findText(conf.get('common_conf', 'CHIP_TYPE'))
+            if index >= 0:
+                self.cbChipType.setCurrentIndex(index)  
+                self.leChipType.setHidden(True)
+            else:
+                self.cbChipType.setCurrentIndex(self.CHIP_TYPE_NUM-1)
+                self.leChipType.setText(conf.get('common_conf', 'CHIP_TYPE'))
+                self.leChipType.setHidden(False)
+            self.leFWVer.setText(conf.get('common_conf', 'FW_VER'))
+            self.lePoNo.setText(conf.get('common_conf', 'PO_NO'))
+            self.leMPNNo.setText(conf.get('common_conf', 'MPN_NO'))
+            self.leFacId.setText(conf.get('common_conf', 'FAC_SID'))
+            self.leBatchId.setText(conf.get('common_conf', 'BATCH_SID'))
+            self.leFacPlan.setText(conf.get('common_conf', 'FAC_PlAN'))
+            self.leConfigId.setText(conf.get('common_conf', 'CLOUD_NO'))
+            for i in xrange(1, self.DUT_NUM+1):
+                for j in xrange(1, 3):
+                    eval('self.cbPort'+str(i)+'_'+str(j)).setItemText(0, conf.get('DUT'+str(i), 'PORT'+str(j)))
+                    eval('self.cbPort'+str(i)+'_'+str(j)).setCurrentIndex(0)
+                    index = eval('self.cbPortRate'+str(i)+'_'+str(j)).findText(conf.get('DUT'+str(i), 'RATE'+str(j)))
+                    if index >= 0:
+                        eval('self.cbPortRate'+str(i)+'_'+str(j)).setCurrentIndex(index)
+                        eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(True)
+                    else:
+                        eval('self.cbPortRate'+str(i)+'_'+str(j)).setCurrentIndex(self.BAUD_NUM-1)
+                        eval('self.lePortRate'+str(i)+'_'+str(j)).setText(conf.get('DUT'+str(i), 'RATE'+str(j)))
+                        eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(False)
                                
-        #except:
-            #print ('load to config file fail')
-        self.dut_conf = conf
-        
+        except:
+            print ('load to config file fail')
+        for i in conf.sections():
+            self.dut_config[i] = dict(conf.items(i))
     
     def _dut_submit(self):
         first_flag = True
@@ -380,8 +391,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             else:
                 break
             
-    def dut_update(self, file='./config/dutConfig'):
-        with open(file, 'w') as fd:
+    def dut_update(self, file_path='./config/dutConfig'):
+        with open(file_path, 'w') as fd:
             fd.write('[common_conf]\n')
             if self.cbChipType.currentIndex() < self.CHIP_TYPE_NUM - 1:
                 fd.write('CHIP_TYPE = {}\n'.format(self.cbChipType.currentText()))
@@ -399,11 +410,28 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 fd.write('\n[DUT{}]\n'.format(str(i)))
                 for j in xrange(1, 3):
                     fd.write('PORT{} = {}\n'.format(str(j), str(eval('self.cbPort'+str(i)+'_'+str(j)).currentText())))
-                    if eval('self.cbPort'+str(i)+'_'+str(j)).currentIndex() < self.BAUD_NUM - 1:
+                    if eval('self.cbPort'+str(i)+'_'+str(j)).currentIndex() < self.BAUD_NUM:
                         fd.write('RATE{} = {}\n'.format(str(j), str(eval('self.cbPortRate'+str(i)+'_'+str(j)).currentText())))
                     else:
-                        fd.write('RATE{} = {}\n'.format(str(j), str(eval('self.lePortRate'+str(i)+'_'+str(j)).text())))            
-                
+                        fd.write('RATE{} = {}\n'.format(str(j), str(eval('self.lePortRate'+str(i)+'_'+str(j)).text())))
+                        
+        if file_path=='./config/dutConfig':
+            msg = QtGui.QMessageBox(QtGui.QMessageBox.NoIcon, '!!!','The DUT config update succ!!    ')
+            msg.exec_()
+    
+    
+    def print_log(self, tbw, log):
+        log=str(log)
+        tbw.append(log)
+    
+    def chip_type_change(self, index):
+        if index == self.CHIP_TYPE_NUM - 1:
+            self.leChipType.setHidden(False)
+            self.dut_config['common_conf']['CHIP_TYPE'] = None
+        else:
+            self.leChipType.setHidden(True)
+            self.dut_config['common_conf']['CHIP_TYPE'] = self.cbChipType.currentText()
+    
     
 def run():       
     app = QtGui.QApplication(sys.argv)
