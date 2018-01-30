@@ -6,6 +6,7 @@ import ConfigParser
 import serial
 import serial.tools.list_ports 
 from my_widget import *
+from io import StringIO
 
 from PyQt4 import QtCore, QtGui
 
@@ -22,6 +23,10 @@ try:
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
+
+def fac_test(stdout, dut_config, test_flow):
+    sys.stdout = stdout
+    print (test_flow['USER_FW_VER_BAUD'])
 
 class WarningBox(QtGui.QDialog):
     def __init__(self,str_title,str_text,input_box_bool,list_bool):##自己写一个warningbox
@@ -102,13 +107,23 @@ class Filter(QtCore.QObject):
 
 class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     _SP_SIGN = '$$'
-    SIGNAL_PRINT = QtCore.pyqtSignal(str)
+    SIGNAL_PRINT = QtCore.pyqtSignal(QtGui.QTextBrowser, str)
     DUT_NUM = 4
     DUT_PORTS = []
     DUT_RATES = []
     DUT_START_BTNS = []
     DUT_LOG_BTNS = []
     CHIP_TYPE_NUM = 0
+    
+    class _Print(StringIO):
+        def __init__(self, factory_tool, obj):
+            """ x.__init__(...) initializes x; see help(type(x)) for signature """
+            self.factory_tool = factory_tool
+            self.obj = obj
+        
+        def write(self, log):
+            self.factory_tool.SIGNAL_PRINT.emit(self.obj, log)    
+    
     def __init__(self, params={}, parent=None):
         super(QtGui.QMainWindow, self).__init__(parent=parent)
         self.setupUi(self)  # general by pyqt designer
@@ -145,8 +160,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     
     def _test_init(self):
         self.dut_config = {}
-        self.CHIP_TYPE_NUM = self.cbChipType.maxCount()
-        self.BAUD_NUM = self.cbPortRate1_1.maxCount()
+        self.CHIP_TYPE_NUM = self.cbChipType.count()
+        self.BAUD_NUM = self.cbPortRate1_1.count()
         self.dut_reset('./config/dutConfig') 
         
         self.test_flow = {}
@@ -306,12 +321,29 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         pass
     
     def single_start(self, btn):
-        print btn.objectName()
-        pass
-    
+        id = int(btn.objectName()[len(btn.objectName())-1])
+        if id in (1,2,3,4):
+            stdout_ = self._Print(self, eval("self.tbLog"+str(id)))
+            fac_test(stdout_, self.dut_config, self.test_flow)
+            
+        else:
+            print('error: get strat btn err')
+       
+    def print_(self, log):
+        self.SIGNAL_PRINT.emit(log)
+        
     def pop_log(self, btn):
-        print btn.objectName()
-        pass
+        id = int(btn.objectName()[len(btn.objectName())-1])
+        if id == 1:
+            pass
+        elif id == 2:
+            pass
+        elif id == 3:
+            pass
+        elif id == 4:
+            pass
+        else:
+            print('error: get log btn err')
     
     def change_port(self, cb_port):
         port_list = list(serial.tools.list_ports.comports())
@@ -320,8 +352,9 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             print port[0]
             cb_port.addItem(_fromUtf8(port[0]))
         cb_port.showPopup()
-        
-    def change_baud(self, cb_baud):
+    
+    # TODO.
+    def change_baud(self, cb_baud): 
         pass
         
     def cloud_sync(self):
@@ -329,8 +362,12 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     
     def dut_reset(self, file_path='./config/dutConfig'):
         conf = ConfigParser.ConfigParser()
+              
         try:
             conf.read(file_path)
+            for i in conf.sections():
+                self.dut_config[i] = dict(conf.items(i))  
+                
             index = self.cbChipType.findText(conf.get('common_conf', 'CHIP_TYPE'))
             if index >= 0:
                 self.cbChipType.setCurrentIndex(index)  
@@ -361,8 +398,6 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                                
         except:
             print ('load to config file fail')
-        for i in conf.sections():
-            self.dut_config[i] = dict(conf.items(i))
     
     def _dut_submit(self):
         first_flag = True
@@ -420,17 +455,15 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             msg.exec_()
     
     
-    def print_log(self, tbw, log):
+    def print_log(self, tb, log):
         log=str(log)
-        tbw.append(log)
+        tb.append(log)
     
     def chip_type_change(self, index):
         if index == self.CHIP_TYPE_NUM - 1:
             self.leChipType.setHidden(False)
-            self.dut_config['common_conf']['CHIP_TYPE'] = None
         else:
             self.leChipType.setHidden(True)
-            self.dut_config['common_conf']['CHIP_TYPE'] = self.cbChipType.currentText()
     
     
 def run():       

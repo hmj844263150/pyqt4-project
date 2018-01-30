@@ -1,5 +1,5 @@
 [common_conf]
-CHIP_TYPE = WROOM-02
+CHIP_TYPE = WROOM-32
 FW_VER = ver_1.0.0
 PO_NO = c0392
 MPN_NO = 2018010001
