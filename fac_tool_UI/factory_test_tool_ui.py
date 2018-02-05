@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'factory_test_tool_ui.ui'
 #
-# Created: Mon Jan 29 19:14:16 2018
+# Created: Mon Feb 05 12:11:27 2018
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -340,7 +340,7 @@ class Ui_MainWindow(object):
         self.textBrowser_21.setTextInteractionFlags(QtCore.Qt.TextBrowserInteraction)
         self.textBrowser_21.setObjectName(_fromUtf8("textBrowser_21"))
         self.label_3 = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_3.setGeometry(QtCore.QRect(560, 75, 31, 39))
+        self.label_3.setGeometry(QtCore.QRect(560, 76, 31, 39))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -380,7 +380,7 @@ class Ui_MainWindow(object):
         self.label_6.setSizePolicy(sizePolicy)
         self.label_6.setObjectName(_fromUtf8("label_6"))
         self.label_7 = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_7.setGeometry(QtCore.QRect(670, 75, 31, 39))
+        self.label_7.setGeometry(QtCore.QRect(670, 76, 31, 39))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -426,7 +426,7 @@ class Ui_MainWindow(object):
         self.cbPort2_2.addItem(_fromUtf8(""))
         self.cbPort2_2.setItemText(1, _fromUtf8(""))
         self.label_13 = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_13.setGeometry(QtCore.QRect(560, 178, 31, 39))
+        self.label_13.setGeometry(QtCore.QRect(560, 179, 31, 39))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -476,7 +476,7 @@ class Ui_MainWindow(object):
         self.lePortRate2_1.setMaxLength(10)
         self.lePortRate2_1.setObjectName(_fromUtf8("lePortRate2_1"))
         self.label_15 = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_15.setGeometry(QtCore.QRect(670, 178, 31, 39))
+        self.label_15.setGeometry(QtCore.QRect(670, 179, 31, 39))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -484,7 +484,7 @@ class Ui_MainWindow(object):
         self.label_15.setSizePolicy(sizePolicy)
         self.label_15.setObjectName(_fromUtf8("label_15"))
         self.label_16 = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_16.setGeometry(QtCore.QRect(560, 384, 31, 39))
+        self.label_16.setGeometry(QtCore.QRect(560, 385, 31, 39))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -500,7 +500,7 @@ class Ui_MainWindow(object):
         self.label_17.setSizePolicy(sizePolicy)
         self.label_17.setObjectName(_fromUtf8("label_17"))
         self.label_8 = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_8.setGeometry(QtCore.QRect(560, 281, 31, 39))
+        self.label_8.setGeometry(QtCore.QRect(560, 282, 31, 39))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -508,7 +508,7 @@ class Ui_MainWindow(object):
         self.label_8.setSizePolicy(sizePolicy)
         self.label_8.setObjectName(_fromUtf8("label_8"))
         self.label_18 = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_18.setGeometry(QtCore.QRect(670, 384, 31, 39))
+        self.label_18.setGeometry(QtCore.QRect(670, 385, 31, 39))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -580,7 +580,7 @@ class Ui_MainWindow(object):
         self.lePortRate4_2.setMaxLength(10)
         self.lePortRate4_2.setObjectName(_fromUtf8("lePortRate4_2"))
         self.label_11 = QtGui.QLabel(self.scrollAreaWidgetContents)
-        self.label_11.setGeometry(QtCore.QRect(670, 281, 31, 39))
+        self.label_11.setGeometry(QtCore.QRect(670, 282, 31, 39))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
@@ -669,7 +669,7 @@ class Ui_MainWindow(object):
         self.leMPNNo = QtGui.QLineEdit(self.wgLocalConfig)
         self.leMPNNo.setGeometry(QtCore.QRect(90, 170, 131, 21))
         self.leMPNNo.setText(_fromUtf8(""))
-        self.leMPNNo.setMaxLength(10)
+        self.leMPNNo.setMaxLength(100)
         self.leMPNNo.setObjectName(_fromUtf8("leMPNNo"))
         self.label_25 = QtGui.QLabel(self.wgLocalConfig)
         self.label_25.setGeometry(QtCore.QRect(28, 201, 61, 39))
@@ -697,12 +697,12 @@ class Ui_MainWindow(object):
         self.label_22.setObjectName(_fromUtf8("label_22"))
         self.leFWVer = QtGui.QLineEdit(self.wgLocalConfig)
         self.leFWVer.setGeometry(QtCore.QRect(90, 90, 131, 21))
-        self.leFWVer.setMaxLength(10)
+        self.leFWVer.setMaxLength(100)
         self.leFWVer.setObjectName(_fromUtf8("leFWVer"))
         self.leFacPlan = QtGui.QLineEdit(self.wgLocalConfig)
         self.leFacPlan.setGeometry(QtCore.QRect(340, 91, 131, 21))
         self.leFacPlan.setText(_fromUtf8(""))
-        self.leFacPlan.setMaxLength(10)
+        self.leFacPlan.setMaxLength(100)
         self.leFacPlan.setObjectName(_fromUtf8("leFacPlan"))
         self.label_26 = QtGui.QLabel(self.wgLocalConfig)
         self.label_26.setGeometry(QtCore.QRect(278, 81, 61, 39))
@@ -714,11 +714,11 @@ class Ui_MainWindow(object):
         self.label_26.setObjectName(_fromUtf8("label_26"))
         self.leBatchId = QtGui.QLineEdit(self.wgLocalConfig)
         self.leBatchId.setGeometry(QtCore.QRect(340, 50, 131, 21))
-        self.leBatchId.setMaxLength(10)
+        self.leBatchId.setMaxLength(100)
         self.leBatchId.setObjectName(_fromUtf8("leBatchId"))
         self.leFacId = QtGui.QLineEdit(self.wgLocalConfig)
         self.leFacId.setGeometry(QtCore.QRect(90, 210, 131, 21))
-        self.leFacId.setMaxLength(10)
+        self.leFacId.setMaxLength(100)
         self.leFacId.setObjectName(_fromUtf8("leFacId"))
         self.label_27 = QtGui.QLabel(self.wgLocalConfig)
         self.label_27.setGeometry(QtCore.QRect(278, 40, 61, 39))
@@ -737,7 +737,7 @@ class Ui_MainWindow(object):
         self.cbChipType.addItem(_fromUtf8(""))
         self.leChipType = QtGui.QLineEdit(self.wgLocalConfig)
         self.leChipType.setGeometry(QtCore.QRect(90, 50, 111, 21))
-        self.leChipType.setMaxLength(10)
+        self.leChipType.setMaxLength(100)
         self.leChipType.setObjectName(_fromUtf8("leChipType"))
         self.label_21 = QtGui.QLabel(self.wgLocalConfig)
         self.label_21.setGeometry(QtCore.QRect(28, 80, 61, 39))
@@ -750,7 +750,7 @@ class Ui_MainWindow(object):
         self.lePoNo = QtGui.QLineEdit(self.wgLocalConfig)
         self.lePoNo.setGeometry(QtCore.QRect(90, 130, 131, 21))
         self.lePoNo.setText(_fromUtf8(""))
-        self.lePoNo.setMaxLength(10)
+        self.lePoNo.setMaxLength(100)
         self.lePoNo.setObjectName(_fromUtf8("lePoNo"))
         self.textBrowser_30 = QtGui.QTextBrowser(self.wgLocalConfig)
         self.textBrowser_30.setEnabled(True)
@@ -763,17 +763,17 @@ class Ui_MainWindow(object):
         self.textBrowser_30.setStyleSheet(_fromUtf8("background-color: rgb(230, 230, 230);\n"
 "color: rgb(85, 0, 0);"))
         self.textBrowser_30.setObjectName(_fromUtf8("textBrowser_30"))
-        self.widgetCloud = QtGui.QWidget(self.scrollAreaWidgetContents)
-        self.widgetCloud.setGeometry(QtCore.QRect(20, 280, 521, 141))
-        self.widgetCloud.setAutoFillBackground(False)
-        self.widgetCloud.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
-        self.widgetCloud.setObjectName(_fromUtf8("widgetCloud"))
-        self.pbCloudSync = QtGui.QPushButton(self.widgetCloud)
+        self.wgCloudConfig = QtGui.QWidget(self.scrollAreaWidgetContents)
+        self.wgCloudConfig.setGeometry(QtCore.QRect(20, 280, 521, 141))
+        self.wgCloudConfig.setAutoFillBackground(False)
+        self.wgCloudConfig.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 255);"))
+        self.wgCloudConfig.setObjectName(_fromUtf8("wgCloudConfig"))
+        self.pbCloudSync = QtGui.QPushButton(self.wgCloudConfig)
         self.pbCloudSync.setGeometry(QtCore.QRect(230, 50, 41, 21))
         self.pbCloudSync.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 0);\n"
 "background-color: rgb(200, 200, 200);"))
         self.pbCloudSync.setObjectName(_fromUtf8("pbCloudSync"))
-        self.label_28 = QtGui.QLabel(self.widgetCloud)
+        self.label_28 = QtGui.QLabel(self.wgCloudConfig)
         self.label_28.setGeometry(QtCore.QRect(30, 40, 61, 39))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -781,12 +781,12 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.label_28.sizePolicy().hasHeightForWidth())
         self.label_28.setSizePolicy(sizePolicy)
         self.label_28.setObjectName(_fromUtf8("label_28"))
-        self.leConfigId = QtGui.QLineEdit(self.widgetCloud)
+        self.leConfigId = QtGui.QLineEdit(self.wgCloudConfig)
         self.leConfigId.setGeometry(QtCore.QRect(90, 50, 131, 21))
         self.leConfigId.setText(_fromUtf8(""))
-        self.leConfigId.setMaxLength(10)
+        self.leConfigId.setMaxLength(100)
         self.leConfigId.setObjectName(_fromUtf8("leConfigId"))
-        self.textBrowser_31 = QtGui.QTextBrowser(self.widgetCloud)
+        self.textBrowser_31 = QtGui.QTextBrowser(self.wgCloudConfig)
         self.textBrowser_31.setEnabled(True)
         self.textBrowser_31.setGeometry(QtCore.QRect(0, 0, 521, 31))
         font = QtGui.QFont()
@@ -1038,15 +1038,15 @@ class Ui_MainWindow(object):
         self.textBrowser_2.setFont(font)
         self.textBrowser_2.setStyleSheet(_fromUtf8("font: 12pt \"Comic Sans MS\";"))
         self.textBrowser_2.setObjectName(_fromUtf8("textBrowser_2"))
-        self.textEdit = QtGui.QTextEdit(self.centralwidget)
-        self.textEdit.setGeometry(QtCore.QRect(2, 132, 246, 31))
+        self.tePosition = QtGui.QTextEdit(self.centralwidget)
+        self.tePosition.setGeometry(QtCore.QRect(2, 132, 246, 31))
         font = QtGui.QFont()
         font.setPointSize(12)
-        self.textEdit.setFont(font)
-        self.textEdit.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
+        self.tePosition.setFont(font)
+        self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
 "border-color: rgb(0, 255, 255);"))
-        self.textEdit.setReadOnly(True)
-        self.textEdit.setObjectName(_fromUtf8("textEdit"))
+        self.tePosition.setReadOnly(True)
+        self.tePosition.setObjectName(_fromUtf8("tePosition"))
         self.label = QtGui.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(300, 10, 281, 21))
         font = QtGui.QFont()
@@ -1065,13 +1065,13 @@ class Ui_MainWindow(object):
         font.setWeight(75)
         self.label_2.setFont(font)
         self.label_2.setObjectName(_fromUtf8("label_2"))
-        self.lbModuleType = QtGui.QLabel(self.centralwidget)
-        self.lbModuleType.setGeometry(QtCore.QRect(369, 43, 211, 21))
+        self.lbChipType = QtGui.QLabel(self.centralwidget)
+        self.lbChipType.setGeometry(QtCore.QRect(369, 43, 211, 21))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Arial Rounded MT Bold"))
         font.setPointSize(12)
-        self.lbModuleType.setFont(font)
-        self.lbModuleType.setObjectName(_fromUtf8("lbModuleType"))
+        self.lbChipType.setFont(font)
+        self.lbChipType.setObjectName(_fromUtf8("lbChipType"))
         self.lbFWVer = QtGui.QLabel(self.centralwidget)
         self.lbFWVer.setGeometry(QtCore.QRect(369, 65, 211, 21))
         font = QtGui.QFont()
@@ -1128,13 +1128,13 @@ class Ui_MainWindow(object):
         font.setPointSize(12)
         self.lbWorkStat.setFont(font)
         self.lbWorkStat.setObjectName(_fromUtf8("lbWorkStat"))
-        self.lbServerStat = QtGui.QLabel(self.centralwidget)
-        self.lbServerStat.setGeometry(QtCore.QRect(90, 137, 121, 21))
+        self.lbPosition = QtGui.QLabel(self.centralwidget)
+        self.lbPosition.setGeometry(QtCore.QRect(90, 137, 121, 21))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Arial"))
         font.setPointSize(12)
-        self.lbServerStat.setFont(font)
-        self.lbServerStat.setObjectName(_fromUtf8("lbServerStat"))
+        self.lbPosition.setFont(font)
+        self.lbPosition.setObjectName(_fromUtf8("lbPosition"))
         self.fraLogo = QtGui.QFrame(self.centralwidget)
         self.fraLogo.setGeometry(QtCore.QRect(2, 2, 246, 128))
         self.fraLogo.setAutoFillBackground(False)
@@ -1167,10 +1167,12 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName(_fromUtf8("statusbar"))
         MainWindow.setStatusBar(self.statusbar)
         self.actionLocal = QtGui.QAction(MainWindow)
+        self.actionLocal.setCheckable(True)
+        self.actionLocal.setChecked(True)
         self.actionLocal.setObjectName(_fromUtf8("actionLocal"))
         self.actionCloud = QtGui.QAction(MainWindow)
+        self.actionCloud.setCheckable(True)
         self.actionCloud.setObjectName(_fromUtf8("actionCloud"))
-        self.menuPosition.addAction(self.actionLocal)
         self.menuPosition.addAction(self.actionCloud)
         self.menuTools.addAction(self.menuPosition.menuAction())
         self.menubar.addAction(self.menu.menuAction())
@@ -1499,30 +1501,30 @@ class Ui_MainWindow(object):
 "</style></head><body style=\" font-family:\'Arial\'; font-size:14pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Arial Narrow\'; font-size:10pt;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Arial Narrow\'; font-size:10pt;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\';\">Module Type  :</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\';\">Firmware Ver :</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\';\">PO No        :</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\';\">MPN No         :</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\';\">Total Status    :</span></p></body></html>", None))
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\';\">Chip Type       </span><span style=\" font-family:\'Arial Narrow\'; font-weight:600;\">:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\';\">Firmware Ver </span><span style=\" font-family:\'Arial Narrow\'; font-weight:600;\">:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\';\">PO No             </span><span style=\" font-family:\'Arial Narrow\'; font-weight:600;\">:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\';\">MPN No          </span><span style=\" font-family:\'Arial Narrow\'; font-weight:600;\">:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\';\">Total Status     </span><span style=\" font-family:\'Arial Narrow\'; font-weight:600;\">:</span></p></body></html>", None))
         self.textBrowser_2.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Comic Sans MS\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Arial Narrow\'; font-size:10pt;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:\'Arial Narrow\'; font-size:10pt;\"><br /></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\'; font-size:14pt;\">Server address:  </span><span style=\" font-family:\'Arial Narrow\'; font-size:14pt; font-weight:600;\">factory.espressif.com</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\'; font-size:14pt;\">Factory ID         :</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\'; font-size:14pt;\">Batch ID            :</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\'; font-size:14pt;\">Fac-Plan ID      :</span></p>\n"
-"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\'; font-size:14pt;\">Loacl Status     :</span></p></body></html>", None))
-        self.textEdit.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\'; font-size:14pt;\">Server address</span><span style=\" font-family:\'Arial Narrow\'; font-size:14pt; font-weight:600;\">:</span><span style=\" font-family:\'Arial Narrow\'; font-size:14pt;\">  </span><span style=\" font-family:\'Arial Narrow\'; font-size:14pt; font-weight:600;\">factory.espressif.com</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\'; font-size:14pt;\">Factory ID         </span><span style=\" font-family:\'Arial Narrow\'; font-size:14pt; font-weight:600;\">:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\'; font-size:14pt;\">Batch ID            </span><span style=\" font-family:\'Arial Narrow\'; font-size:14pt; font-weight:600;\">:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\'; font-size:14pt;\">Fac-Plan ID      </span><span style=\" font-family:\'Arial Narrow\'; font-size:14pt; font-weight:600;\">:</span></p>\n"
+"<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\'; font-size:14pt;\">Loacl Status     </span><span style=\" font-family:\'Arial Narrow\'; font-size:14pt; font-weight:600;\">:</span></p></body></html>", None))
+        self.tePosition.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'SimSun\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:\'Arial Narrow\'; font-weight:600;\">Position : </span></p></body></html>", None))
         self.label.setText(_translate("MainWindow", "Overall production state", None))
         self.label_2.setText(_translate("MainWindow", "Local production state", None))
-        self.lbModuleType.setText(_translate("MainWindow", "WROOM02", None))
+        self.lbChipType.setText(_translate("MainWindow", "WROOM02", None))
         self.lbFWVer.setText(_translate("MainWindow", "Ver_1.0.0", None))
         self.lbPoNo.setText(_translate("MainWindow", "c0392", None))
         self.lbMPNNo.setText(_translate("MainWindow", "hehe", None))
@@ -1531,7 +1533,7 @@ class Ui_MainWindow(object):
         self.lbBatchId.setText(_translate("MainWindow", "XXXX", None))
         self.lbFacId.setText(_translate("MainWindow", "XXXX", None))
         self.lbWorkStat.setText(_translate("MainWindow", "xx/xxx", None))
-        self.lbServerStat.setText(_translate("MainWindow", "Local/Cloud", None))
+        self.lbPosition.setText(_translate("MainWindow", "Local/Cloud", None))
         self.pbAllStart.setText(_translate("MainWindow", "ALL START", None))
         self.menu.setTitle(_translate("MainWindow", "File", None))
         self.menuTools.setTitle(_translate("MainWindow", "Config", None))

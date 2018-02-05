@@ -1,33 +1,35 @@
 [common_conf]
-CHIP_TYPE = WROOM-32
-FW_VER = ver_1.0.0
-PO_NO = c0392
-MPN_NO = 2018010001
-FAC_SID = esp-own-te
-BATCH_SID = bf54c4adf0
-FAC_PlAN = --
-CLOUD_NO = --
+position = local
+chip_type = WROOM-32
+fw_ver = ver_1.0.0
+po_no = c0392
+mpn_no = 2018010001
+fac_sid = esp-own-test-FID
+batch_sid = bf54c4adf0
+fac_plan = --
+cloud_no = --
 
 [DUT1]
-PORT1 = COM6
-RATE1 = 74880
-PORT2 = COM6
-RATE2 = 115200
+port1 = COM6
+rate1 = 115200
+port2 = COM6
+rate2 = 115200
 
 [DUT2]
-PORT1 = COM8
-RATE1 = 115200
-PORT2 = COM8
-RATE2 = 115200
+port1 = COM8
+rate1 = 115200
+port2 = COM8
+rate2 = 115200
 
 [DUT3]
-PORT1 = COM6
-RATE1 = 115200
-PORT2 = COM6
-RATE2 = 115200
+port1 = COM6
+rate1 = 115200
+port2 = COM6
+rate2 = 115200
 
 [DUT4]
-PORT1 = COM6
-RATE1 = 115200
-PORT2 = COM6
-RATE2 = 115200
+port1 = COM6
+rate1 = 115200
+port2 = COM6
+rate2 = 38400
+

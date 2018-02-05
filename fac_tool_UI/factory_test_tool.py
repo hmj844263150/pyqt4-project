@@ -139,7 +139,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 self.DUT_PORTS.append(eval('self.cbPort'+str(i)+'_'+str(j)))
                 self.DUT_RATES.append(eval('self.cbPortRate'+str(i)+'_'+str(j)))
                 eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(True)
-        
+       
     def _setup_signal(self):
         p = self.trwTestFlow.children()[0]
         QtCore.QObject.connect(self.trwTestFlow, QtCore.SIGNAL(_fromUtf8("itemChanged(QTreeWidgetItem*,int)")), self.testflow_check)
@@ -155,6 +155,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         for cb in self.DUT_PORTS: cb.clicked.connect(self.change_port)
         #for cb in self.DUT_RATES: QtCore.QObject.connect(cb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QComboBox,QString)")), self.change_baud)
         self.SIGNAL_PRINT.connect(self.print_log)
+        self.actionCloud.changed.connect(self.change_position)
         
         QtCore.QMetaObject.connectSlotsByName(self)
     
@@ -241,8 +242,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             if rst:       
                 try:
                     if int(verify) == (y+(m+d+h))%10000:
-                        print ('verify pass')
                         self.testflow_update()
+                        print ('verify pass')
                         break
                     else:
                         print ('verify fail')
@@ -366,7 +367,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         try:
             conf.read(file_path)
             for i in conf.sections():
-                self.dut_config[i] = dict(conf.items(i))  
+                self.dut_config[i] = dict(conf.items(i))
                 
             index = self.cbChipType.findText(conf.get('common_conf', 'CHIP_TYPE'))
             if index >= 0:
@@ -395,7 +396,25 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                         eval('self.cbPortRate'+str(i)+'_'+str(j)).setCurrentIndex(self.BAUD_NUM-1)
                         eval('self.lePortRate'+str(i)+'_'+str(j)).setText(conf.get('DUT'+str(i), 'RATE'+str(j)))
                         eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(False)
-                               
+            
+            if conf.get('common_conf', 'position') == 'local':
+                self.actionCloud.setChecked(False)
+                self.wgCloudConfig.setEnabled(False)
+                self.wgLocalConfig.setEnabled(True)
+                self.lbPosition.setText('Loacl')
+            else:
+                self.actionCloud.setChecked(True)
+                self.wgCloudConfig.setEnabled(True)
+                self.wgLocalConfig.setEnabled(False)
+                self.lbPosition.setText('Cloud')
+                
+            self.lbChipType.setText(conf.get('common_conf', 'chip_type'))
+            self.lbFWVer.setText(self.leFWVer.text())
+            self.lbPoNo.setText(self.lePoNo.text())
+            self.lbMPNNo.setText(self.leMPNNo.text())
+            self.lbFacId.setText(self.leFacId.text())
+            self.lbBatchId.setText(self.leBatchId.text())
+            self.lbFacPlan.setText(self.leFacPlan.text())
         except:
             print ('load to config file fail')
     
@@ -425,35 +444,42 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     print ('please input 4 bytes Number')
             else:
                 break
-            
+    
     def dut_update(self, file_path='./config/dutConfig'):
-        with open(file_path, 'w') as fd:
-            fd.write('[common_conf]\n')
-            if self.cbChipType.currentIndex() < self.CHIP_TYPE_NUM - 1:
-                fd.write('CHIP_TYPE = {}\n'.format(self.cbChipType.currentText()))
-            else:
-                fd.write('CHIP_TYPE = {}\n'.format(self.leChipType.text()))
-            fd.write('FW_VER = {}\n'.format(self.leFWVer.text()))
-            fd.write('PO_NO = {}\n'.format(self.lePoNo.text()))
-            fd.write('MPN_NO = {}\n'.format(self.leMPNNo.text()))
-            fd.write('FAC_SID = {}\n'.format(self.leFacId.text()))
-            fd.write('BATCH_SID = {}\n'.format(self.leBatchId.text()))
-            fd.write('FAC_PlAN = {}\n'.format(self.leFacPlan.text()))
-            fd.write('CLOUD_NO = {}\n'.format(self.leConfigId.text()))
+        conf = ConfigParser.ConfigParser()
+        conf.read(file_path)
+        if not conf.has_section('common_conf'):
+            conf.add_section('common_conf')
             
-            for i in xrange(1, self.DUT_NUM+1):
-                fd.write('\n[DUT{}]\n'.format(str(i)))
-                for j in xrange(1, 3):
-                    fd.write('PORT{} = {}\n'.format(str(j), str(eval('self.cbPort'+str(i)+'_'+str(j)).currentText())))
-                    if eval('self.cbPort'+str(i)+'_'+str(j)).currentIndex() < self.BAUD_NUM:
-                        fd.write('RATE{} = {}\n'.format(str(j), str(eval('self.cbPortRate'+str(i)+'_'+str(j)).currentText())))
-                    else:
-                        fd.write('RATE{} = {}\n'.format(str(j), str(eval('self.lePortRate'+str(i)+'_'+str(j)).text())))
-                        
+        conf.set('common_conf', 'POSITION', 'cloud' if self.actionCloud.isChecked() else 'local')
+        if self.cbChipType.currentIndex() < self.CHIP_TYPE_NUM - 1:
+            conf.set('common_conf', 'CHIP_TYPE', self.cbChipType.currentText())
+        else:
+            conf.set('common_conf', 'CHIP_TYPE', self.leChipType.text())
+        conf.set('common_conf', 'FW_VER', self.leFWVer.text())
+        conf.set('common_conf', 'PO_NO', self.lePoNo.text())
+        conf.set('common_conf', 'MPN_NO', self.leMPNNo.text())
+        conf.set('common_conf', 'FAC_SID', self.leFacId.text())
+        conf.set('common_conf', 'BATCH_SID', self.leBatchId.text())
+        conf.set('common_conf', 'FAC_PlAN', self.leFacPlan.text())
+        conf.set('common_conf', 'CLOUD_NO', self.leConfigId.text())
+        
+        for i in xrange(1, self.DUT_NUM+1):
+            if not conf.has_section('DUT'+str(i)):
+                conf.add_section('DUT'+str(i))
+            for j in xrange(1, 3):
+                conf.set('DUT'+str(i), 'PORT'+str(j), str(eval('self.cbPort'+str(i)+'_'+str(j)).currentText()))
+                if eval('self.cbPort'+str(i)+'_'+str(j)).currentIndex() < self.BAUD_NUM:
+                    conf.set('DUT'+str(i), 'RATE'+str(j), str(eval('self.cbPortRate'+str(i)+'_'+str(j)).currentText()))
+                else:
+                    conf.set('DUT'+str(i), 'RATE'+str(j), str(eval('self.lePortRate'+str(i)+'_'+str(j)).text()))
+        conf.write(open(file_path, 'w'))
+        
+        self.dut_reset(file_path)
+            
         if file_path=='./config/dutConfig':
             msg = QtGui.QMessageBox(QtGui.QMessageBox.NoIcon, '!!!','The DUT config update succ!!    ')
-            msg.exec_()
-    
+            msg.exec_()    
     
     def print_log(self, tb, log):
         log=str(log)
@@ -465,13 +491,26 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         else:
             self.leChipType.setHidden(True)
     
-    
-def run():       
+    def change_position(self):
+        if self.actionCloud.isChecked():
+            self.wgLocalConfig.setEnabled(False)
+            self.wgCloudConfig.setEnabled(True)
+            self.lbPosition.setText('Cloud')
+            self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 0);\n"
+                                                    "border-color: rgb(0, 255, 255);"))
+        else:
+            self.wgLocalConfig.setEnabled(True)
+            self.wgCloudConfig.setEnabled(False)
+            self.lbPosition.setText('Loacl')
+            self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
+                                                    "border-color: rgb(0, 255, 255);"))            
+        
+
+def run():
     app = QtGui.QApplication(sys.argv)
     ui = FactoryToolUI()
     ui.show()
-    sys.exit(app.exec_())        
-    pass
+    sys.exit(app.exec_())
 
 if __name__ == "__main__":
     run()
