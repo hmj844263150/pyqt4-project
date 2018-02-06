@@ -5,6 +5,7 @@ import time
 import ConfigParser
 import serial
 import serial.tools.list_ports 
+import threading
 from my_widget import *
 from io import StringIO
 
@@ -25,86 +26,30 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 def fac_test(stdout, dut_config, test_flow):
-    sys.stdout = stdout
-    print (test_flow['USER_FW_VER_BAUD'])
-
-class WarningBox(QtGui.QDialog):
-    def __init__(self,str_title,str_text,input_box_bool,list_bool):##自己写一个warningbox
-        super(WarningBox,self).__init__(parent = None)
-        #self.setWindowFlags(QtCore.Qt.Popup)
+    #sys.stdout = stdout
+    if dut_config['common_conf']['test_from'] == 'FLASH':
+        dut_num = dut_config['common_conf']['dut_num']
+        baudrate = dut_config['DUT'+dut_num]['rate1']
+        port = dut_config['DUT'+dut_num]['port1']
+        import random
+        i = random.randint(0, 4)
         
-        self.return_value = list_bool
-        self.setWindowTitle(_translate("WarningBox", str_title, None))
-        self.setMinimumSize(QtCore.QSize(280, 160))
-        self.setMaximumSize(QtCore.QSize(280, 160))
-        self.resize(280, 160)
-        #self.widget = QtGui.QWidget(self)
-        #self.widget.setGeometry(QtCore.QRect(0, 0, 281, 161))
-        self.buttonSure = QtGui.QPushButton(self)
-        self.buttonSure.setGeometry(QtCore.QRect(110, 120, 75, 23))
-        self.buttonSure.setText(_translate("WarningBox", "Sure", None))
-        self.buttonCancel = QtGui.QPushButton(self)
-        self.buttonCancel.setText(_translate("WarningBox", "Cancel", None))
-        self.buttonCancel.setGeometry(QtCore.QRect(190, 120, 75, 23))
-        self.leVerify = QtGui.QLineEdit(self)
-        self.leVerify.setGeometry(QtCore.QRect(50, 60, 181, 31))
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.leVerify.setFont(font)
-        self.label = QtGui.QLabel(self)
-        self.label.setText(_translate("WarningBox", str_text, None))  
-        self.label.setGeometry(QtCore.QRect(70, 30, 121, 21))
-        font = QtGui.QFont()
-        font.setPointSize(14)
-        self.label.setFont(font)
-        QtCore.QMetaObject.connectSlotsByName(self)
-        self.buttonSure.clicked.connect(self.sureOpra)
-        self.buttonCancel.clicked.connect(self.cancelOpra)
-        
-        self.filter = Filter()
-        self.setFocusPolicy(QtCore.Qt.WheelFocus)
-        self.installEventFilter(self.filter)
-        self.filter.message.connect(self.activiteEvent)
-        self.show()
-        
-    def activiteEvent(self, value):
-        print value
-        if value == 3: # activite state change
-            self.activateWindow() # active the window
-            self.raise_()   # pop dialog            
+        stdout.write('[state]run')
+        stdout.write('[mac]18fe34000001')
+        stdout.write(port)
+        stdout.write(baudrate)
+        try:
+            ser = serial.Serial(port=port, baudrate=baudrate, timeout=1)
+            ser.write('esp_set_flash_jump_start 1\r')
+            rl = ser.readline()            
+        except:
+            stdout.write('open serial fail')
+            
+    elif dut_config['common_conf']['test_from'] == 'RAM':
+        pass
+    else:
+        pass
     
-    def sureOpra(self):
-        self.close()
-        self.return_value.append(1)
-
-    def cancelOpra(self):
-        self.close()
-        self.return_value.append(0)
-        
-class Filter(QtCore.QObject):
-    message = QtCore.pyqtSignal(int)
-    def __init__(self):
-        super(Filter, self).__init__()
-        self.counter = 0
-        
-    def eventFilter(self, obj, event):
-        #popupVisible = obj != self
-        if event.type() == QtCore.QEvent.FocusOut:
-            self.message.emit(-1)
-        if event.type()==QtCore.QEvent.FocusIn:
-            self.counter += 1
-            self.message.emit(1)
-        if event.type()==QtCore.QEvent.WindowActivate:
-            self.message.emit(2)
-        if event.type() ==QtCore.QEvent.WindowDeactivate:
-            self.message.emit(3)
-        if event.type()==QtCore.QEvent.KeyPress:
-            print event.key()
-            if event.key() == QtCore.Qt.Key_Tab:
-                print  QtCore.Qt.AltModifier
-        return False 
-
-
 class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     _SP_SIGN = '$$'
     SIGNAL_PRINT = QtCore.pyqtSignal(QtGui.QTextBrowser, str)
@@ -112,6 +57,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     DUT_PORTS = []
     DUT_RATES = []
     DUT_START_BTNS = []
+    DUT_STOP_BTNS = []
     DUT_LOG_BTNS = []
     CHIP_TYPE_NUM = 0
     
@@ -134,7 +80,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     def _ui_init(self):
         for i in xrange(1,self.DUT_NUM+1):
             self.DUT_START_BTNS.append(eval('self.pbStart'+str(i)))
-            self.DUT_LOG_BTNS.append(eval('self.pbLog'+str(i)))
+            self.DUT_STOP_BTNS.append(eval('self.pbStop'+str(i)))
+            self.DUT_LOG_BTNS.append(eval('self.maLog'+str(i)))
             for j in xrange(1,3):
                 self.DUT_PORTS.append(eval('self.cbPort'+str(i)+'_'+str(j)))
                 self.DUT_RATES.append(eval('self.cbPortRate'+str(i)+'_'+str(j)))
@@ -150,12 +97,26 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         QtCore.QObject.connect(self.pbDutReset, QtCore.SIGNAL(_fromUtf8("clicked()")), self.dut_reset)
         QtCore.QObject.connect(self.pbDutSubmit, QtCore.SIGNAL(_fromUtf8("clicked()")), self._dut_submit)
         QtCore.QObject.connect(self.cbChipType, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.chip_type_change)
+        QtCore.QObject.connect(self.cbTestFrom, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.test_from_change)
+        QtCore.QObject.connect(self.pbBinPath, QtCore.SIGNAL(_fromUtf8("clicked()")), self.showFileDialog)
         for btn in self.DUT_START_BTNS: btn.clicked.connect(self.single_start)
-        for btn in self.DUT_LOG_BTNS: btn.clicked.connect(self.pop_log)
+        for btn in self.DUT_STOP_BTNS: btn.clicked.connect(self.single_stop)
         for cb in self.DUT_PORTS: cb.clicked.connect(self.change_port)
-        #for cb in self.DUT_RATES: QtCore.QObject.connect(cb, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(QComboBox,QString)")), self.change_baud)
+        self.maLog1.triggered.connect(lambda :self.pop_log(1))
+        self.maLog2.triggered.connect(lambda :self.pop_log(2))
+        self.maLog3.triggered.connect(lambda :self.pop_log(3))
+        self.maLog4.triggered.connect(lambda :self.pop_log(4))
+        self.cbPortRate1_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate1_1))
+        self.cbPortRate1_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate1_2))
+        self.cbPortRate2_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate2_1))
+        self.cbPortRate2_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate2_2))
+        self.cbPortRate3_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate3_1))
+        self.cbPortRate3_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate3_2))
+        self.cbPortRate4_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate4_1))
+        self.cbPortRate4_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate4_2))
+        
         self.SIGNAL_PRINT.connect(self.print_log)
-        self.actionCloud.changed.connect(self.change_position)
+        self.maCloud.changed.connect(self.change_position)
         
         QtCore.QMetaObject.connectSlotsByName(self)
     
@@ -325,16 +286,31 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         id = int(btn.objectName()[len(btn.objectName())-1])
         if id in (1,2,3,4):
             stdout_ = self._Print(self, eval("self.tbLog"+str(id)))
-            fac_test(stdout_, self.dut_config, self.test_flow)
-            
+            self.dut_config['common_conf']['dut_num'] = str(id)
+            t = threading.Thread(target=fac_test, args=[stdout_, self.dut_config, self.test_flow])
+            t.start()
         else:
             print('error: get strat btn err')
-       
+    
+    def single_stop(self, btn):
+        id = int(btn.objectName()[len(btn.objectName())-1])
+        if id == 1:
+            pass
+        elif id == 2:
+            pass
+        elif id == 3:
+            pass
+        elif id == 4:
+            pass
+        else:
+            print('error: get log btn err')
+    
     def print_(self, log):
         self.SIGNAL_PRINT.emit(log)
         
-    def pop_log(self, btn):
-        id = int(btn.objectName()[len(btn.objectName())-1])
+    def pop_log(self, index):
+        id = index
+        print id
         if id == 1:
             pass
         elif id == 2:
@@ -354,28 +330,78 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             cb_port.addItem(_fromUtf8(port[0]))
         cb_port.showPopup()
     
-    # TODO.
-    def change_baud(self, cb_baud): 
-        pass
+    def change_baud(self, cb):
+        if cb.currentText() == 'custom':
+            eval('self.lePortRate{}'.format(cb.objectName()[-3:])).setHidden(False)
+        else:
+            eval('self.lePortRate{}'.format(cb.objectName()[-3:])).setHidden(True)
         
     def cloud_sync(self):
-        pass
-    
+        url = 'http://127.0.0.1:8080/hp_register.py?opration=config&user_token={}'.format(self.leConfigId.text()) # test_config_002
+        import requests
+        import json
+        def get(url, datas=None):
+            response = requests.get(url, params=datas)
+            json = response.json()
+            return json
+        
+        rsp = get(url)
+        #print rsp
+        
+        if rsp['production'] == False or rsp['testflow'] == False:
+            self.lbSyncState.setText('get cloud config fail')
+            return
+        self.lbSyncState.setText('get cloud config succ')
+        production, testflow = list(rsp['production']), list(rsp['testflow'])
+        conf = ConfigParser.ConfigParser()
+        try:
+            conf.read('./config/dutConfig')
+            conf.set('common_conf','position', 'cloud')
+            conf.set('common_conf','fw_ver', production[3])
+            conf.set('common_conf','po_no', production[4])
+            conf.set('common_conf','mpn_no', production[1])
+            conf.set('common_conf','fac_sid', production[5])
+            conf.set('common_conf','batch_sid', production[6])
+            conf.set('common_conf','fac_plan', production[7])
+            conf.set('common_conf','cloud_no', production[0])
+            conf.set('common_conf','test_from', production[8])
+            conf.set('common_conf','auto_start', str(production[11]))
+            conf.set('chip_conf','freq', production[9])
+            conf.set('chip_conf','efuse_mode', production[10])
+            conf.set('chip_conf','chip_type', production[2])
+            conf.write(open('./config/dutConfig', 'w'))
+        except:
+            print 'dut config file error'
+        self.dut_reset(file_path='./config/dutConfig')
+        item = self.trwTestFlow.invisibleRootItem()
+        if testflow[0] == '\x01':
+            item.child(0).setCheckState(0, 2)
+        else:
+            item.child(0).setCheckState(0, 0)
+        if testflow[1] == '\x01':
+            item.child(1).setCheckState(0, 2)
+        else:
+            item.child(1).setCheckState(0, 0)
+        if testflow[2] == '\x01':
+            item.child(2).setCheckState(0, 2)
+        else:
+            item.child(2).setCheckState(0, 0)
+        self.testflow_update()
+        
     def dut_reset(self, file_path='./config/dutConfig'):
         conf = ConfigParser.ConfigParser()
-              
         try:
             conf.read(file_path)
             for i in conf.sections():
                 self.dut_config[i] = dict(conf.items(i))
                 
-            index = self.cbChipType.findText(conf.get('common_conf', 'CHIP_TYPE'))
+            index = self.cbChipType.findText(conf.get('chip_conf', 'CHIP_TYPE'))
             if index >= 0:
                 self.cbChipType.setCurrentIndex(index)  
                 self.leChipType.setHidden(True)
             else:
                 self.cbChipType.setCurrentIndex(self.CHIP_TYPE_NUM-1)
-                self.leChipType.setText(conf.get('common_conf', 'CHIP_TYPE'))
+                self.leChipType.setText(conf.get('chip_conf', 'CHIP_TYPE'))
                 self.leChipType.setHidden(False)
             self.leFWVer.setText(conf.get('common_conf', 'FW_VER'))
             self.lePoNo.setText(conf.get('common_conf', 'PO_NO'))
@@ -384,6 +410,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             self.leBatchId.setText(conf.get('common_conf', 'BATCH_SID'))
             self.leFacPlan.setText(conf.get('common_conf', 'FAC_PlAN'))
             self.leConfigId.setText(conf.get('common_conf', 'CLOUD_NO'))
+            self.leBinPath.setText(conf.get('common_conf', 'BIN_PATH'))
             for i in xrange(1, self.DUT_NUM+1):
                 for j in xrange(1, 3):
                     eval('self.cbPort'+str(i)+'_'+str(j)).setItemText(0, conf.get('DUT'+str(i), 'PORT'+str(j)))
@@ -397,18 +424,27 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                         eval('self.lePortRate'+str(i)+'_'+str(j)).setText(conf.get('DUT'+str(i), 'RATE'+str(j)))
                         eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(False)
             
-            if conf.get('common_conf', 'position') == 'local':
-                self.actionCloud.setChecked(False)
-                self.wgCloudConfig.setEnabled(False)
-                self.wgLocalConfig.setEnabled(True)
-                self.lbPosition.setText('Loacl')
-            else:
-                self.actionCloud.setChecked(True)
+            if conf.get('common_conf', 'position') == 'cloud':
+                self.maCloud.setChecked(True)
                 self.wgCloudConfig.setEnabled(True)
                 self.wgLocalConfig.setEnabled(False)
                 self.lbPosition.setText('Cloud')
+            else:
+                self.maCloud.setChecked(False)
+                self.wgCloudConfig.setEnabled(False)
+                self.wgLocalConfig.setEnabled(True)
+                self.lbPosition.setText('Loacl')                
+            
+            if conf.get('common_conf', 'test_from') == 'RAM':
+                self.cbTestFrom.setCurrentIndex(0)
+            else:
+                self.cbTestFrom.setCurrentIndex(1)
                 
-            self.lbChipType.setText(conf.get('common_conf', 'chip_type'))
+            self.cbFREQ.setCurrentIndex(self.cbFREQ.findText(conf.get('chip_conf', 'freq')))
+            self.cbAutoStart.setCurrentIndex(self.cbAutoStart.findText(conf.get('common_conf', 'auto_start')))
+            self.cbEfuseMode.setCurrentIndex(self.cbEfuseMode.findText(conf.get('chip_conf', 'efuse_mode')))
+                
+            self.lbChipType.setText(conf.get('chip_conf', 'chip_type'))
             self.lbFWVer.setText(self.leFWVer.text())
             self.lbPoNo.setText(self.lePoNo.text())
             self.lbMPNNo.setText(self.leMPNNo.text())
@@ -450,12 +486,18 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         conf.read(file_path)
         if not conf.has_section('common_conf'):
             conf.add_section('common_conf')
+        if not conf.has_section('chip_conf'):
+            conf.add_section('chip_conf')
             
-        conf.set('common_conf', 'POSITION', 'cloud' if self.actionCloud.isChecked() else 'local')
+        conf.set('common_conf', 'POSITION', 'cloud' if self.maCloud.isChecked() else 'local')
+        conf.set('common_conf', 'TEST_FROM', self.cbTestFrom.currentText())
+        conf.set('chip_conf', 'FREQ', self.cbFREQ.currentText())
+        conf.set('chip_conf', 'efuse_mode', self.cbEfuseMode.currentText())
+        conf.set('common_conf', 'auto_start', self.cbAutoStart.currentText())
         if self.cbChipType.currentIndex() < self.CHIP_TYPE_NUM - 1:
-            conf.set('common_conf', 'CHIP_TYPE', self.cbChipType.currentText())
+            conf.set('chip_conf', 'CHIP_TYPE', self.cbChipType.currentText())
         else:
-            conf.set('common_conf', 'CHIP_TYPE', self.leChipType.text())
+            conf.set('chip_conf', 'CHIP_TYPE', self.leChipType.text())
         conf.set('common_conf', 'FW_VER', self.leFWVer.text())
         conf.set('common_conf', 'PO_NO', self.lePoNo.text())
         conf.set('common_conf', 'MPN_NO', self.leMPNNo.text())
@@ -463,13 +505,14 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         conf.set('common_conf', 'BATCH_SID', self.leBatchId.text())
         conf.set('common_conf', 'FAC_PlAN', self.leFacPlan.text())
         conf.set('common_conf', 'CLOUD_NO', self.leConfigId.text())
+        conf.set('common_conf', 'BIN_PATH', self.leBinPath.text())
         
         for i in xrange(1, self.DUT_NUM+1):
             if not conf.has_section('DUT'+str(i)):
                 conf.add_section('DUT'+str(i))
             for j in xrange(1, 3):
                 conf.set('DUT'+str(i), 'PORT'+str(j), str(eval('self.cbPort'+str(i)+'_'+str(j)).currentText()))
-                if eval('self.cbPort'+str(i)+'_'+str(j)).currentIndex() < self.BAUD_NUM:
+                if eval('self.cbPortRate'+str(i)+'_'+str(j)).currentIndex() < self.BAUD_NUM-1:
                     conf.set('DUT'+str(i), 'RATE'+str(j), str(eval('self.cbPortRate'+str(i)+'_'+str(j)).currentText()))
                 else:
                     conf.set('DUT'+str(i), 'RATE'+str(j), str(eval('self.lePortRate'+str(i)+'_'+str(j)).text()))
@@ -481,8 +524,31 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             msg = QtGui.QMessageBox(QtGui.QMessageBox.NoIcon, '!!!','The DUT config update succ!!    ')
             msg.exec_()    
     
+    def state_change(self, dut_num, state, style):
+        leState = eval("self.leStatus{}".format(dut_num))
+        leState.setText(state)
+        leState.setStyleSheet(_fromUtf8(style+"color: rgb(255, 255, 255);"))
+        
     def print_log(self, tb, log):
         log=str(log)
+        if log.startswith('[state]'):
+            if log.lower().find('idle') >= 0:
+                state = 'IDLE'
+                style = "background-color: rgb(0, 170, 255);\n"
+            elif log.lower().find('run') >= 0:
+                state = 'RUN'
+                style = "background-color: rgb(255, 255, 0);\n"
+            elif log.lower().find('pass') >= 0:
+                state = 'PASS'
+                style = "background-color: rgb(0, 170, 0);\n"
+            else:
+                state = 'FAIL'
+                style = "background-color: rgb(255, 0, 0);\n"
+            
+            self.state_change(tb.objectName()[-1], state, style)
+        elif log.startswith('[mac]'):
+            eval("self.lbMAC{}".format(tb.objectName()[-1])).setText(log[5:17])
+            
         tb.append(log)
     
     def chip_type_change(self, index):
@@ -491,20 +557,35 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         else:
             self.leChipType.setHidden(True)
     
+    def test_from_change(self, index):
+        self.dut_config['common_conf']['test_from'] = self.cbTestFrom.currentText()
+        if self.cbTestFrom.currentText() == 'RAM':
+            self.pbBinPath.setEnabled(True)
+            self.leBinPath.setEnabled(True)
+        else:
+            self.pbBinPath.setEnabled(False)
+            self.leBinPath.setEnabled(False)            
+    
     def change_position(self):
-        if self.actionCloud.isChecked():
+        if self.maCloud.isChecked():
             self.wgLocalConfig.setEnabled(False)
             self.wgCloudConfig.setEnabled(True)
+            self.twTestArea.widget(2).setEnabled(False)
             self.lbPosition.setText('Cloud')
             self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 0);\n"
                                                     "border-color: rgb(0, 255, 255);"))
         else:
             self.wgLocalConfig.setEnabled(True)
             self.wgCloudConfig.setEnabled(False)
+            self.twTestArea.widget(2).setEnabled(True)
             self.lbPosition.setText('Loacl')
             self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
                                                     "border-color: rgb(0, 255, 255);"))            
-        
+    
+    def showFileDialog(self):
+        filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', './bin/', filter='firmware(*.bin);;all(*.*)', selectedFilter='firmware(*.bin)')
+        self.leBinPath.setText(filename)
+        self.dut_config['common_conf']['bin_path'] = filename
 
 def run():
     app = QtGui.QApplication(sys.argv)

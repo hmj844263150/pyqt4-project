@@ -1,13 +1,15 @@
 [common_conf]
-position = local
-chip_type = WROOM-32
-fw_ver = ver_1.0.0
-po_no = c0392
-mpn_no = 2018010001
-fac_sid = esp-own-test-FID
+position = cloud
+fw_ver = ver_1.1.1
+po_no = c0393
+mpn_no = 2018020001
+fac_sid = esp-own-test-FID-dbd42d01
 batch_sid = bf54c4adf0
-fac_plan = --
-cloud_no = --
+fac_plan = just-test
+cloud_no = test_config_002
+test_from = FLASH
+bin_path = D:/VM/share/new_factory_tools/fac_tool_UI/bin/esp8266_fac_jump_test.bin
+auto_start = 0
 
 [DUT1]
 port1 = COM6
@@ -17,19 +19,24 @@ rate2 = 115200
 
 [DUT2]
 port1 = COM8
-rate1 = 115200
+rate1 = 9600
 port2 = COM8
-rate2 = 115200
+rate2 = 1152000
 
 [DUT3]
 port1 = COM6
-rate1 = 115200
+rate1 = 74880
 port2 = COM6
-rate2 = 115200
+rate2 = 38400
 
 [DUT4]
 port1 = COM6
-rate1 = 115200
+rate1 = 921600
 port2 = COM6
-rate2 = 38400
+rate2 = 115200
+
+[chip_conf]
+freq = 26M
+efuse_mode = 1
+chip_type = WROOM-02
 
