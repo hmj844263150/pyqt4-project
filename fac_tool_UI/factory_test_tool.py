@@ -337,7 +337,11 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             eval('self.lePortRate{}'.format(cb.objectName()[-3:])).setHidden(True)
         
     def cloud_sync(self):
-        url = 'http://127.0.0.1:8080/hp_register.py?opration=config&user_token={}'.format(self.leConfigId.text()) # test_config_002
+        conf = ConfigParser.ConfigParser()
+        conf.read('./config/dutConfig')
+        ip = conf.get('common_conf', 'tmp_server_ip')
+        port = conf.get('common_conf', 'tmp_server_port')
+        url = 'http://{}:{}/hp_register.py?opration=config&user_token={}'.format(ip,port,self.leConfigId.text()) # test_config_002
         import requests
         import json
         def get(url, datas=None):
