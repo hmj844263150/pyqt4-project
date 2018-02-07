@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'factory_test_tool_ui.ui'
 #
-# Created: Tue Feb 06 14:28:53 2018
+# Created: Tue Feb 06 18:43:31 2018
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -131,7 +131,7 @@ class Ui_MainWindow(object):
         self.leStatus2.setAlignment(QtCore.Qt.AlignCenter)
         self.leStatus2.setReadOnly(True)
         self.leStatus2.setObjectName(_fromUtf8("leStatus2"))
-        self.pbStop2 = MyPushButton(self.tab)
+        self.pbStop2 = QtGui.QPushButton(self.tab)
         self.pbStop2.setGeometry(QtCore.QRect(442, 62, 41, 21))
         self.pbStop2.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 0);\n"
 "background-color: rgb(200, 200, 200);"))
@@ -183,7 +183,7 @@ class Ui_MainWindow(object):
         self.leStatus3.setAlignment(QtCore.Qt.AlignCenter)
         self.leStatus3.setReadOnly(True)
         self.leStatus3.setObjectName(_fromUtf8("leStatus3"))
-        self.pbStop3 = MyPushButton(self.tab)
+        self.pbStop3 = QtGui.QPushButton(self.tab)
         self.pbStop3.setGeometry(QtCore.QRect(685, 62, 41, 21))
         self.pbStop3.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 0);\n"
 "background-color: rgb(200, 200, 200);"))
@@ -235,7 +235,7 @@ class Ui_MainWindow(object):
         self.leStatus4.setAlignment(QtCore.Qt.AlignCenter)
         self.leStatus4.setReadOnly(True)
         self.leStatus4.setObjectName(_fromUtf8("leStatus4"))
-        self.pbStop4 = MyPushButton(self.tab)
+        self.pbStop4 = QtGui.QPushButton(self.tab)
         self.pbStop4.setGeometry(QtCore.QRect(928, 62, 41, 21))
         self.pbStop4.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 0);\n"
 "background-color: rgb(200, 200, 200);"))
@@ -260,27 +260,27 @@ class Ui_MainWindow(object):
         self.tbLog4 = QtGui.QTextBrowser(self.tab)
         self.tbLog4.setGeometry(QtCore.QRect(742, 187, 227, 251))
         self.tbLog4.setObjectName(_fromUtf8("tbLog4"))
-        self.pbStart1 = MyPushButton(self.tab)
+        self.pbStart1 = QtGui.QPushButton(self.tab)
         self.pbStart1.setGeometry(QtCore.QRect(12, 62, 41, 21))
         self.pbStart1.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 0);\n"
 "background-color: rgb(200, 200, 200);"))
         self.pbStart1.setObjectName(_fromUtf8("pbStart1"))
-        self.pbStart2 = MyPushButton(self.tab)
+        self.pbStart2 = QtGui.QPushButton(self.tab)
         self.pbStart2.setGeometry(QtCore.QRect(256, 62, 41, 21))
         self.pbStart2.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 0);\n"
 "background-color: rgb(200, 200, 200);"))
         self.pbStart2.setObjectName(_fromUtf8("pbStart2"))
-        self.pbStart3 = MyPushButton(self.tab)
+        self.pbStart3 = QtGui.QPushButton(self.tab)
         self.pbStart3.setGeometry(QtCore.QRect(499, 62, 41, 21))
         self.pbStart3.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 0);\n"
 "background-color: rgb(200, 200, 200);"))
         self.pbStart3.setObjectName(_fromUtf8("pbStart3"))
-        self.pbStart4 = MyPushButton(self.tab)
+        self.pbStart4 = QtGui.QPushButton(self.tab)
         self.pbStart4.setGeometry(QtCore.QRect(742, 62, 41, 21))
         self.pbStart4.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 0);\n"
 "background-color: rgb(200, 200, 200);"))
         self.pbStart4.setObjectName(_fromUtf8("pbStart4"))
-        self.pbStop1 = MyPushButton(self.tab)
+        self.pbStop1 = QtGui.QPushButton(self.tab)
         self.pbStop1.setGeometry(QtCore.QRect(198, 62, 41, 21))
         self.pbStop1.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 0);\n"
 "background-color: rgb(200, 200, 200);"))
@@ -1644,7 +1644,7 @@ class Ui_MainWindow(object):
         self.maLog3.setText(_translate("MainWindow", "Dut3", None))
         self.maLog4.setText(_translate("MainWindow", "Dut4", None))
 
-from my_widget import MyPushButton, MyComboBox
+from my_widget import MyComboBox
 import res_rc
 
 if __name__ == "__main__":

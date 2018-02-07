@@ -9,6 +9,11 @@ import threading
 from my_widget import *
 from io import StringIO
 
+sys.path.append('D:\\VM\\share\\new_factory_tools\\RF_test')
+import esp_test
+sys.path.append('D:\\VM\\share\\new_factory_tools\\upload_to_server')
+from upload_to_server import *
+
 from PyQt4 import QtCore, QtGui
 
 try:
@@ -26,6 +31,11 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
 
 def fac_test(stdout, dut_config, test_flow):
+    sys.path.append('../RF_test')
+    import esp_test
+    esp_test.fac_test(stdout, dut_config, test_flow)
+    if 1:
+        return
     #sys.stdout = stdout
     if dut_config['common_conf']['test_from'] == 'FLASH':
         dut_num = dut_config['common_conf']['dut_num']
@@ -60,6 +70,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     DUT_STOP_BTNS = []
     DUT_LOG_BTNS = []
     CHIP_TYPE_NUM = 0
+    esp_process = {}
     
     class _Print(StringIO):
         def __init__(self, factory_tool, obj):
@@ -82,6 +93,9 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             self.DUT_START_BTNS.append(eval('self.pbStart'+str(i)))
             self.DUT_STOP_BTNS.append(eval('self.pbStop'+str(i)))
             self.DUT_LOG_BTNS.append(eval('self.maLog'+str(i)))
+            
+            self.print_log(eval('self.tbLog{}'.format(str(i))), '[state]idle')
+            
             for j in xrange(1,3):
                 self.DUT_PORTS.append(eval('self.cbPort'+str(i)+'_'+str(j)))
                 self.DUT_RATES.append(eval('self.cbPortRate'+str(i)+'_'+str(j)))
@@ -99,8 +113,17 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         QtCore.QObject.connect(self.cbChipType, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.chip_type_change)
         QtCore.QObject.connect(self.cbTestFrom, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.test_from_change)
         QtCore.QObject.connect(self.pbBinPath, QtCore.SIGNAL(_fromUtf8("clicked()")), self.showFileDialog)
-        for btn in self.DUT_START_BTNS: btn.clicked.connect(self.single_start)
-        for btn in self.DUT_STOP_BTNS: btn.clicked.connect(self.single_stop)
+        #for btn in self.DUT_START_BTNS: btn.clicked.connect(self.single_start)
+        #for btn in self.DUT_STOP_BTNS: btn.clicked.connect(self.single_stop)
+        self.pbStart1.clicked.connect(lambda :self.single_start(self.pbStart1))
+        self.pbStart2.clicked.connect(lambda :self.single_start(self.pbStart2))
+        self.pbStart3.clicked.connect(lambda :self.single_start(self.pbStart3))
+        self.pbStart4.clicked.connect(lambda :self.single_start(self.pbStart4))
+        self.pbStop1.clicked.connect(lambda :self.single_stop(self.pbStop1))
+        self.pbStop2.clicked.connect(lambda :self.single_stop(self.pbStop2))
+        self.pbStop3.clicked.connect(lambda :self.single_stop(self.pbStop3))
+        self.pbStop4.clicked.connect(lambda :self.single_stop(self.pbStop4))        
+        
         for cb in self.DUT_PORTS: cb.clicked.connect(self.change_port)
         self.maLog1.triggered.connect(lambda :self.pop_log(1))
         self.maLog2.triggered.connect(lambda :self.pop_log(2))
@@ -283,12 +306,18 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         pass
     
     def single_start(self, btn):
+        btn.setEnabled(False)
+        btn.setDown(True)
+        
         id = int(btn.objectName()[len(btn.objectName())-1])
         if id in (1,2,3,4):
             stdout_ = self._Print(self, eval("self.tbLog"+str(id)))
             self.dut_config['common_conf']['dut_num'] = str(id)
-            t = threading.Thread(target=fac_test, args=[stdout_, self.dut_config, self.test_flow])
-            t.start()
+            self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow)
+            self.esp_process[id].start()
+            stdout_.write('[state]run')
+            #t = threading.Thread(target=fac_test, args=[stdout_, self.dut_config, self.test_flow])
+            #t.start()
         else:
             print('error: get strat btn err')
     
@@ -304,6 +333,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             pass
         else:
             print('error: get log btn err')
+        if self.esp_process.has_key(id):
+            self.esp_process[id].STOPTEST()
     
     def print_(self, log):
         self.SIGNAL_PRINT.emit(log)
@@ -533,8 +564,10 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         leState.setText(state)
         leState.setStyleSheet(_fromUtf8(style+"color: rgb(255, 255, 255);"))
         
+    
     def print_log(self, tb, log):
         log=str(log)
+        state_flag = True
         if log.startswith('[state]'):
             if log.lower().find('idle') >= 0:
                 state = 'IDLE'
@@ -545,11 +578,25 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             elif log.lower().find('pass') >= 0:
                 state = 'PASS'
                 style = "background-color: rgb(0, 170, 0);\n"
-            else:
+            elif log.lower().find('fail') >= 0:
                 state = 'FAIL'
                 style = "background-color: rgb(255, 0, 0);\n"
-            
-            self.state_change(tb.objectName()[-1], state, style)
+            elif log.lower().find('upload-f') >= 0:
+                state = 'upload-f'
+                style = "background-color: rgb(255, 0, 0);\n"
+            elif log.lower().find('upload-p') >= 0:
+                state = 'upload-p'
+                style = "background-color: rgb(0, 0, 255);\n"            
+            else:
+                state_flag = False
+                
+            if state_flag:
+                self.state_change(tb.objectName()[-1], state, style)
+                
+            if log.lower().find('finish') >= 0:
+                eval('self.pbStart{}'.format(tb.objectName()[-1])).setDown(False)
+                eval('self.pbStart{}'.format(tb.objectName()[-1])).setEnabled(True)
+                
         elif log.startswith('[mac]'):
             eval("self.lbMAC{}".format(tb.objectName()[-1])).setText(log[5:17])
             

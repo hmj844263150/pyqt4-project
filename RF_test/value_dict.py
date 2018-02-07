@@ -1,0 +1,112 @@
+
+SPI_FLASH_VENDOR_DICT = {
+    0xA1 : "FM",
+    0xC8 : "GD",
+    0x9D : "ISSI",
+    0xC2 : "KH",
+    0xEF : "WB",
+    }
+
+SPI_FLASH_MODE_DICT = {
+    0x40: "QUAD",
+    0x30: "DUAL",
+    }
+
+SPI_FLASH_MODE_IDX = {
+     "QUAD": 0,
+     "DUAL": 2,
+    }
+
+
+
+
+SPI_FLASH_SIZE_DICT = {
+    0x09 : "256Kbit",
+    0x10 : "512Kbit",
+    0x11 : "1Mbit",
+    0x12 : "2Mbit",
+    0x13 : "4Mbit",
+    0x14 : "8Mbit",
+    0x15 : "16Mbit",
+    0x16 : "32Mbit",
+    0x17 : "64Mbit",
+    0x18 : "128Mbit",
+    }   
+
+SPI_FLASH_SIZE_IDX_ESP8266 = {
+    "4Mbit":0,
+    "2Mbit":1,
+    "8Mbit":2,
+    "16Mbit":3,
+    "32Mbit":4,
+    }
+
+SPI_FLASH_SIZE_IDX_ESP32 = {
+    "8Mbit":0,
+    "16Mbit":1,
+    "32Mbit":2,
+    "64Mbit":3,
+    "128Mbit":4,
+    }
+SPI_FLASH_SIZE_IDX = {"ESP8266":SPI_FLASH_SIZE_IDX_ESP8266,
+                      "ESP32":SPI_FLASH_SIZE_IDX_ESP32}
+
+
+
+
+RF_GAIN_DICT = {
+    "0dB": 0xf,
+    "-2.5dB":0xe,
+    "-6dB":0xd,
+    "-8.5dB":0x9,
+    "-11.5dB":0xc,
+    "-14dB":0x8,
+    "-17.5dB":0x4,
+    "-23dB":0x0,
+    
+    }
+
+
+
+CHIP_REG_DICT = {
+    "ESP_UART0_BASE_REG_ESP8266":0x60000000,
+    "ESP_UART0_CLKDIV_OFFSET_ESP8266":0x14,
+    "ESP_UART0_CLKDIV_CNT_ESP8266":0x000fffff,
+    "ESP_UART0_CLKDIV_S_ESP8266":0,
+    "ESP_CMD_ADDR_ESP8266":0x60000200,
+    "ESP_CMD_RDID_ESP8266":(0x1<<28),
+    "ESP_DATA_ADDR_ESP8266":0x60000240,
+    
+    "ESP_UART0_BASE_REG_ESP8285":0x60000000,
+    "ESP_UART0_CLKDIV_OFFSET_ESP8285":0x14,
+    "ESP_UART0_CLKDIV_CNT_ESP8285":0x000fffff,
+    "ESP_UART0_CLKDIV_S_ESP8285":0,
+    "ESP_CMD_ADDR_ESP8285":0x60000200,
+    "ESP_CMD_RDID_ESP8285":(0x1<<28),
+    "ESP_DATA_ADDR_ESP8285":0x60000240,    
+    
+    "ESP_UART0_BASE_REG_ESP8089":0x60000000,
+    "ESP_UART0_CLKDIV_OFFSET_ESP8089":0x14,
+    "ESP_UART0_CLKDIV_CNT_ESP8089":0x000fffff,
+    "ESP_UART0_CLKDIV_S_ESP8089":0,
+    "ESP_CMD_ADDR_ESP8089":0x60000200,
+    "ESP_CMD_RDID_ESP8089":(0x1<<28),
+    "ESP_DATA_ADDR_ESP8089":0x60000240,    
+
+    "ESP_UART0_BASE_REG_ESP32":0x60000000,
+    "ESP_UART0_CLKDIV_OFFSET_ESP32":0x14,
+    "ESP_UART0_CLKDIV_CNT_ESP32":0x000fffff,
+    "ESP_UART0_CLKDIV_S_ESP32":0,
+    "ESP_CMD_ADDR_ESP32":0x60002000,
+    "ESP_CMD_RDID_ESP32":(0x1<<28),
+    "ESP_DATA_ADDR_ESP32":0x60002080,
+
+    "ESP_UART0_BASE_REG_ESP32D2WD":0x60000000,
+    "ESP_UART0_CLKDIV_OFFSET_ESP32D2WD":0x14,
+    "ESP_UART0_CLKDIV_CNT_ESP32D2WD":0x000fffff,
+    "ESP_UART0_CLKDIV_S_ESP32D2WD":0,
+    "ESP_CMD_ADDR_ESP32D2WD":0x60002000,
+    "ESP_CMD_RDID_ESP32D2WD":(0x1<<28),
+    "ESP_DATA_ADDR_ESP32D2WD":0x60002080,
+
+}

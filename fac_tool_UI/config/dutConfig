@@ -20,20 +20,20 @@ port2 = COM6
 rate2 = 115200
 
 [DUT2]
-port1 = COM8
-rate1 = 9600
+port1 = COM14
+rate1 = 115200
 port2 = COM8
 rate2 = 1152000
 
 [DUT3]
-port1 = COM6
-rate1 = 74880
+port1 = COM8
+rate1 = 115200
 port2 = COM6
 rate2 = 38400
 
 [DUT4]
-port1 = COM6
-rate1 = 921600
+port1 = COM8
+rate1 = 115200
 port2 = COM6
 rate2 = 115200
 

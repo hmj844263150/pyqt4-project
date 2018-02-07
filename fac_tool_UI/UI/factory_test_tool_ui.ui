@@ -321,7 +321,7 @@ background-color: rgb(255, 255, 0);</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="MyPushButton" name="pbStop2">
+     <widget class="QPushButton" name="pbStop2">
       <property name="geometry">
        <rect>
         <x>442</x>
@@ -478,7 +478,7 @@ background-color: rgb(0, 170, 0);</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="MyPushButton" name="pbStop3">
+     <widget class="QPushButton" name="pbStop3">
       <property name="geometry">
        <rect>
         <x>685</x>
@@ -635,7 +635,7 @@ background-color: rgb(255, 0, 0);</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="MyPushButton" name="pbStop4">
+     <widget class="QPushButton" name="pbStop4">
       <property name="geometry">
        <rect>
         <x>928</x>
@@ -713,7 +713,7 @@ p, li { white-space: pre-wrap; }
        </rect>
       </property>
      </widget>
-     <widget class="MyPushButton" name="pbStart1">
+     <widget class="QPushButton" name="pbStart1">
       <property name="geometry">
        <rect>
         <x>12</x>
@@ -730,7 +730,7 @@ background-color: rgb(200, 200, 200);</string>
        <string>START</string>
       </property>
      </widget>
-     <widget class="MyPushButton" name="pbStart2">
+     <widget class="QPushButton" name="pbStart2">
       <property name="geometry">
        <rect>
         <x>256</x>
@@ -747,7 +747,7 @@ background-color: rgb(200, 200, 200);</string>
        <string>START</string>
       </property>
      </widget>
-     <widget class="MyPushButton" name="pbStart3">
+     <widget class="QPushButton" name="pbStart3">
       <property name="geometry">
        <rect>
         <x>499</x>
@@ -764,7 +764,7 @@ background-color: rgb(200, 200, 200);</string>
        <string>START</string>
       </property>
      </widget>
-     <widget class="MyPushButton" name="pbStart4">
+     <widget class="QPushButton" name="pbStart4">
       <property name="geometry">
        <rect>
         <x>742</x>
@@ -781,7 +781,7 @@ background-color: rgb(200, 200, 200);</string>
        <string>START</string>
       </property>
      </widget>
-     <widget class="MyPushButton" name="pbStop1">
+     <widget class="QPushButton" name="pbStop1">
       <property name="geometry">
        <rect>
         <x>198</x>
@@ -3898,14 +3898,6 @@ background-color: rgb(200, 200, 200);</string>
    <slots>
     <signal>clicked(myComboBox)</signal>
     <signal>currentIndexChanged(QComboBox,QString)</signal>
-   </slots>
-  </customwidget>
-  <customwidget>
-   <class>MyPushButton</class>
-   <extends>QPushButton</extends>
-   <header>my_widget.h</header>
-   <slots>
-    <signal>clicked(QPushButton)</signal>
    </slots>
   </customwidget>
  </customwidgets>
