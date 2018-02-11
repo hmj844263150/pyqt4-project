@@ -2,21 +2,21 @@
 position = cloud
 fw_ver = ver_1.1.1
 po_no = c0393
-mpn_no = 2018020001
+mpn_no = 2018020003
 fac_sid = esp-own-test-FID-dbd42d01
 batch_sid = bf54c4adf0
 fac_plan = just-test
-cloud_no = test_config_002
+cloud_no = tt1
 test_from = FLASH
 bin_path = D:/VM/share/new_factory_tools/fac_tool_UI/bin/esp8266_fac_jump_test.bin
-auto_start = 0
-tmp_server_ip = 127.0.0.1
-tmp_server_port = 8080
+auto_start = 1
+tmp_server_ip = 192.168.16.186
+tmp_server_port = 8000
 
 [DUT1]
 port1 = COM8
 rate1 = 115200
-port2 = COM6
+port2 = COM8
 rate2 = 115200
 
 [DUT2]

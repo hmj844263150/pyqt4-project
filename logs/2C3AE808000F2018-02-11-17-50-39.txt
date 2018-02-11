@@ -1,0 +1,103 @@
+********************-----ESP MODULE TEST LOG-----********************
+TEST TOOL VERSION:V0.0.1
+CHIP TYPE:ESP8266
+FACTORY:esp-own-test-FID-dbd42d01
+{u'vdd33': [[0.0, 0.0, -40.0], [4000.0, 180.0, 0.0]], u'TXP_RES': [[80.0, 80.0], [98.0, 98.0]], u'TXIQ': [[-12.0, -25.0], [12.0, 25.0]], u'RXIQ': [[-13.0, -27.0], [13.0, 27.0]], u'RXDC': [[128.0], [384.0]], u'TX_POWER_BACKOFF': [[0.0, 0.0, 0.0, 0.0], [8.0, 8.0, 8.0, 8.0]], u'BT_TXDC': [[221.0, 231.0, 241.0, 251.0], [220.0, 230.0, 240.0, 250.0]], u'dut_rx_num': [[48.0], [98.0]], u'TOUT': [[-50.0], [50.0]], u'TXDC': [[3.0], [124.0]], u'FREQ_OFFSET': [[-15.0, -15.0, -15.0, -15.0], [15.0, 15.0, 15.0, 15.0]], u'RX_PATH_GAIN': [[45.0], [60.0]], u'dut_rxrssi': [[30.0, 30.0, 30.0, 30.0, 30.0, 30.0], [70.0, 70.0, 70.0, 70.0, 70.0, 70.0]], u'rssi_diff': [[-10.0], [10.0]], u'fb_rxrssi': [[30.0, 30.0, 30.0, 30.0, 30.0, 30.0], [70.0, 70.0, 70.0, 70.0, 70.0, 70.0]], u'VDD33': [[0.0, 0.0, -40.0], [4000.0, 180.0, 0.0]], u'RX_NOISEFLOOR': [[-395.0], [-345.0]], u'TX_VDD33_DIFF': [[-300.0], [300.0]], u'fb_rx_num': [[48.0], [98.0]], u'RXDC_RFRX_WIFI': [[241.0, 341.0], [240.0, 340.0]], u'BT_TXIQ': [[11.0, 21.0], [10.0, 20.0]], u'RXDC_RXBB_WIFI': [[101.0, 201.0], [100.0, 200.0]], u'txp_result': [[48.0, 48.0], [98.0, 98.0]], u'RXDC_RFRX_BT': [[201.0, 301.0], [200.0, 300.0]], u'RX_PATH_SNR': [[15.0], [5000.0]]}
+load to flash
+serial open ok
+[debug]:mac sta: 2C-3A-E8-08-00-0F
+[debug]:dl_result is 1
+record serial print 
+MODULE_TEST START!!!
+phy_version: 1140.0, 139bb01, Feb  2 2018, 17:47:10
+CHIP_VERSION: 0x1
+CHIP_ID: 0x2c3ae8a8
+
+vdd33=3379, temp_code=0, offset=0
+cal_rf_ana_gain, rf_gain=0x5f, ana_gain=0x10, bb_atten=17, 17, 0
+TXCAP_TMX2G_CCT_LOAD, 15, 15, 11, 
+TXCAP_PA2G_CCT_STG1, 7, 7, 7, 
+TXCAP_PA2G_CCT_STG2, 3, 2, 2, 
+TX_POWER_BACKOFF, 0, 0, 0, 0, 
+TX_PWRCTRL_ATTEN, -13, -8, -5, 1, 5, 13, -9, -5, -1, 5, 9, 17, -7, -2, 2, 8, 11, 20, -7, -2, 2, 8, 11, 20, 
+TXIQ, 4, 9
+TXDC, 71, 42; 70, 43; 70, 42; 69, 40; 
+RXIQ, 6, 2; 6, 2; 6, 2; 6, 2; 7, 3; 
+RXDC, 255, 282, 256, 256; 255, 283, 256, 256; 255, 282, 256, 256; 255, 282, 256, 256; 255, 282, 256, 256; 256, 281, 256, 256; 256, 277, 256, 256; 256, 277, 256, 256; 256, 278, 256, 256; 256, 278, 256, 256; 256, 278, 256, 256; 256, 277, 256, 256; 257, 276, 256, 256; 257, 275, 253, 260; 257, 275, 256, 256; 257, 275, 256, 256; 257, 275, 256, 256; 257, 275, 256, 256; 257, 276, 255, 255; 257, 275, 256, 258; 257, 275, 256, 258; 257, 275, 255, 261; 257, 275, 258, 260; 257, 275, 258, 260; 257, 276, 255, 255; 257, 275, 256, 258; 257, 275, 256, 258; 257, 275, 255, 261; 257, 275, 258, 260; 257, 275, 258, 260; 
+SVN_LOG=1140
+TX_VDD33=3379, -112
+TOUT=127
+TEST_NUM=1, TEST_TIME=92127us
+
+MODULE_ANA TEST END!!!
+
+tx packet test ..
+txp_pwctrl_atten: 12
+rombist_rslt: 0
+fb_rxrssi: 43, 43, 42, 41, 41, 41, 
+dut_rxrssi: 57, 57, 58, 58, 58, 57, 
+fb_rx_num: 16, 15, 15, 16, 15, 16, 
+dut_rx_num: 16, 15, 13, 16, 15, 16, 
+FREQ_OFFSET, -3, -4, -4, -4, 
+txp_state: 0xffffbffffffffff7dfffffff, 0xffffbffffffffcf7dfffffff;
+txp_result: 93, 91, 2
+0: req_suc:1 req_times:1 data_suc:1 txdata_use_timer:0x6d06 96 txreq_start_time:0xa169750 txdata_start_time:0xa1a3fdd 
+init_time=403441us
+
+MODULE_TEST END!!!
+
+Data Processing...
+
+analog test ok
+start tx test
+"TEST ITEM:
+TX TEST BEGIN
+[debug]:fb_rx_num 	[[48.0], [98.0]]
+
+[debug]:FREQ_OFFSET 	-15~15
+
+[debug]:FREQ_OFFSET 	-15~15
+
+[debug]:FREQ_OFFSET 	-15~15
+
+[debug]:FREQ_OFFSET 	-15~15
+
+[debug]:TXP_RES 	80~98
+
+TX TEST OK
+start rx test
+RX TEST BEGIN
+[debug]:dut_rx_num 	48~98
+
+fb_rxrssi 	30~70
+
+fb_rxrssi 	30~70
+
+fb_rxrssi 	30~70
+
+fb_rxrssi 	30~70
+
+fb_rxrssi 	30~70
+
+fb_rxrssi 	30~70
+
+[debug]:dut_rxrssi 	30~70
+
+[debug]:dut_rxrssi 	30~70
+
+[debug]:dut_rxrssi 	30~70
+
+[debug]:dut_rxrssi 	30~70
+
+[debug]:dut_rxrssi 	30~70
+
+[debug]:dut_rxrssi 	30~70
+
+[debug]:rssi_diff 	-10~10
+
+[debug]:Part failure in RSSI res: FB: 43 ; DUT: 57, -10 !< 14 !< 10 
+
+[debug]:TXP_RES_1 	80~98
+
+RX TEST NOK
+quit test
