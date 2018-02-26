@@ -7,12 +7,15 @@ import serial
 import serial.tools.list_ports 
 import threading
 import datetime
+import queue
 from my_widget import *
 from io import StringIO
 
-sys.path.append('D:\\VM\\share\\new_factory_tools\\RF_test')
-import esp_test
-sys.path.append('D:\\VM\\share\\new_factory_tools\\upload_to_server')
+sys.path.append('../')
+import RF_test.esp_test as esp_test
+
+sys.path.append('../')
+import upload_to_server.upload_to_server as upload_to_server
 from upload_to_server import *
 
 from PyQt4 import QtCore, QtGui
@@ -72,6 +75,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     DUT_LOG_BTNS = []
     CHIP_TYPE_NUM = 0
     esp_process={1:None, 2:None, 3:None, 4:None}
+    run_queue=queue.Queue(maxsize=4)
+    #run_flag = True
     
     class _Print(StringIO):
         def __init__(self, factory_tool, obj):
@@ -80,14 +85,17 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             self.obj = obj
         
         def write(self, log):
+            timestr=time.strftime('[%M:%S]',time.localtime(time.time()))
+            log=timestr+log
             self.factory_tool.SIGNAL_PRINT.emit(self.obj, log)    
     
     def __init__(self, params={}, parent=None):
         super(QtGui.QMainWindow, self).__init__(parent=parent)
         self.setupUi(self)  # general by pyqt designer
         self._ui_init()       # add my control and init some ui settings
+        self._test_init()  
         self._setup_signal()  # add signal for need
-        self._test_init()     # initial the settings for production test
+        #self._test_init()     # initial the settings for production test
         
     def _ui_init(self):
         for i in xrange(1,self.DUT_NUM+1):
@@ -101,7 +109,9 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 self.DUT_PORTS.append(eval('self.cbPort'+str(i)+'_'+str(j)))
                 self.DUT_RATES.append(eval('self.cbPortRate'+str(i)+'_'+str(j)))
                 eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(True)
-       
+                
+            
+
     def _setup_signal(self):
         p = self.trwTestFlow.children()[0]
         QtCore.QObject.connect(self.trwTestFlow, QtCore.SIGNAL(_fromUtf8("itemChanged(QTreeWidgetItem*,int)")), self.testflow_check)
@@ -138,6 +148,9 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.cbPortRate3_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate3_2))
         self.cbPortRate4_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate4_1))
         self.cbPortRate4_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate4_2))
+      #  for i in range(1,5):    
+      #      self.connect(self.esp_process[i], QtCore.SIGNAL("finished()"), self.finished) 
+      #      self.connect(self.thread, QtCore.SIGNAL("terminated()"), self.finished)
         
         self.SIGNAL_PRINT.connect(self.print_log)
         self.maCloud.changed.connect(self.change_position)
@@ -152,8 +165,19 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         
         self.test_flow = {}
         self._testflow_init()
-        self._threshold_init()        
+        self._threshold_init()    
+        self.test_thread_init()
         
+    def test_thread_init(self):
+        #id = int(btn.objectName()[len(btn.objectName())-1])
+        for i in range(1,5):
+            stdout_ = self._Print(self, eval("self.tbLog"+str(i)))
+            self.dut_config['common_conf']['dut_num'] = str(i)  
+            
+            self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow)
+            #self.esp_process[id].start()
+        else:
+            print('error: get strat btn err')        
     def _threshold_init(self):
         import openpyxl
         wb = openpyxl.load_workbook('config/ESP8266_Threshold_20180110_hmj.xlsx')
@@ -346,8 +370,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         else:
             print('error: get log btn err')
         if self.esp_process.has_key(id):
-            if self.esp_process[id].isRunning():
-                self.esp_process[id].SIGNAL_STOP.emit()
+           # if self.esp_process[id].isRunning():
+            self.esp_process[id].SIGNAL_STOP.emit()
     
     def print_(self, log):
         self.SIGNAL_PRINT.emit(log)
@@ -568,10 +592,12 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         
     
     def print_log(self, tb, log):
+        show_flag = True
         log=str(log)
         state_flag = True
         dut_num = tb.objectName()[-1]
-        if log.startswith('[state]'):
+        if log.find('[state]') >= 0:
+            show_flag = False
             if log.lower().find('idle') >= 0:
                 state = 'IDLE'
                 eval("self.tbLog"+str(dut_num)).clear()
@@ -582,6 +608,12 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             elif log.lower().find('run') >= 0:
                 state = 'RUN'
                 style = "background-color: rgb(255, 255, 0);\n"
+                
+                # thread operation
+                if not self.run_queue.full():
+                    self.run_queue.put(self.esp_process[dut_num],block=False)
+                else:
+                    print 'thread num error'
             elif log.lower().find('pass') >= 0:
                 state = 'PASS'
                 style = "background-color: rgb(0, 170, 0);\n"
@@ -596,7 +628,19 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 style = "background-color: rgb(255, 0, 0);\n"
             elif log.lower().find('upload-p') >= 0:
                 state = 'upload-p'
-                style = "background-color: rgb(0, 0, 255);\n"            
+                style = "background-color: rgb(0, 0, 255);\n"    
+            elif log.lower().find('finish') >= 0:
+                eval('self.pbStart{}'.format(dut_num)).setDown(False)
+                eval('self.pbStart{}'.format(dut_num)).setEnabled(True)
+                state = 'IDLE'
+                eval("self.tbLog"+str(dut_num)).clear()
+                style = "background-color: rgb(0, 170, 255);\n"   
+            elif log.lower().find('switch') >= 0:
+                print "switch:{}".format(time.time())
+                state_flag = False
+                if not self.run_queue.empty():
+                    esp_process=self.run_queue.get(block=False)
+                    esp_process.resume()
             else:
                 state_flag = False
                 
@@ -606,12 +650,15 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             if log.lower().find('finish') >= 0:
                 eval('self.pbStart{}'.format(dut_num)).setDown(False)
                 eval('self.pbStart{}'.format(dut_num)).setEnabled(True)
+                              
+                
         elif log.startswith('[upload]'):
             self.lbTotalStatus.setText(log[8:])
         elif log.startswith('[mac]'):
             eval("self.lbMAC{}".format(dut_num)).setText(log[5:17])
-            
-        tb.append(log)
+        
+        if show_flag:
+            tb.append(log)
     
     def chip_type_change(self, index):
         if index == self.CHIP_TYPE_NUM - 1:

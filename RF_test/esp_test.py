@@ -32,6 +32,7 @@ class esp_testThread(QtCore.QThread):
         super(esp_testThread,self).__init__(parent=None)
 	self.SIGNAL_STOP.connect(self.ui_stop)
 	self.set_params(_stdout,dutconfig,testflow)
+	self.__flag = threading.Event()
 	self.ui_STOPFLAG=0
 	self.MAC = '000000000000'
 	self.set_mac_en=0	
@@ -58,9 +59,13 @@ class esp_testThread(QtCore.QThread):
             
     def run(self):
 	while not self.ui_STOPFLAG:
+
 	    self.test()
 	self.ui_STOPFLAG = False
-		
+	try:
+	    self.ser.close()
+	except:
+	    pass
         self.l_print(0,'quit test')
 	self.ui_print('USER QUIT TEST')
 	self.ui_print('[state]finish')
@@ -104,7 +109,7 @@ class esp_testThread(QtCore.QThread):
 	self.rx_test_res=0
         self._date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
         self._time = time.strftime('%H:%M:%S',time.localtime(time.time()))
-        #self.logpath=self.esp_gen_log()
+        
         self.tx_rx_log = ""   
 	self.logpath=''
 	self.logstr=''
@@ -112,8 +117,8 @@ class esp_testThread(QtCore.QThread):
         dl_result=0
 	self.l_print(0,str(self.THRESHOLD_DICT))
 	rst = self.try_sync()
-	#self.esp_write_flash()
-	#rst=self.reboot()
+	#self.__flag.wait()
+	
 	try:
 	    self.ser.close()
 	except:
@@ -131,8 +136,13 @@ class esp_testThread(QtCore.QThread):
 	    self.STOPFLAG=1
 	    self.STOPTEST()
 	    return 
+	elif rst==0:
+	    
+	    self.ui_print('SYNC OK,START TO TEST')
 	
 	self.ui_print('[state]RUN')
+	self.__flag.set()
+	self.__flag.wait()
 	if not self.ui_STOPFLAG:   
 	    dl_result=self.test_download()
 	    
@@ -1433,8 +1443,16 @@ class esp_testThread(QtCore.QThread):
 	self.l_print(0,'start firmware check')
 	self.l_print(2,'firmware check port is %s'%self.user_fw_download_port)
 	self.l_print(2,'firmware check baudrate is %d'%self.user_fw_download_baud)
-	self.fwser=serial.Serial(port=self.user_fw_download_port, baudrate=self.user_fw_download_baud, 
-	                      timeout=3)
+	try:
+	    
+	    self.fwser=serial.Serial(port=self.user_fw_download_port, baudrate=self.user_fw_download_baud, 
+	                             timeout=3)
+	except:
+	    self.ui_print('OPEN FIRMWARE CHECK PORT ERROR')
+	    self.resflag=0
+	    self.STOPFLAG=1
+	    return -1
+	    
 	if(self.fw_cmdEn==0):
 	    self.l_print(0,'fw check with no cmd')
 	    res,data=self.read_fw(ser=self.fwser,cmd_str='',pattern=self.fw_targetstr,ser_tout=self.user_fw_download_timeout,
@@ -1516,20 +1534,22 @@ class esp_testThread(QtCore.QThread):
 	return cmdstr        
     
     def STOPTEST(self):
-	#if(self.isRunning()):
-	    #print 'stop exe'
 	try:
 	    self.ser.close()
 	except:
 	    self.l_print(0,'close port error1')
+	
+	self.ui_print("[state]switch") 
+	
 	if self.resflag == 0:
 	    self.upload_server('fail')
 	    self.esp_gen_rpt()
+	    self.sleep(5)
 	elif self.resflag==1:
 	    self.l_print(0,'all item test passed')
 	    self.ui_print('[state]pass')
 	    self.esp_gen_rpt()
-	    time.sleep(0)
+	    time.sleep(5)
 	    try:
 		self.ser.close()
 	    except:
@@ -1538,21 +1558,37 @@ class esp_testThread(QtCore.QThread):
 	elif self.resflag==2:
 	    self.l_print(0,'already passed module')
 	    self.ui_print('[state]passed')
+	    self.sleep(5)
 	time.sleep(1)
-	self.ui_print('[state]finish')
+	#self.ui_print('[state]finish')
 	self.ui_print('[state]idle')
 	#self.ui_STOPFLAG=1
-	self.quit()
+	#self.quit()
 	if not self.autostartEn:
 	    self.ui_STOPFLAG=1	    
 	    
 	    
-	#if(self.autostartEn):
+    def stopthread(self):
+	#time.sleep(0.1)
+	self.ui_print("[state]switch") 
+	self.ui_print('[state]finish')
+	self.terminate()
 	
-	    
+    def resume(self):
+	self.__flag.clear()
+	
+    def pause(self):
+	self.__flag.set()
+    
+    
     def ui_stop(self):
+	
+	
+	#while self.isRunning():
+	#    self.wait()
 	#self.ui_print('USER MANU STOP TEST')
-	self.ui_STOPFLAG=1
+	#self.ui_STOPFLAG=1
+	self.stopthread()
     def set_params(self,stdout_='',dutconfig='',testflow=''):
 	self.send_cmd=[]
 	self.fwstr_withcmd=[]
