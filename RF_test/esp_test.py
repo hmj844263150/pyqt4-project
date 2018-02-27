@@ -28,11 +28,14 @@ import upload_to_server.upload_to_server as upload_to_server
 
 class esp_testThread(QtCore.QThread):
     SIGNAL_STOP = QtCore.pyqtSignal()
+    SIGNAL_RESUME = QtCore.pyqtSignal()
     def __init__(self,_stdout,dutconfig,testflow):
         super(esp_testThread,self).__init__(parent=None)
 	self.SIGNAL_STOP.connect(self.ui_stop)
+	self.SIGNAL_RESUME.connect(self.thread_resume)
 	self.set_params(_stdout,dutconfig,testflow)
 	self.__flag = threading.Event()
+	self.thread_pause=1
 	self.ui_STOPFLAG=0
 	self.MAC = '000000000000'
 	self.set_mac_en=0	
@@ -59,7 +62,7 @@ class esp_testThread(QtCore.QThread):
             
     def run(self):
 	while not self.ui_STOPFLAG:
-
+	    self.ui_print("[state]idle")
 	    self.test()
 	self.ui_STOPFLAG = False
 	try:
@@ -117,7 +120,6 @@ class esp_testThread(QtCore.QThread):
         dl_result=0
 	self.l_print(0,str(self.THRESHOLD_DICT))
 	rst = self.try_sync()
-	#self.__flag.wait()
 	
 	try:
 	    self.ser.close()
@@ -141,8 +143,16 @@ class esp_testThread(QtCore.QThread):
 	    self.ui_print('SYNC OK,START TO TEST')
 	
 	self.ui_print('[state]RUN')
-	self.__flag.set()
-	self.__flag.wait()
+	
+	#print self.dutconfig['common_conf']['dut_num'], ' start wait'
+	#self.__flag.set()
+	#self.__flag.wait()
+	#print self.dutconfig['common_conf']['dut_num'], ' end wait'
+	while self.thread_pause:
+	    pass
+	    
+	    
+	
 	if not self.ui_STOPFLAG:   
 	    dl_result=self.test_download()
 	    
@@ -229,7 +239,8 @@ class esp_testThread(QtCore.QThread):
 		    self.STOPTEST()
 		    return 		
     
-	if (not self.ui_STOPFLAG):	
+	if (not self.ui_STOPFLAG):
+	    res = -1
 	    
 	    if(self.resflag):
 	    
@@ -785,7 +796,6 @@ class esp_testThread(QtCore.QThread):
 		self.STOPFLAG=1
 
 	#serTestRes.close()
-	self.fail_list.append("gpio_test")
 	if(self.gpio_test_res==0):
 	    self.l_print(3,'gpio test fail,please check step log for err info')
 	    self.resflag=0
@@ -1535,6 +1545,9 @@ class esp_testThread(QtCore.QThread):
 	return cmdstr        
     
     def STOPTEST(self):
+	if self.thread_pause==0:
+	    self.ui_print('[state]RFMutex')            #for rf test mutex
+	    
 	try:
 	    self.ser.close()
 	except:
@@ -1562,16 +1575,18 @@ class esp_testThread(QtCore.QThread):
 	    self.sleep(5)
 	time.sleep(1)
 	#self.ui_print('[state]finish')
-	self.ui_print('[state]idle')
+	#self.ui_print('[state]idle')
 	#self.ui_STOPFLAG=1
 	#self.quit()
 	if not self.autostartEn:
+	    
 	    self.ui_STOPFLAG=1	    
+	else:
+	    self.ui_print('[state]idle')
 	    
 	    
     def stopthread(self):
 	#time.sleep(0.1)
-	self.ui_print("[state]switch") 
 	self.ui_print('[state]finish')
 	self.terminate()
 	
@@ -1581,6 +1596,8 @@ class esp_testThread(QtCore.QThread):
     def pause(self):
 	self.__flag.set()
     
+    def thread_resume(self):
+	self.thread_pause=0
     
     def ui_stop(self):
 	
@@ -1647,6 +1664,7 @@ class esp_testThread(QtCore.QThread):
 	self.analogtest=int(self.testflow['ANALOG'])
 	self.gpiotest_8266=int(self.testflow['GPIO_8266_TEST'])
 	self.gpiotest_32=int(self.testflow['GPIO_32_TEST'])	
+    
     
 
 	    

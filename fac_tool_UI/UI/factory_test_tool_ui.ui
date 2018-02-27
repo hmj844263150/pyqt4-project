@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>../icon/logo.png</normaloff>../icon/logo.png</iconset>
+    <normaloff>C:/Users/Administrator/.designer/icon/logo.png</normaloff>C:/Users/Administrator/.designer/icon/logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="Line" name="line">
@@ -56,7 +56,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -3643,13 +3643,15 @@ p, li { white-space: pre-wrap; }
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
+    <zorder>pbAllStart_2</zorder>
+    <zorder>pbAllStart</zorder>
    </widget>
    <widget class="QPushButton" name="pbAllStart">
     <property name="geometry">
      <rect>
-      <x>60</x>
+      <x>20</x>
       <y>70</y>
-      <width>131</width>
+      <width>101</width>
       <height>41</height>
      </rect>
     </property>
@@ -3664,6 +3666,28 @@ background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="text">
      <string>ALL START</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pbAllStop">
+    <property name="geometry">
+     <rect>
+      <x>130</x>
+      <y>70</y>
+      <width>101</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>15</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">border-color: rgb(0, 0, 0);
+background-color: rgb(200, 200, 200);</string>
+    </property>
+    <property name="text">
+     <string>ALL STOP</string>
     </property>
    </widget>
    <zorder>fraLogo</zorder>
@@ -3688,6 +3712,7 @@ background-color: rgb(200, 200, 200);</string>
    <zorder>label</zorder>
    <zorder>label_2</zorder>
    <zorder>pbAllStart</zorder>
+   <zorder>pbAllStop</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

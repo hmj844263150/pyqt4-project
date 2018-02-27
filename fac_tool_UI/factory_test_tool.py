@@ -77,7 +77,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     esp_process={1:None, 2:None, 3:None, 4:None}
     run_queue=queue.Queue(maxsize=4)
     run_mutex = threading.Lock()
-    #run_flag = True
+    run_flag = True
     
     class _Print(StringIO):
         def __init__(self, factory_tool, obj):
@@ -119,6 +119,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         QtCore.QObject.connect(self.pbTFSubmit, QtCore.SIGNAL(_fromUtf8("clicked()")), self._testflow_submit)
         QtCore.QObject.connect(self.pbTFReset, QtCore.SIGNAL(_fromUtf8("clicked()")), self.testflow_reset)
         QtCore.QObject.connect(self.pbAllStart, QtCore.SIGNAL(_fromUtf8("clicked()")), self.all_start)
+        QtCore.QObject.connect(self.pbAllStop, QtCore.SIGNAL(_fromUtf8("clicked()")), self.all_stop)
         QtCore.QObject.connect(self.pbCloudSync, QtCore.SIGNAL(_fromUtf8("clicked()")), self.cloud_sync)
         QtCore.QObject.connect(self.pbDutReset, QtCore.SIGNAL(_fromUtf8("clicked()")), self.dut_reset)
         QtCore.QObject.connect(self.pbDutSubmit, QtCore.SIGNAL(_fromUtf8("clicked()")), self._dut_submit)
@@ -340,13 +341,18 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     
     def all_start(self):
         for id in (1,2,3,4):
-            if id in (1,2,3,4):
-                stdout_ = self._Print(self, eval("self.tbLog"+str(id)))
-                self.dut_config['common_conf']['dut_num'] = str(id)  
-                
-                self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow)
-                self.esp_process[id].start()
-                time.sleep(0.1)
+            try:
+                if self.esp_process[id]==None or (not self.esp_process[id].isRunning()):
+                    stdout_ = self._Print(self, eval("self.tbLog"+str(id)))
+                    self.dut_config['common_conf']['dut_num'] = str(id)  
+                    
+                    self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow)
+                    self.esp_process[id].start()
+                    eval('self.pbStart{}'.format(id)).setEnabled(False)
+                    eval('self.pbStart{}'.format(id)).setDown(True)
+                    time.sleep(0.1)
+            except:
+                pass
     
     def single_start(self, btn):
         btn.setEnabled(False)
@@ -361,18 +367,16 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         else:
             print('error: get strat btn err')
     
+    def all_stop(self):
+        for id in (1,2,3,4):
+            try:
+                if self.esp_process[id].isRunning():
+                    self.esp_process[id].SIGNAL_STOP.emit()
+            except:
+                pass
+    
     def single_stop(self, btn):
         id = int(btn.objectName()[len(btn.objectName())-1])
-        if id == 1:
-            pass
-        elif id == 2:
-            pass
-        elif id == 3:
-            pass
-        elif id == 4:
-            pass
-        else:
-            print('error: get log btn err')
         if self.esp_process.has_key(id):
            # if self.esp_process[id].isRunning():
             self.esp_process[id].SIGNAL_STOP.emit()
@@ -605,7 +609,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         show_flag = True
         log=str(log)
         state_flag = True
-        dut_num = tb.objectName()[-1]
+        dut_num = str(tb.objectName()[-1])
         if log.find('[state]') >= 0:
             show_flag = False
             if log.lower().find('idle') >= 0:
@@ -624,6 +628,13 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     self.run_queue.put(self.esp_process[int(str(dut_num))],block=False)
                 else:
                     print 'thread num error'
+                
+                if self.run_flag == True:
+                    if not self.run_queue.empty():
+                        esp_process=self.run_queue.get(block=False)
+                        esp_process.SIGNAL_RESUME.emit()
+                    self.run_flag = False
+                
             elif log.lower().find('pass') >= 0:
                 state = 'PASS'
                 style = "background-color: rgb(0, 170, 0);\n"
@@ -640,18 +651,18 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 state = 'upload-p'
                 style = "background-color: rgb(0, 0, 255);\n"    
             elif log.lower().find('finish') >= 0:
+                state_flag = False
                 eval('self.pbStart{}'.format(dut_num)).setDown(False)
                 eval('self.pbStart{}'.format(dut_num)).setEnabled(True)
-                state = 'IDLE'
-                eval("self.tbLog"+str(dut_num)).clear()
-                style = "background-color: rgb(0, 170, 255);\n"   
-            elif log.lower().find('switch') >= 0:
+            elif log.lower().find('rfmutex') >= 0:
                 print "switch:{}".format(time.time())
                 state_flag = False
                 if not self.run_queue.empty():
-                    
                     esp_process=self.run_queue.get(block=False)
-                    esp_process.resume()
+                    esp_process.SIGNAL_RESUME.emit()
+                    
+                if self.run_queue.empty():
+                    self.run_flag = True
                    
             else:
                 state_flag = False
@@ -664,10 +675,10 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 eval('self.pbStart{}'.format(dut_num)).setEnabled(True)
                               
                 
-        elif log.startswith('[upload]'):
+        elif log.find('[upload]') >= 0:
             self.lbTotalStatus.setText(log[8:])
-        elif log.startswith('[mac]'):
-            eval("self.lbMAC{}".format(dut_num)).setText(log[5:17])
+        elif log.find('[mac]') >= 0:
+            eval("self.lbMAC{}".format(dut_num)).setText(log[-12:])
         
         if show_flag:
             tb.append(log)

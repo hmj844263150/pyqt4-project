@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'factory_test_tool_ui.ui'
 #
-# Created: Thu Feb 08 20:33:02 2018
+# Created: Tue Feb 27 16:52:37 2018
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(1000, 686))
         MainWindow.setMaximumSize(QtCore.QSize(1000, 686))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../icon/logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8("C:/Users/Administrator/.designer/icon/logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
@@ -1180,13 +1180,21 @@ class Ui_MainWindow(object):
         self.fraLogo.setFrameShadow(QtGui.QFrame.Raised)
         self.fraLogo.setObjectName(_fromUtf8("fraLogo"))
         self.pbAllStart = QtGui.QPushButton(self.centralwidget)
-        self.pbAllStart.setGeometry(QtCore.QRect(60, 70, 131, 41))
+        self.pbAllStart.setGeometry(QtCore.QRect(20, 70, 101, 41))
         font = QtGui.QFont()
         font.setPointSize(15)
         self.pbAllStart.setFont(font)
         self.pbAllStart.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 0);\n"
 "background-color: rgb(200, 200, 200);"))
         self.pbAllStart.setObjectName(_fromUtf8("pbAllStart"))
+        self.pbAllStop = QtGui.QPushButton(self.centralwidget)
+        self.pbAllStop.setGeometry(QtCore.QRect(130, 70, 101, 41))
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.pbAllStop.setFont(font)
+        self.pbAllStop.setStyleSheet(_fromUtf8("border-color: rgb(0, 0, 0);\n"
+"background-color: rgb(200, 200, 200);"))
+        self.pbAllStop.setObjectName(_fromUtf8("pbAllStop"))
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtGui.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1000, 23))
@@ -1232,7 +1240,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.twTestArea.setCurrentIndex(1)
+        self.twTestArea.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -1584,6 +1592,7 @@ class Ui_MainWindow(object):
         self.lbWorkStat.setText(_translate("MainWindow", "xx/xxx", None))
         self.lbPosition.setText(_translate("MainWindow", "Local/Cloud", None))
         self.pbAllStart.setText(_translate("MainWindow", "ALL START", None))
+        self.pbAllStop.setText(_translate("MainWindow", "ALL STOP", None))
         self.menu.setTitle(_translate("MainWindow", "File", None))
         self.menuTools.setTitle(_translate("MainWindow", "Config", None))
         self.menuPosition.setTitle(_translate("MainWindow", "Position", None))
