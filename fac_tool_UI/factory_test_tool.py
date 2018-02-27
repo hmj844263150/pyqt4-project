@@ -76,6 +76,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     CHIP_TYPE_NUM = 0
     esp_process={1:None, 2:None, 3:None, 4:None}
     run_queue=queue.Queue(maxsize=4)
+    run_mutex = threading.Lock()
     #run_flag = True
     
     class _Print(StringIO):
@@ -110,7 +111,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 self.DUT_RATES.append(eval('self.cbPortRate'+str(i)+'_'+str(j)))
                 eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(True)
                 
-            
+            self.twTestArea.setCurrentIndex(0)
 
     def _setup_signal(self):
         p = self.trwTestFlow.children()[0]
@@ -176,8 +177,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             
             self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow)
             #self.esp_process[id].start()
-        else:
-            print('error: get strat btn err')        
+    
     def _threshold_init(self):
         import openpyxl
         wb = openpyxl.load_workbook('config/ESP8266_Threshold_20180110_hmj.xlsx')
@@ -194,14 +194,18 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         
     def _testflow_init(self):
         self.testflow_update('./config/tmp_testFlow')
-        try:
-            if self.testflow_reset('./config/testFlow') != 0:
+        if self.dut_config['common_conf']['position'] == 'cloud':
+            flow_path = './config/cloudTestFlow'
+        else:
+            flow_path = './config/testFlow'
+        try:            
+            if self.testflow_reset(flow_path) != 0:
                 print ('Test Flow file was broken, load with default config')
                 self.testflow_reset('./config/tmp_testFlow')
         except:
             print ('Test Flow file was broken, load with default config')
             self.testflow_reset('./config/tmp_testFlow')
-        self.testflow_update('./config/testFlow')
+        self.testflow_update(flow_path)
         os.remove('./config/tmp_testFlow')
         
     
@@ -380,8 +384,13 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         id = index
         print id
         if id in (1,2,3,4):
+            logpath = self.esp_process[id].logpath[2:]
+            ospath = os.getcwd().replace('\\', '//')
+            ospath = ospath[:ospath.find(ospath.split('//')[len(ospath.split('//'))-1])]
+            logpath = ospath + logpath
             try:
-                os.startfile(self.esp_process[id].logpath)
+                os.startfile(logpath)
+                
             except:
                 print 'error path'
         else:
@@ -491,11 +500,12 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             if conf.get('common_conf', 'position') == 'cloud':
                 self.maCloud.setChecked(True)
                 self.pbCloudSync.setEnabled(True)
-                self.lbPosition.setText('Cloud')
             else:
                 self.maCloud.setChecked(False)
                 self.pbCloudSync.setEnabled(False)
-                self.lbPosition.setText('Loacl')                
+                self.lbPosition.setText('Loacl')
+                
+            self.change_position() 
             
             if conf.get('common_conf', 'test_from') == 'RAM':
                 self.cbTestFrom.setCurrentIndex(0)
@@ -611,7 +621,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 
                 # thread operation
                 if not self.run_queue.full():
-                    self.run_queue.put(self.esp_process[dut_num],block=False)
+                    self.run_queue.put(self.esp_process[int(str(dut_num))],block=False)
                 else:
                     print 'thread num error'
             elif log.lower().find('pass') >= 0:
@@ -639,8 +649,10 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 print "switch:{}".format(time.time())
                 state_flag = False
                 if not self.run_queue.empty():
+                    
                     esp_process=self.run_queue.get(block=False)
                     esp_process.resume()
+                   
             else:
                 state_flag = False
                 

@@ -251,7 +251,8 @@ class esp_testThread(QtCore.QThread):
 		self.STOPTEST()
 		return
 	if(not self.ui_STOPFLAG):
-	    self.fwcheck()
+	    if self.user_fw_checkEn:
+		self.fwcheck()
 	    if(self.STOPFLAG):
 		self.ui_print('FIRMWARE CHECK FAIL')
 		self.ui_print('END TEST SEQUENCE')
@@ -1611,6 +1612,7 @@ class esp_testThread(QtCore.QThread):
 	self.fac_=self.dutconfig['common_conf']['fac_sid']
 	self.po=self.dutconfig['common_conf']['po_no']
 	self.test_mode=self.dutconfig['common_conf']['position']
+	self.user_fw_checkEn=int(self.testflow['USER_FW_CKECK'])
 	self.fw_targetstr=self.testflow['USER_FW_VER_STR']
 	self.fw_cmd_combin=self.testflow['USER_TEST_CMD<cmd,rsp,tmo>']
 	try:
