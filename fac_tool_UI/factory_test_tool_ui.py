@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'factory_test_tool_ui.ui'
 #
-# Created: Tue Feb 27 16:52:37 2018
+# Created: Wed Feb 28 15:56:27 2018
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -816,14 +816,6 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.label_24.sizePolicy().hasHeightForWidth())
         self.label_24.setSizePolicy(sizePolicy)
         self.label_24.setObjectName(_fromUtf8("label_24"))
-        self.label_31 = QtGui.QLabel(self.wgSPConfig)
-        self.label_31.setGeometry(QtCore.QRect(360, 100, 60, 21))
-        sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.label_31.sizePolicy().hasHeightForWidth())
-        self.label_31.setSizePolicy(sizePolicy)
-        self.label_31.setObjectName(_fromUtf8("label_31"))
         self.label_32 = QtGui.QLabel(self.wgSPConfig)
         self.label_32.setGeometry(QtCore.QRect(180, 100, 60, 21))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
@@ -832,11 +824,6 @@ class Ui_MainWindow(object):
         sizePolicy.setHeightForWidth(self.label_32.sizePolicy().hasHeightForWidth())
         self.label_32.setSizePolicy(sizePolicy)
         self.label_32.setObjectName(_fromUtf8("label_32"))
-        self.cbAutoStart = QtGui.QComboBox(self.wgSPConfig)
-        self.cbAutoStart.setGeometry(QtCore.QRect(430, 100, 71, 21))
-        self.cbAutoStart.setObjectName(_fromUtf8("cbAutoStart"))
-        self.cbAutoStart.addItem(_fromUtf8(""))
-        self.cbAutoStart.addItem(_fromUtf8(""))
         self.cbFREQ = QtGui.QComboBox(self.wgSPConfig)
         self.cbFREQ.setGeometry(QtCore.QRect(90, 100, 71, 21))
         self.cbFREQ.setObjectName(_fromUtf8("cbFREQ"))
@@ -848,6 +835,9 @@ class Ui_MainWindow(object):
         self.cbEfuseMode.setObjectName(_fromUtf8("cbEfuseMode"))
         self.cbEfuseMode.addItem(_fromUtf8(""))
         self.cbEfuseMode.addItem(_fromUtf8(""))
+        self.cbAutoStart = QtGui.QCheckBox(self.wgSPConfig)
+        self.cbAutoStart.setGeometry(QtCore.QRect(370, 100, 71, 20))
+        self.cbAutoStart.setObjectName(_fromUtf8("cbAutoStart"))
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
         self.twTestArea.addTab(self.tab_2, _fromUtf8(""))
         self.tab_4 = QtGui.QWidget()
@@ -1258,7 +1248,7 @@ class Ui_MainWindow(object):
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Arial Black\'; font-size:9pt; font-weight:600; font-style:normal;\">\n"
 "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:22pt;\">DUT1</span></p></body></html>", None))
-        self.lbMAC1.setText(_translate("MainWindow", "2c3ae8080000", None))
+        self.lbMAC1.setText(_translate("MainWindow", "000000000000", None))
         self.textBrowser_6.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -1267,7 +1257,7 @@ class Ui_MainWindow(object):
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:11pt;\">     MAC:</span></p></body></html>", None))
-        self.lbMAC2.setText(_translate("MainWindow", "2c3ae8080000", None))
+        self.lbMAC2.setText(_translate("MainWindow", "000000000000", None))
         self.pbStop2.setText(_translate("MainWindow", "STOP", None))
         self.textBrowser_7.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -1282,7 +1272,7 @@ class Ui_MainWindow(object):
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:11pt;\">     MAC:</span></p></body></html>", None))
-        self.lbMAC3.setText(_translate("MainWindow", "2c3ae8080000", None))
+        self.lbMAC3.setText(_translate("MainWindow", "000000000000", None))
         self.pbStop3.setText(_translate("MainWindow", "STOP", None))
         self.textBrowser_9.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -1297,7 +1287,7 @@ class Ui_MainWindow(object):
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;\"><br /></p>\n"
 "<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:11pt;\"><br /></p>\n"
 "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:11pt;\">     MAC:</span></p></body></html>", None))
-        self.lbMAC4.setText(_translate("MainWindow", "2c3ae8080000", None))
+        self.lbMAC4.setText(_translate("MainWindow", "000000000000", None))
         self.pbStop4.setText(_translate("MainWindow", "STOP", None))
         self.textBrowser_11.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -1444,14 +1434,12 @@ class Ui_MainWindow(object):
         self.cbTestFrom.setItemText(1, _translate("MainWindow", "FLASH", None))
         self.label_30.setText(_translate("MainWindow", "Test From", None))
         self.label_24.setText(_translate("MainWindow", "FREQ", None))
-        self.label_31.setText(_translate("MainWindow", "AUTOSTART", None))
         self.label_32.setText(_translate("MainWindow", "EFUSE MODE", None))
-        self.cbAutoStart.setItemText(0, _translate("MainWindow", "0", None))
-        self.cbAutoStart.setItemText(1, _translate("MainWindow", "1", None))
         self.cbFREQ.setItemText(0, _translate("MainWindow", "26M", None))
         self.cbFREQ.setItemText(1, _translate("MainWindow", "40M", None))
-        self.cbEfuseMode.setItemText(0, _translate("MainWindow", "0", None))
-        self.cbEfuseMode.setItemText(1, _translate("MainWindow", "1", None))
+        self.cbEfuseMode.setItemText(0, _translate("MainWindow", "normal", None))
+        self.cbEfuseMode.setItemText(1, _translate("MainWindow", "cus_mac", None))
+        self.cbAutoStart.setText(_translate("MainWindow", "AUTOSTART", None))
         self.twTestArea.setTabText(self.twTestArea.indexOf(self.tab_2), _translate("MainWindow", "Dut Config", None))
         self.trwTestFlow.headerItem().setText(0, _translate("MainWindow", "Total", None))
         __sortingEnabled = self.trwTestFlow.isSortingEnabled()
@@ -1461,7 +1449,7 @@ class Ui_MainWindow(object):
         self.trwTestFlow.topLevelItem(0).child(1).setText(0, _translate("MainWindow", "RX", None))
         self.trwTestFlow.topLevelItem(0).child(2).setText(0, _translate("MainWindow", "ANALOG", None))
         self.trwTestFlow.topLevelItem(1).setText(0, _translate("MainWindow", "GENERAL_TEST", None))
-        self.trwTestFlow.topLevelItem(1).child(0).setText(0, _translate("MainWindow", "USER_FW_CKECK", None))
+        self.trwTestFlow.topLevelItem(1).child(0).setText(0, _translate("MainWindow", "USER_FW_CHECK", None))
         self.trwTestFlow.topLevelItem(1).child(0).child(0).setText(0, _translate("MainWindow", "USER_FW_VER_TEST", None))
         self.trwTestFlow.topLevelItem(1).child(0).child(0).child(0).setText(0, _translate("MainWindow", "USER_FW_VER_BAUD", None))
         self.trwTestFlow.topLevelItem(1).child(0).child(0).child(0).child(0).setText(0, _translate("MainWindow", "115200", None))
@@ -1498,8 +1486,8 @@ class Ui_MainWindow(object):
         self.trwTestFlow.topLevelItem(1).child(3).setText(0, _translate("MainWindow", "FLASH_ID_CHECK", None))
         self.trwTestFlow.topLevelItem(1).child(4).setText(0, _translate("MainWindow", "FLASH_RW_CHECK", None))
         self.trwTestFlow.topLevelItem(1).child(5).setText(0, _translate("MainWindow", "ADC_TEST", None))
-        self.trwTestFlow.topLevelItem(1).child(6).setText(0, _translate("MainWindow", "PSRAMTEST", None))
-        self.trwTestFlow.topLevelItem(1).child(7).setText(0, _translate("MainWindow", "PVTTEST", None))
+        self.trwTestFlow.topLevelItem(1).child(6).setText(0, _translate("MainWindow", "PSRAM_TEST", None))
+        self.trwTestFlow.topLevelItem(1).child(7).setText(0, _translate("MainWindow", "PVT_TEST", None))
         self.trwTestFlow.topLevelItem(2).setText(0, _translate("MainWindow", "FUNCTION", None))
         self.trwTestFlow.topLevelItem(2).child(0).setText(0, _translate("MainWindow", "USER_FW_DOWNLOAD", None))
         self.trwTestFlow.topLevelItem(2).child(0).child(0).setText(0, _translate("MainWindow", "USER_FW_DOWNLOAD_PORT", None))

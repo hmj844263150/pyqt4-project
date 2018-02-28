@@ -1,5 +1,5 @@
 [common_conf]
-position = cloud
+position = local
 fw_ver = ver_1.1.1
 po_no = c0393
 mpn_no = 2018020003
@@ -14,22 +14,22 @@ tmp_server_ip = 192.168.16.186
 tmp_server_port = 8000
 
 [DUT1]
-port1 = COM8
+port1 = COM5
 rate1 = 115200
-port2 = COM8
+port2 = COM5
 rate2 = 115200
 
 [DUT2]
-port1 = COM14
+port1 = COM5
 rate1 = 115200
-port2 = COM8
-rate2 = 1152000
+port2 = COM5
+rate2 = 115200
 
 [DUT3]
-port1 = COM8
+port1 = COM7
 rate1 = 115200
-port2 = COM6
-rate2 = 38400
+port2 = COM7
+rate2 = 115200
 
 [DUT4]
 port1 = COM8

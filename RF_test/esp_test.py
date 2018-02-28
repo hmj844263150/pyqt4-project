@@ -23,6 +23,8 @@ import esp_rpt
 import espDownloader
 #from param_save_load import *
 
+DEBUG = 0
+
 sys.path.append('../')
 import upload_to_server.upload_to_server as upload_to_server
 
@@ -34,7 +36,6 @@ class esp_testThread(QtCore.QThread):
 	self.SIGNAL_STOP.connect(self.ui_stop)
 	self.SIGNAL_RESUME.connect(self.thread_resume)
 	self.set_params(_stdout,dutconfig,testflow)
-	self.__flag = threading.Event()
 	self.thread_pause=1
 	self.ui_STOPFLAG=0
 	self.MAC = '000000000000'
@@ -62,7 +63,7 @@ class esp_testThread(QtCore.QThread):
             
     def run(self):
 	while not self.ui_STOPFLAG:
-	    self.ui_print("[state]idle")
+	    self.ui_print("[state]idle clear")
 	    self.test()
 	self.ui_STOPFLAG = False
 	try:
@@ -71,7 +72,7 @@ class esp_testThread(QtCore.QThread):
 	    pass
         self.l_print(0,'quit test')
 	self.ui_print('USER QUIT TEST')
-	self.ui_print('[state]finish')
+	self.ui_print('[state]finish btn up')
 	
     def try_sync(self):
 	self.ui_print('[state]SYNC')
@@ -98,7 +99,8 @@ class esp_testThread(QtCore.QThread):
 		return -2 # into normal mode without test pass
 	    elif rl.find('jump to run test bin') >= 0:
 		return 0 # into test mode
-	    if len(rl)>1: print rl
+	    if len(rl)>1: 
+		if DEBUG: print rl
 	    
 	return -3 # sync timeout 
     
@@ -144,10 +146,6 @@ class esp_testThread(QtCore.QThread):
 	
 	self.ui_print('[state]RUN')
 	
-	#print self.dutconfig['common_conf']['dut_num'], ' start wait'
-	#self.__flag.set()
-	#self.__flag.wait()
-	#print self.dutconfig['common_conf']['dut_num'], ' end wait'
 	while self.thread_pause:
 	    pass
 	    
@@ -443,7 +441,7 @@ class esp_testThread(QtCore.QThread):
 			dut_rssi_v = [int(x) for x in dlist]
 			dut_rssi_flg = 0
 			if self.chip_type == "ESP32":
-			    print "dut_rssi for ESP32"
+			    if DEBUG: print "dut_rssi for ESP32"
 			    dut_rssi_v = [ max(dut_rssi_v), ]
 
 			
@@ -1325,8 +1323,6 @@ class esp_testThread(QtCore.QThread):
 	self._stdout.write(log)
     
     def upload_server(self, rst):
-	
-	
 	no_err      = "0x00" 
 	err_params  = "0x01"
 	err_conn    = "0x02"
@@ -1546,67 +1542,48 @@ class esp_testThread(QtCore.QThread):
     
     def STOPTEST(self):
 	if self.thread_pause==0:
-	    self.ui_print('[state]RFMutex')            #for rf test mutex
-	    
+	    self.ui_print('[state]RFMutex_' + str(self.resflag))            #for rf test mutex
+	    if self.resflag == 0:
+		self.upload_server('fail')
+	    else:
+		self.upload_server('success')
+		
 	try:
 	    self.ser.close()
 	except:
 	    self.l_print(0,'close port error1')
 	
-	self.ui_print("[state]switch") 
-	
 	if self.resflag == 0:
-	    self.upload_server('fail')
 	    self.esp_gen_rpt()
-	    self.sleep(5)
 	elif self.resflag==1:
 	    self.l_print(0,'all item test passed')
 	    self.ui_print('[state]pass')
 	    self.esp_gen_rpt()
-	    time.sleep(5)
 	    try:
 		self.ser.close()
 	    except:
-		self.l_print(0,'close port error2')		
-	    self.upload_server('success')
+		self.l_print(0,'close port error2')
+	    
 	elif self.resflag==2:
 	    self.l_print(0,'already passed module')
 	    self.ui_print('[state]passed')
-	    self.sleep(5)
-	time.sleep(1)
-	#self.ui_print('[state]finish')
-	#self.ui_print('[state]idle')
-	#self.ui_STOPFLAG=1
-	#self.quit()
+	self.sleep(3)
+	
 	if not self.autostartEn:
-	    
 	    self.ui_STOPFLAG=1	    
 	else:
-	    self.ui_print('[state]idle')
-	    
+	    self.ui_print('[state]idle clear')
 	    
     def stopthread(self):
-	#time.sleep(0.1)
-	self.ui_print('[state]finish')
+	self.ui_print('[state]finish btn up')
 	self.terminate()
 	
-    def resume(self):
-	self.__flag.clear()
-	
-    def pause(self):
-	self.__flag.set()
-    
     def thread_resume(self):
 	self.thread_pause=0
     
     def ui_stop(self):
-	
-	
-	#while self.isRunning():
-	#    self.wait()
-	#self.ui_print('USER MANU STOP TEST')
-	#self.ui_STOPFLAG=1
 	self.stopthread()
+	
     def set_params(self,stdout_='',dutconfig='',testflow=''):
 	self.send_cmd=[]
 	self.fwstr_withcmd=[]
@@ -1614,22 +1591,22 @@ class esp_testThread(QtCore.QThread):
 	self.testflow=testflow
 	self.dutconfig=dutconfig
 	self._stdout=stdout_
-	slot_num =self.dutconfig['common_conf']['dut_num']
-	self.COMPORT=self.dutconfig['DUT'+slot_num]['port1']	
-	self.BAUDRATE=int(self.dutconfig['DUT'+slot_num]['rate1'])
+	self.slot_num =self.dutconfig['common_conf']['dut_num']
+	self.COMPORT=self.dutconfig['DUT'+self.slot_num]['port1']	
+	self.BAUDRATE=int(self.dutconfig['DUT'+self.slot_num]['rate1'])
 	self.chip_type=self.dutconfig['chip_conf']['chip_type'] 
 	self.sub_chip_type=''
 	self.autostartEn=int(self.dutconfig['common_conf']['auto_start'])
 	self.loadmode=self.dutconfig['common_conf']['test_from']
-	self.user_fw_download_port=self.dutconfig['DUT'+slot_num]['port2']
-	self.user_fw_download_baud=int(self.dutconfig['DUT'+slot_num]['rate2'])
+	self.user_fw_download_port=self.dutconfig['DUT'+self.slot_num]['port2']
+	self.user_fw_download_baud=int(self.dutconfig['DUT'+self.slot_num]['rate2'])
 	self.user_fw_download_delay=int(self.testflow['USER_FW_VER_DELAY(s)'])
 	self.user_fw_download_timeout=int(self.testflow['USER_FW_VER_TIMEOUT(s)'])
 	self.IMGPATH=self.dutconfig['common_conf']['bin_path']
 	self.fac_=self.dutconfig['common_conf']['fac_sid']
 	self.po=self.dutconfig['common_conf']['po_no']
 	self.test_mode=self.dutconfig['common_conf']['position']
-	self.user_fw_checkEn=int(self.testflow['USER_FW_CKECK'])
+	self.user_fw_checkEn=int(self.testflow['USER_FW_CHECK'])
 	self.fw_targetstr=self.testflow['USER_FW_VER_STR']
 	self.fw_cmd_combin=self.testflow['USER_TEST_CMD<cmd,rsp,tmo>']
 	try:
@@ -1668,5 +1645,5 @@ class esp_testThread(QtCore.QThread):
     
 
 	    
-#if __name__=='__main':
-    
+if __name__=='__main':
+    pass

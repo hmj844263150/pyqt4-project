@@ -56,7 +56,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -209,7 +209,7 @@ background-color: rgb(0, 170, 255);</string>
        </font>
       </property>
       <property name="text">
-       <string>2c3ae8080000</string>
+       <string>000000000000</string>
       </property>
      </widget>
      <widget class="QTextBrowser" name="textBrowser_6">
@@ -253,7 +253,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>2c3ae8080000</string>
+       <string>000000000000</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="leStatus2">
@@ -410,7 +410,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>2c3ae8080000</string>
+       <string>000000000000</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="leStatus3">
@@ -567,7 +567,7 @@ p, li { white-space: pre-wrap; }
        </font>
       </property>
       <property name="text">
-       <string>2c3ae8080000</string>
+       <string>000000000000</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="leStatus4">
@@ -2428,25 +2428,6 @@ p, li { white-space: pre-wrap; }
           <string>FREQ</string>
          </property>
         </widget>
-        <widget class="QLabel" name="label_31">
-         <property name="geometry">
-          <rect>
-           <x>360</x>
-           <y>100</y>
-           <width>60</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>AUTOSTART</string>
-         </property>
-        </widget>
         <widget class="QLabel" name="label_32">
          <property name="geometry">
           <rect>
@@ -2465,26 +2446,6 @@ p, li { white-space: pre-wrap; }
          <property name="text">
           <string>EFUSE MODE</string>
          </property>
-        </widget>
-        <widget class="QComboBox" name="cbAutoStart">
-         <property name="geometry">
-          <rect>
-           <x>430</x>
-           <y>100</y>
-           <width>71</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <item>
-          <property name="text">
-           <string>0</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>1</string>
-          </property>
-         </item>
         </widget>
         <widget class="QComboBox" name="cbFREQ">
          <property name="geometry">
@@ -2520,14 +2481,27 @@ p, li { white-space: pre-wrap; }
          </property>
          <item>
           <property name="text">
-           <string>0</string>
+           <string>normal</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>1</string>
+           <string>cus_mac</string>
           </property>
          </item>
+        </widget>
+        <widget class="QCheckBox" name="cbAutoStart">
+         <property name="geometry">
+          <rect>
+           <x>370</x>
+           <y>100</y>
+           <width>71</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>AUTOSTART</string>
+         </property>
         </widget>
        </widget>
        <zorder>wgLocalConfig</zorder>
@@ -2644,7 +2618,7 @@ p, li { white-space: pre-wrap; }
        </property>
        <item>
         <property name="text">
-         <string>USER_FW_CKECK</string>
+         <string>USER_FW_CHECK</string>
         </property>
         <property name="checkState">
          <enum>Checked</enum>
@@ -2940,7 +2914,7 @@ p, li { white-space: pre-wrap; }
        </item>
        <item>
         <property name="text">
-         <string>PSRAMTEST</string>
+         <string>PSRAM_TEST</string>
         </property>
         <property name="checkState">
          <enum>Checked</enum>
@@ -2948,7 +2922,7 @@ p, li { white-space: pre-wrap; }
        </item>
        <item>
         <property name="text">
-         <string>PVTTEST</string>
+         <string>PVT_TEST</string>
         </property>
         <property name="checkState">
          <enum>Checked</enum>

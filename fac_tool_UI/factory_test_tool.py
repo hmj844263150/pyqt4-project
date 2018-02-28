@@ -8,6 +8,7 @@ import serial.tools.list_ports
 import threading
 import datetime
 import queue
+from memory_profiler import profile
 from my_widget import *
 from io import StringIO
 
@@ -33,36 +34,7 @@ try:
 except AttributeError:
     def _translate(context, text, disambig):
         return QtGui.QApplication.translate(context, text, disambig)
-
-def fac_test(stdout, dut_config, test_flow):
-    sys.path.append('../RF_test')
-    import esp_test
-    esp_test.fac_test(stdout, dut_config, test_flow)
-    if 1:
-        return
-    #sys.stdout = stdout
-    if dut_config['common_conf']['test_from'] == 'FLASH':
-        dut_num = dut_config['common_conf']['dut_num']
-        baudrate = dut_config['DUT'+dut_num]['rate1']
-        port = dut_config['DUT'+dut_num]['port1']
-        import random
-        i = random.randint(0, 4)
-        
-        stdout.write('[state]run')
-        stdout.write('[mac]18fe34000001')
-        stdout.write(port)
-        stdout.write(baudrate)
-        try:
-            ser = serial.Serial(port=port, baudrate=baudrate, timeout=1)
-            ser.write('esp_set_flash_jump_start 1\r')
-            rl = ser.readline()            
-        except:
-            stdout.write('open serial fail')
-            
-    elif dut_config['common_conf']['test_from'] == 'RAM':
-        pass
-    else:
-        pass
+    
     
 class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     _SP_SIGN = '$$'
@@ -70,16 +42,12 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     DUT_NUM = 4
     DUT_PORTS = []
     DUT_RATES = []
-    DUT_START_BTNS = []
-    DUT_STOP_BTNS = []
-    DUT_LOG_BTNS = []
     CHIP_TYPE_NUM = 0
-    esp_process={1:None, 2:None, 3:None, 4:None}
-    run_queue=queue.Queue(maxsize=4)
-    run_mutex = threading.Lock()
-    run_flag = True
     
-    class _Print(StringIO):
+    class _Print(StringIO): 
+        '''
+        this is a inner class use for ui print to specify dut
+        '''
         def __init__(self, factory_tool, obj):
             """ x.__init__(...) initializes x; see help(type(x)) for signature """
             self.factory_tool = factory_tool
@@ -93,41 +61,37 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     def __init__(self, params={}, parent=None):
         super(QtGui.QMainWindow, self).__init__(parent=parent)
         self.setupUi(self)  # general by pyqt designer
-        self._ui_init()       # add my control and init some ui settings
-        self._test_init()  
-        self._setup_signal()  # add signal for need
-        #self._test_init()     # initial the settings for production test
+        self._ui_init()     # add spicial control module and init some ui settings
+        self._test_init()    # initial the settings for production test
+        self._setup_signal() # add signal for need
+        
+        tmp_path = os.getcwd().replace('\\', '//')
+        self.logs_path = tmp_path[:tmp_path.find(tmp_path.split('//')[len(tmp_path.split('//'))-1])] + 'logs//'        
         
     def _ui_init(self):
+        self.twTestArea.setCurrentIndex(0)
         for i in xrange(1,self.DUT_NUM+1):
-            self.DUT_START_BTNS.append(eval('self.pbStart'+str(i)))
-            self.DUT_STOP_BTNS.append(eval('self.pbStop'+str(i)))
-            self.DUT_LOG_BTNS.append(eval('self.maLog'+str(i)))
-            
             self.print_log(eval('self.tbLog{}'.format(str(i))), '[state]idle')
-            
             for j in xrange(1,3):
                 self.DUT_PORTS.append(eval('self.cbPort'+str(i)+'_'+str(j)))
                 self.DUT_RATES.append(eval('self.cbPortRate'+str(i)+'_'+str(j)))
                 eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(True)
-                
-            self.twTestArea.setCurrentIndex(0)
 
     def _setup_signal(self):
-        p = self.trwTestFlow.children()[0]
         QtCore.QObject.connect(self.trwTestFlow, QtCore.SIGNAL(_fromUtf8("itemChanged(QTreeWidgetItem*,int)")), self.testflow_check)
         QtCore.QObject.connect(self.pbTFSubmit, QtCore.SIGNAL(_fromUtf8("clicked()")), self._testflow_submit)
         QtCore.QObject.connect(self.pbTFReset, QtCore.SIGNAL(_fromUtf8("clicked()")), self.testflow_reset)
-        QtCore.QObject.connect(self.pbAllStart, QtCore.SIGNAL(_fromUtf8("clicked()")), self.all_start)
-        QtCore.QObject.connect(self.pbAllStop, QtCore.SIGNAL(_fromUtf8("clicked()")), self.all_stop)
         QtCore.QObject.connect(self.pbCloudSync, QtCore.SIGNAL(_fromUtf8("clicked()")), self.cloud_sync)
         QtCore.QObject.connect(self.pbDutReset, QtCore.SIGNAL(_fromUtf8("clicked()")), self.dut_reset)
         QtCore.QObject.connect(self.pbDutSubmit, QtCore.SIGNAL(_fromUtf8("clicked()")), self._dut_submit)
         QtCore.QObject.connect(self.cbChipType, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.chip_type_change)
         QtCore.QObject.connect(self.cbTestFrom, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.test_from_change)
         QtCore.QObject.connect(self.pbBinPath, QtCore.SIGNAL(_fromUtf8("clicked()")), self.showFileDialog)
-        #for btn in self.DUT_START_BTNS: btn.clicked.connect(self.single_start)
-        #for btn in self.DUT_STOP_BTNS: btn.clicked.connect(self.single_stop)
+        self.SIGNAL_PRINT.connect(self.print_log)
+        self.maCloud.changed.connect(self.change_position)        
+        
+        QtCore.QObject.connect(self.pbAllStart, QtCore.SIGNAL(_fromUtf8("clicked()")), self.all_start)
+        QtCore.QObject.connect(self.pbAllStop, QtCore.SIGNAL(_fromUtf8("clicked()")), self.all_stop)        
         self.pbStart1.clicked.connect(lambda :self.single_start(self.pbStart1))
         self.pbStart2.clicked.connect(lambda :self.single_start(self.pbStart2))
         self.pbStart3.clicked.connect(lambda :self.single_start(self.pbStart3))
@@ -137,11 +101,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.pbStop3.clicked.connect(lambda :self.single_stop(self.pbStop3))
         self.pbStop4.clicked.connect(lambda :self.single_stop(self.pbStop4))        
         
-        for cb in self.DUT_PORTS: cb.clicked.connect(self.change_port)
-        self.maLog1.triggered.connect(lambda :self.pop_log(1))
-        self.maLog2.triggered.connect(lambda :self.pop_log(2))
-        self.maLog3.triggered.connect(lambda :self.pop_log(3))
-        self.maLog4.triggered.connect(lambda :self.pop_log(4))
+        for cb in self.DUT_PORTS: cb.clicked.connect(self.change_port) 
         self.cbPortRate1_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate1_1))
         self.cbPortRate1_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate1_2))
         self.cbPortRate2_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate2_1))
@@ -150,16 +110,20 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.cbPortRate3_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate3_2))
         self.cbPortRate4_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate4_1))
         self.cbPortRate4_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate4_2))
-      #  for i in range(1,5):    
-      #      self.connect(self.esp_process[i], QtCore.SIGNAL("finished()"), self.finished) 
-      #      self.connect(self.thread, QtCore.SIGNAL("terminated()"), self.finished)
         
-        self.SIGNAL_PRINT.connect(self.print_log)
-        self.maCloud.changed.connect(self.change_position)
+        self.maLog1.triggered.connect(lambda :self.pop_log(1))
+        self.maLog2.triggered.connect(lambda :self.pop_log(2))
+        self.maLog3.triggered.connect(lambda :self.pop_log(3))
+        self.maLog4.triggered.connect(lambda :self.pop_log(4))
         
         QtCore.QMetaObject.connectSlotsByName(self)
     
     def _test_init(self):
+        self.esp_process={1:None, 2:None, 3:None, 4:None}
+        self.run_queue=queue.Queue(maxsize=4)
+        self.run_flag = True
+        self.mutex = threading.Lock()
+        
         self.dut_config = {}
         self.CHIP_TYPE_NUM = self.cbChipType.count()
         self.BAUD_NUM = self.cbPortRate1_1.count()
@@ -380,21 +344,15 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         if self.esp_process.has_key(id):
            # if self.esp_process[id].isRunning():
             self.esp_process[id].SIGNAL_STOP.emit()
-    
-    def print_(self, log):
-        self.SIGNAL_PRINT.emit(log)
-        
+         
     def pop_log(self, index):
-        id = index
-        print id
-        if id in (1,2,3,4):
-            logpath = self.esp_process[id].logpath[2:]
-            ospath = os.getcwd().replace('\\', '//')
-            ospath = ospath[:ospath.find(ospath.split('//')[len(ospath.split('//'))-1])]
-            logpath = ospath + logpath
+        log_path = self.logs_path
+        if index in (1,2,3,4):       
+            if self.esp_process[index] != None:
+                log_path = self.esp_process[index].logpath.split('//')[-1]
+                log_path = self.logs_path + log_path
             try:
-                os.startfile(logpath)
-                
+                os.startfile(log_path)
             except:
                 print 'error path'
         else:
@@ -507,7 +465,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             else:
                 self.maCloud.setChecked(False)
                 self.pbCloudSync.setEnabled(False)
-                self.lbPosition.setText('Loacl')
+                self.lbPosition.setText('Local')
                 
             self.change_position() 
             
@@ -517,11 +475,10 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 self.cbTestFrom.setCurrentIndex(1)
                 
             self.cbFREQ.setCurrentIndex(self.cbFREQ.findText(conf.get('chip_conf', 'freq')))
-            self.cbAutoStart.setCurrentIndex(self.cbAutoStart.findText(conf.get('common_conf', 'auto_start')))
-            self.cbEfuseMode.setCurrentIndex(self.cbEfuseMode.findText(conf.get('chip_conf', 'efuse_mode')))
+            self.cbAutoStart.setChecked(True if conf.get('common_conf', 'auto_start') == '1' else False)
+            self.cbEfuseMode.setCurrentIndex(int(conf.get('chip_conf', 'efuse_mode')))
                 
             self.lbChipType.setText(conf.get('chip_conf', 'chip_type'))
-            #self.lbFWVer.setText(self.leFWVer.text())
             self.lbPoNo.setText(self.lePoNo.text())
             self.lbMPNNo.setText(self.leMPNNo.text())
             self.lbFacId.setText(self.leFacId.text())
@@ -569,8 +526,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         conf.set('common_conf', 'POSITION', 'cloud' if self.maCloud.isChecked() else 'local')
         conf.set('common_conf', 'TEST_FROM', self.cbTestFrom.currentText())
         conf.set('chip_conf', 'FREQ', self.cbFREQ.currentText())
-        conf.set('chip_conf', 'efuse_mode', self.cbEfuseMode.currentText())
-        conf.set('common_conf', 'auto_start', self.cbAutoStart.currentText())
+        conf.set('chip_conf', 'efuse_mode', self.cbEfuseMode.currentIndex())
+        conf.set('common_conf', 'auto_start', '1' if self.cbAutoStart.checkState() else '0')
         if self.cbChipType.currentIndex() < self.CHIP_TYPE_NUM - 1:
             conf.set('chip_conf', 'CHIP_TYPE', self.cbChipType.currentText())
         else:
@@ -604,7 +561,9 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         leState.setText(state)
         leState.setStyleSheet(_fromUtf8(style+"color: rgb(255, 255, 255);"))
         
-    
+    def print_(self, log):
+        self.SIGNAL_PRINT.emit(log)
+        
     def print_log(self, tb, log):
         show_flag = True
         log=str(log)
@@ -638,12 +597,11 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             elif log.lower().find('pass') >= 0:
                 state = 'PASS'
                 style = "background-color: rgb(0, 170, 0);\n"
-                if log.lower().find('passed') < 0:
-                    self.local_count('pass', dut_num)                
+                    
             elif log.lower().find('fail') >= 0:
                 state = 'FAIL'
                 style = "background-color: rgb(255, 0, 0);\n"
-                self.local_count('fail', dut_num)
+                
             elif log.lower().find('upload-f') >= 0:
                 state = 'upload-f'
                 style = "background-color: rgb(255, 0, 0);\n"
@@ -663,20 +621,20 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     
                 if self.run_queue.empty():
                     self.run_flag = True
+                    
+                if log[-1] == '0':
+                    self.local_count('fail', dut_num)
+                else:
+                    self.local_count('pass', dut_num)
                    
             else:
                 state_flag = False
                 
             if state_flag:
                 self.state_change(dut_num, state, style)
-                
-            if log.lower().find('finish') >= 0:
-                eval('self.pbStart{}'.format(dut_num)).setDown(False)
-                eval('self.pbStart{}'.format(dut_num)).setEnabled(True)
-                              
-                
+                                
         elif log.find('[upload]') >= 0:
-            self.lbTotalStatus.setText(log[8:])
+            self.lbTotalStatus.setText(log.split(']')[-1])
         elif log.find('[mac]') >= 0:
             eval("self.lbMAC{}".format(dut_num)).setText(log[-12:])
         
@@ -708,7 +666,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         else:
             self.pbCloudSync.setEnabled(False)
             self.twTestArea.widget(2).setEnabled(True)
-            self.lbPosition.setText('Loacl')
+            self.lbPosition.setText('Local')
             self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
                                                     "border-color: rgb(0, 255, 255);"))            
     
@@ -718,9 +676,10 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.dut_config['common_conf']['bin_path'] = filename
         
     def local_count(self, rst, dut_num):
+        self.mutex.acquire()
         # total, pass, fail, mac, time
         datas = [0,0,0,0,0]
-        with open('./config/localCount.txt', 'r') as fd:
+        with open('./config/localCount.txt', 'a+') as fd:
             rls = fd.readlines()
             
             if len(rls) > 0:
@@ -728,30 +687,33 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     if len(rls[-1 * i].split(',')) >= 4:
                         datas = rls[-1].split(',')
                         break
-        try:
-            total = int(data[0])
-            pass_num = int(data[1])
-            fail_num = int(data[2])
-        except:
-            total = 0
-            pass_num = 0
-            fail_num = 0
-        mac = eval("self.lbMAC{}".format(dut_num)).text()
-        now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')[5:]
-        if rst == 'pass':
-            pass_num += 1
-        elif rst == 'fail':
-            fail_num += 1
-        total += 1
-        with open('./config/localCount.txt','a') as fd:
+                    
+            try:
+                total = int(datas[0])
+                pass_num = int(datas[1])
+                fail_num = int(datas[2])
+            except:
+                total = 0
+                pass_num = 0
+                fail_num = 0
+            mac = eval("self.lbMAC{}".format(dut_num)).text()
+            now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')[5:]
+            if rst == 'pass':
+                pass_num += 1
+            elif rst == 'fail':
+                fail_num += 1
+            total += 1
+            
             fd.write(str(total)+','+str(pass_num)+','+str(fail_num)+','+str(mac)+','+now_time+"\n")
+            
+        self.mutex.release()
         self.lbWorkStat.setText('pass:{}/ fail:{}'.format(pass_num, fail_num))
 
-def run():
+def main():
     app = QtGui.QApplication(sys.argv)
     ui = FactoryToolUI()
     ui.show()
     sys.exit(app.exec_())
 
 if __name__ == "__main__":
-    run()
+    main()
