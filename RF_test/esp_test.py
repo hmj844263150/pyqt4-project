@@ -1478,12 +1478,16 @@ class esp_testThread(QtCore.QThread):
 	                          delay=self.user_fw_download_delay,baud=self.user_fw_download_baud)
 	    
 	elif(self.fw_cmdEn):
-	    self.l_print(0,'fw check with cmden=1')
-	    res,data=self.read_fw(ser=self.fwser, cmd_str=self.send_cmd[0], pattern=self.fwstr_withcmd[0],ser_tout=self.fwtmo_withcmd[0],
-	                          delay=0.5,baud=self.user_fw_download_baud)
-	    self.l_print(3,'re-send cmd')
-	    res,data=self.read_fw(ser=self.fwser, cmd_str=self.send_cmd[0], pattern=self.fwstr_withcmd[0],ser_tout=self.fwtmo_withcmd[0],
-		                          delay=0.5,baud=self.user_fw_download_baud)	    
+	    for cmd,targetstr,tout in self.send_cmd,self.fwstr_withcmd,self.fwtmo_withcmd:
+		self.l_print(0,'fw check with cmden=1')
+		res,data=self.read_fw(ser=self.fwser, cmd_str=cmd, pattern=targetstr,ser_tout=tout,
+		                      delay=0.5,baud=self.user_fw_download_baud)
+		self.l_print(3,'re-send cmd')
+		res,data=self.read_fw(ser=self.fwser, cmd_str=cmd, pattern=targetstr,ser_tout=tout,
+		                      delay=0.5,baud=self.user_fw_download_baud)
+		if not res==True:
+		    self.l_print(3,'%s cmd check firmware error'%cmd)
+		    break
 	    
 	if res==True:
 	    self.l_print(0,'firmware check ok')
@@ -1513,13 +1517,16 @@ class esp_testThread(QtCore.QThread):
 		   
 		    
 	elif(self.fw_cmdEn):
-	    self.l_print(0,'fw check with cmden=1')
-	    check_res=fwcheck_ramdownload.run(self.COMPORT, self.BAUDRATE, self.fw_cmdEn,self.send_cmd[0], self.chip_type, 
-	                                             self.fwstr_withcmd[0], 
-	                                             0.5, 
-	                                             self.fwtmo_withcmd[0], 
-	                                             self.user_fw_download_port,self.user_fw_download_baud)		
-		
+	    for cmd,targetstr,tout in self.send_cmd,self.fwstr_withcmd,self.fwtmo_withcmd:
+		self.l_print(0,'fw check with cmden=1')
+		check_res=fwcheck_ramdownload.run(self.COMPORT, self.BAUDRATE, self.fw_cmdEn,cmd, self.chip_type, 
+		                                         targetstr, 
+		                                         0.5, 
+		                                         tout, 
+		                                         self.user_fw_download_port,self.user_fw_download_baud)		
+		if not check_res:
+		        self.l_print(3,'%s cmd check firmware error'%cmd)
+			break
 	if check_res:
 	    self.ui_print('FIRMWARE CHECK OK')
 	else:
