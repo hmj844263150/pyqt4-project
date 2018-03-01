@@ -22,7 +22,7 @@ def uart_send_command(ser,cmd_str,pattern,ser_tout = 1,delay = 1, baud = None):
     start_time = time.time()
 
     if not cmd_str == '':
-        ser.write(cmd_str+"\r")
+        ser.write(cmd_str+"\r\n")
     #ser.flush()
     
     if pattern == None:

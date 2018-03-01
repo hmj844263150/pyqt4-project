@@ -102,7 +102,7 @@ def test_get_serial(com,baud):
         line = ser.readline()
         print "test print: ",line
 
-def get_serial_line_id(ser,start_flg,end_flg,sta_num=-1,retry=False,chip_type = "ESP8266"):
+def get_serial_line_id(ser,start_flg,end_flg,sta_num=-1,retry=False,chip_type = "ESP8266",mode=0,wd='null'):
     log=""
     ver=''
     _id=''
@@ -127,11 +127,15 @@ def get_serial_line_id(ser,start_flg,end_flg,sta_num=-1,retry=False,chip_type = 
     print "====================="
     print "RETRY:",retry,chip_type
     print "====================="
-    if retry:
-        ser.flush()
+   # if retry:
+    #if(wd.slot_num!='1'):
+        #ser.flush()
         #raw_input("retry test...")
+        #ser.write("esp_en_retest\r")
+    if mode == 1:
         ser.write("esp_en_retest\r")
-    ser.write('esp_set_flash_jump_start 1\r')
+    else:
+        ser.write('esp_set_flash_jump_start 1\r')
     #ser=serial.Serial(com_num-1,baudrate,timeout=10)
     #print "test ser.isopen: ",ser.isOpen
     s=ser.readline()
@@ -144,7 +148,8 @@ def get_serial_line_id(ser,start_flg,end_flg,sta_num=-1,retry=False,chip_type = 
         #ser.write('esp_set_flash_jump_start 1\r')
         s=ser.readline()
         if s=='':
-            print('get_serial_line_id timeout....')
+            print(3,'get_serial_line_id timeout....')
+            
             break
     print("test point 2...")
     #log+=s
@@ -167,7 +172,8 @@ def get_serial_line_id(ser,start_flg,end_flg,sta_num=-1,retry=False,chip_type = 
         if s=='':
             if sleep_start==1:
                 sleep_flg=1
-            print('get_serial_line_id timeout....')
+            print(3,'get_serial_line_id timeout....')
+            
             break
         #log+=s
     #print(s)

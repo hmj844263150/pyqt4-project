@@ -8,6 +8,7 @@ import serial.tools.list_ports
 import threading
 import datetime
 import queue
+import win32api
 from memory_profiler import profile
 from my_widget import *
 from io import StringIO
@@ -76,6 +77,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 self.DUT_PORTS.append(eval('self.cbPort'+str(i)+'_'+str(j)))
                 self.DUT_RATES.append(eval('self.cbPortRate'+str(i)+'_'+str(j)))
                 eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(True)
+            
 
     def _setup_signal(self):
         QtCore.QObject.connect(self.trwTestFlow, QtCore.SIGNAL(_fromUtf8("itemChanged(QTreeWidgetItem*,int)")), self.testflow_check)
@@ -597,11 +599,13 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             elif log.lower().find('pass') >= 0:
                 state = 'PASS'
                 style = "background-color: rgb(0, 170, 0);\n"
-                    
+                if log.find('record') >= 0:
+                    self.local_count('pass', dut_num)
             elif log.lower().find('fail') >= 0:
                 state = 'FAIL'
                 style = "background-color: rgb(255, 0, 0);\n"
-                
+                if log.find('record') >= 0:
+                    self.local_count('fail', dut_num)
             elif log.lower().find('upload-f') >= 0:
                 state = 'upload-f'
                 style = "background-color: rgb(255, 0, 0);\n"
@@ -622,11 +626,6 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 if self.run_queue.empty():
                     self.run_flag = True
                     
-                if log[-1] == '0':
-                    self.local_count('fail', dut_num)
-                else:
-                    self.local_count('pass', dut_num)
-                   
             else:
                 state_flag = False
                 

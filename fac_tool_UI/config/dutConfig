@@ -2,13 +2,13 @@
 position = local
 fw_ver = ver_1.1.1
 po_no = c0393
-mpn_no = 2018020003
+mpn_no = 2018020004
 fac_sid = esp-own-test-FID-dbd42d01
 batch_sid = bf54c4adf0
 fac_plan = just-test
 cloud_no = tt1
-test_from = FLASH
-bin_path = D:/VM/share/new_factory_tools/fac_tool_UI/bin/esp8266_fac_jump_test.bin
+test_from = RAM
+bin_path = D:/VM/share/new_factory_tools/fac_tool_UI/bin/RSP8266_module_test_vdd33_26m_remove_powerup_test.bin
 auto_start = 1
 tmp_server_ip = 192.168.16.186
 tmp_server_port = 8000
@@ -20,21 +20,21 @@ port2 = COM5
 rate2 = 115200
 
 [DUT2]
-port1 = COM5
-rate1 = 115200
-port2 = COM5
-rate2 = 115200
-
-[DUT3]
 port1 = COM7
 rate1 = 115200
 port2 = COM7
 rate2 = 115200
 
-[DUT4]
-port1 = COM8
+[DUT3]
+port1 = COM10
 rate1 = 115200
-port2 = COM6
+port2 = COM10
+rate2 = 115200
+
+[DUT4]
+port1 = COM17
+rate1 = 115200
+port2 = COM17
 rate2 = 115200
 
 [chip_conf]
