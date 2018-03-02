@@ -115,6 +115,7 @@ class esp_testThread(QtCore.QThread):
 	self.tx_test_res=0
 	self.rx_test_res=0
 	self.thread_pause=1
+	self.mutex_send_flag = 0
         self._date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
         self._time = time.strftime('%H:%M:%S',time.localtime(time.time()))
         
@@ -158,6 +159,7 @@ class esp_testThread(QtCore.QThread):
 		self.ui_print('SYNC OK,START TO TEST')
 		
 	self.ui_print('[state]RUN')
+
 	while self.thread_pause:
 	    pass
 	print self.slot_num, "start wait"
@@ -221,6 +223,7 @@ class esp_testThread(QtCore.QThread):
 	#if(self.loadmode==1):
 	print self.slot_num, "finish RF"
 	self.ui_print('[state]RFMutex')
+	self.mutex_send_flag = 1
 	    
 	if(not self.ui_STOPFLAG):
 	   # if 0:
@@ -1628,6 +1631,16 @@ class esp_testThread(QtCore.QThread):
 	    
     def stopthread(self):
 	self.ui_print('[state]finish btn up')
+	
+	if self.thread_pause==0:
+	    self.thread_pause = 1  # for rf test mutex
+	    if self.mutex_send_flag == 0:
+		print self.slot_num, "finish RF"
+		self.ui_print('[state]RFMutex')            # for rf test mutex
+	
+	self.SIGNAL_RESUME.emit()
+	time.sleep(0.2)	
+	
 	try:
 	    self.ser.close()
 	except:

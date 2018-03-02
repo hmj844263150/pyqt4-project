@@ -138,7 +138,10 @@ def get_serial_line_id(ser,start_flg,end_flg,sta_num=-1,retry=False,chip_type = 
         ser.write('esp_set_flash_jump_start 1\r')
     #ser=serial.Serial(com_num-1,baudrate,timeout=10)
     #print "test ser.isopen: ",ser.isOpen
-    s=ser.readline()
+    try:
+        s=ser.readline()
+    except:
+        return ''
     #s=''.join(s)
     print('test serial opened ...')
     
@@ -146,7 +149,10 @@ def get_serial_line_id(ser,start_flg,end_flg,sta_num=-1,retry=False,chip_type = 
     while not start_flg in s:        
         print "pres: ",s
         #ser.write('esp_set_flash_jump_start 1\r')
-        s=ser.readline()
+        try:
+            s=ser.readline()
+        except:
+            return ''
         if s=='':
             print(3,'get_serial_line_id timeout....')
             
@@ -168,7 +174,10 @@ def get_serial_line_id(ser,start_flg,end_flg,sta_num=-1,retry=False,chip_type = 
         #print(s)
         if 'MODULE_TEST EDN' in s:
             sleep_start=1
-        s=ser.readline()
+        try:
+            s=ser.readline()
+        except:
+            return ''
         if s=='':
             if sleep_start==1:
                 sleep_flg=1
