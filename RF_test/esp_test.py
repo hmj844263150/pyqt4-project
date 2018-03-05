@@ -36,7 +36,9 @@ class esp_testThread(QtCore.QThread):
         super(esp_testThread,self).__init__(parent=None)
 	self.SIGNAL_STOP.connect(self.ui_stop)
 	self.SIGNAL_RESUME.connect(self.thread_resume)
+	self.param_read=1
 	self.set_params(_stdout,dutconfig,testflow)
+	self.check_param()
 	self.thread_pause=1
 	self.ui_STOPFLAG=0
 	self.MAC = '000000000000'
@@ -108,6 +110,7 @@ class esp_testThread(QtCore.QThread):
 	return -3 # sync timeout 
     
     def test(self):
+	
 	self.ui_STOPFLAG=0
 	self.STOPFLAG=0	
 	self.resflag = 1
@@ -128,6 +131,14 @@ class esp_testThread(QtCore.QThread):
 	self.esp_logstr=''	
         dl_result=0
 	self.l_print(0,str(self.THRESHOLD_DICT))
+	
+	if not self.param_read:
+	    self.ui_print('PARAM READ ERROR')
+	    self.STOPFLAG=1
+	    self.resflag=0
+	    self.ui_STOPFLAG=1
+	    self.STOPTEST()
+	    return
 	
 	self.ui_print('[state]SYNC')
 	if(self.loadmode==1):
@@ -1660,30 +1671,35 @@ class esp_testThread(QtCore.QThread):
 	self.stopthread()
 	
     def set_params(self,stdout_='',dutconfig='',testflow=''):
-	self.send_cmd=[]
-	self.fwstr_withcmd=[]
-	self.fwtmo_withcmd=[]
-	self.testflow=testflow
-	self.dutconfig=dutconfig
-	self._stdout=stdout_
-	self.slot_num =self.dutconfig['common_conf']['dut_num']
-	self.COMPORT=self.dutconfig['DUT'+self.slot_num]['port1']	
-	self.BAUDRATE=int(self.dutconfig['DUT'+self.slot_num]['rate1'])
-	self.chip_type=self.dutconfig['chip_conf']['chip_type'] 
-	self.sub_chip_type=''
-	self.autostartEn=int(self.dutconfig['common_conf']['auto_start'])
-	self.loadmode=self.dutconfig['common_conf']['test_from']
-	self.user_fw_download_port=self.dutconfig['DUT'+self.slot_num]['port2']
-	self.user_fw_download_baud=int(self.dutconfig['DUT'+self.slot_num]['rate2'])
-	self.user_fw_download_delay=int(self.testflow['USER_FW_VER_DELAY(s)'])
-	self.user_fw_download_timeout=int(self.testflow['USER_FW_VER_TIMEOUT(s)'])
-	self.IMGPATH=self.dutconfig['common_conf']['bin_path']
-	self.fac_=self.dutconfig['common_conf']['fac_sid']
-	self.po=self.dutconfig['common_conf']['po_no']
-	self.test_mode=self.dutconfig['common_conf']['position']
-	self.user_fw_checkEn=int(self.testflow['USER_FW_CHECK'])
-	self.fw_targetstr=self.testflow['USER_FW_VER_STR']
-	self.fw_cmd_combin=self.testflow['USER_TEST_CMD<cmd,rsp,tmo>']
+	try:
+	    self.send_cmd=[]
+	    self.fwstr_withcmd=[]
+	    self.fwtmo_withcmd=[]
+	    self.testflow=testflow
+	    self.dutconfig=dutconfig
+	    self._stdout=stdout_
+	    self.slot_num =self.dutconfig['common_conf']['dut_num']
+	    self.COMPORT=self.dutconfig['DUT'+self.slot_num]['port1']	
+	    self.BAUDRATE=int(self.dutconfig['DUT'+self.slot_num]['rate1'])
+	    self.chip_type=self.dutconfig['chip_conf']['chip_type'] 
+	    self.sub_chip_type=''
+	    self.autostartEn=int(self.dutconfig['common_conf']['auto_start'])
+	    self.loadmode=self.dutconfig['common_conf']['test_from']
+	    self.user_fw_download_port=self.dutconfig['DUT'+self.slot_num]['port2']
+	    self.user_fw_download_baud=int(self.dutconfig['DUT'+self.slot_num]['rate2'])
+	    self.user_fw_download_delay=int(self.testflow['USER_FW_VER_DELAY(s)'])
+	    self.user_fw_download_timeout=int(self.testflow['USER_FW_VER_TIMEOUT(s)'])
+	    self.IMGPATH=self.dutconfig['common_conf']['bin_path']
+	    self.fac_=self.dutconfig['common_conf']['fac_sid']
+	    self.po=self.dutconfig['common_conf']['po_no']
+	    self.test_mode=self.dutconfig['common_conf']['position']
+	    self.user_fw_checkEn=int(self.testflow['USER_FW_CHECK'])
+	    self.fw_targetstr=self.testflow['USER_FW_VER_STR']
+	    self.fw_cmd_combin=self.testflow['USER_TEST_CMD<cmd,rsp,tmo>']
+	except:
+	    self.l_print(1,'read param error')
+	    self.param_read=0	        #check it before start test
+    
 	try:
 	    cmd_list=self.fw_cmd_combin.replace('<',';').replace('>',';').strip(';').split(';;;')
 	    for cmd in cmd_list:
@@ -1716,6 +1732,21 @@ class esp_testThread(QtCore.QThread):
 	self.analogtest=int(self.testflow['ANALOG'])
 	self.gpiotest_8266=int(self.testflow['GPIO_8266_TEST'])
 	self.gpiotest_32=int(self.testflow['GPIO_32_TEST'])	
+	
+    def check_param(self):
+	#check image avaiable
+	if(self.loadmode==1):
+	    try:
+		with open(self.IMGPATH,'rb') as f:
+		    pass
+	    except:
+		self.l_print(1,'IAMGE un-avaiable')
+		self.param_read=0
+		
+	
+	
+   
+	
     
     
 
