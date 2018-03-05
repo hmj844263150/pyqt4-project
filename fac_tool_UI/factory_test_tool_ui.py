@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'factory_test_tool_ui.ui'
 #
-# Created: Thu Mar 01 16:10:10 2018
+# Created: Mon Mar 05 15:29:24 2018
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -73,7 +73,7 @@ class Ui_MainWindow(object):
         self.leStatus1.setMaximumSize(QtCore.QSize(9999999, 9999999))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Bauhaus 93"))
-        font.setPointSize(48)
+        font.setPointSize(40)
         self.leStatus1.setFont(font)
         self.leStatus1.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.leStatus1.setMouseTracking(True)
@@ -118,7 +118,7 @@ class Ui_MainWindow(object):
         self.leStatus2.setMaximumSize(QtCore.QSize(9999999, 9999999))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Bauhaus 93"))
-        font.setPointSize(48)
+        font.setPointSize(40)
         self.leStatus2.setFont(font)
         self.leStatus2.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.leStatus2.setMouseTracking(True)
@@ -170,7 +170,7 @@ class Ui_MainWindow(object):
         self.leStatus3.setMaximumSize(QtCore.QSize(9999999, 9999999))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Bauhaus 93"))
-        font.setPointSize(48)
+        font.setPointSize(40)
         self.leStatus3.setFont(font)
         self.leStatus3.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.leStatus3.setMouseTracking(True)
@@ -222,7 +222,7 @@ class Ui_MainWindow(object):
         self.leStatus4.setMaximumSize(QtCore.QSize(9999999, 9999999))
         font = QtGui.QFont()
         font.setFamily(_fromUtf8("Bauhaus 93"))
-        font.setPointSize(48)
+        font.setPointSize(40)
         self.leStatus4.setFont(font)
         self.leStatus4.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.leStatus4.setMouseTracking(True)
@@ -1360,7 +1360,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.twTestArea.setCurrentIndex(2)
+        self.twTestArea.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):

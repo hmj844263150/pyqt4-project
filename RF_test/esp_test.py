@@ -92,7 +92,10 @@ class esp_testThread(QtCore.QThread):
 	    self.ser.baudrate = 74880
 	t = time.time()
 	while time.time()-t < timeout:
-	    rl = self.ser.readline()
+	    try:
+		rl = self.ser.readline()
+	    except:
+		return -4 # error cause read from serial
 	    if rl.find('pass flag res:1') >= 0:
 		return 1 # into normal mode, and already test pass
 	    elif rl.find('pass flag res:0') >= 0:
@@ -993,7 +996,7 @@ class esp_testThread(QtCore.QThread):
         connect_status = 1
         #connect_res = 0
         self.memory_download.disconnect()
-        self.msleep(250)
+        #self.msleep(250)
 	#self.window.former_mac=0
 	self.l_print(0,'target bin is %s'%image_path)
         try:
@@ -1624,7 +1627,7 @@ class esp_testThread(QtCore.QThread):
 	elif self.resflag==2:
 	    self.l_print(0,'already passed module')
 	    self.ui_print('[state]passed')
-	self.msleep(300)
+	self.msleep(3000)
 	
 	if not self.autostartEn:
 	    self.ui_STOPFLAG=1	    

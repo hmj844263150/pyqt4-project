@@ -598,6 +598,11 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                         esp_process.SIGNAL_RESUME.emit()
                     self.run_flag = False
                 
+            elif log.lower().find('passed') >= 0:
+                state = 'TESTED'
+                style = "background-color: rgb(0, 170, 0);\n"
+                if log.find('record') >= 0:
+                    self.local_count('pass', dut_num)                
             elif log.lower().find('pass') >= 0:
                 state = 'PASS'
                 style = "background-color: rgb(0, 170, 0);\n"

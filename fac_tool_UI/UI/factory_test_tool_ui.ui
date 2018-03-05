@@ -56,7 +56,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>0</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -149,7 +149,7 @@ p, li { white-space: pre-wrap; }
       <property name="font">
        <font>
         <family>Bauhaus 93</family>
-        <pointsize>48</pointsize>
+        <pointsize>40</pointsize>
        </font>
       </property>
       <property name="cursor">
@@ -283,7 +283,7 @@ p, li { white-space: pre-wrap; }
       <property name="font">
        <font>
         <family>Bauhaus 93</family>
-        <pointsize>48</pointsize>
+        <pointsize>40</pointsize>
        </font>
       </property>
       <property name="cursor">
@@ -437,7 +437,7 @@ p, li { white-space: pre-wrap; }
       <property name="font">
        <font>
         <family>Bauhaus 93</family>
-        <pointsize>48</pointsize>
+        <pointsize>40</pointsize>
        </font>
       </property>
       <property name="cursor">
@@ -591,7 +591,7 @@ p, li { white-space: pre-wrap; }
       <property name="font">
        <font>
         <family>Bauhaus 93</family>
-        <pointsize>48</pointsize>
+        <pointsize>40</pointsize>
        </font>
       </property>
       <property name="cursor">
@@ -838,39 +838,6 @@ background-color: rgb(200, 200, 200);</string>
        <string>MAC:</string>
       </property>
      </widget>
-     <zorder>textBrowser_4</zorder>
-     <zorder>textBrowser_5</zorder>
-     <zorder>leStatus1</zorder>
-     <zorder>tbLog1</zorder>
-     <zorder>lbMAC1</zorder>
-     <zorder>textBrowser_6</zorder>
-     <zorder>lbMAC2</zorder>
-     <zorder>leStatus2</zorder>
-     <zorder>pbStop2</zorder>
-     <zorder>textBrowser_7</zorder>
-     <zorder>textBrowser_8</zorder>
-     <zorder>lbMAC3</zorder>
-     <zorder>leStatus3</zorder>
-     <zorder>pbStop3</zorder>
-     <zorder>textBrowser_9</zorder>
-     <zorder>textBrowser_10</zorder>
-     <zorder>lbMAC4</zorder>
-     <zorder>leStatus4</zorder>
-     <zorder>pbStop4</zorder>
-     <zorder>textBrowser_11</zorder>
-     <zorder>tbLog2</zorder>
-     <zorder>tbLog3</zorder>
-     <zorder>tbLog4</zorder>
-     <zorder>pbStart1</zorder>
-     <zorder>pbStart2</zorder>
-     <zorder>pbStart3</zorder>
-     <zorder>pbStart4</zorder>
-     <zorder>pbStop1</zorder>
-     <zorder>label_5</zorder>
-     <zorder>label_21</zorder>
-     <zorder>label_28</zorder>
-     <zorder>label_29</zorder>
-     <zorder>label_42</zorder>
     </widget>
     <widget class="QWidget" name="tab_2">
      <attribute name="title">
@@ -3663,8 +3630,6 @@ p, li { white-space: pre-wrap; }
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <zorder>pbAllStart_2</zorder>
-    <zorder>pbAllStart</zorder>
    </widget>
    <widget class="QPushButton" name="pbAllStart">
     <property name="geometry">
