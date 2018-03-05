@@ -980,7 +980,8 @@ class esp_testThread(QtCore.QThread):
 	    self.STOPFLAG=1
 	    self.resflag=0
 	if(getmac_res):   
-	    self.MAC=self.memory_download.ESP_MAC.strip('0x').replace('-','').replace(':','')
+	    self.l_print(1,self.memory_download.ESP_MAC)
+	    self.MAC=self.memory_download.ESP_MAC.replace('0x','').replace('-','').replace(':','')
 	    self.l_print(3,"mac sta: %s"%self.memory_download.ESP_MAC) 
 	    self.ui_print('[mac]{}'.format(self.MAC))
 	    self.logpath=self.esp_gen_log()
