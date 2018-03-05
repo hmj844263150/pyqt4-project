@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'factory_test_tool_ui.ui'
 #
-# Created: Mon Mar 05 15:29:24 2018
+# Created: Mon Mar 05 20:25:33 2018
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -1360,7 +1360,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.twTestArea.setCurrentIndex(0)
+        self.twTestArea.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -1529,9 +1529,9 @@ class Ui_MainWindow(object):
         self.label_22.setText(_translate("MainWindow", "PO Number", None))
         self.label_26.setText(_translate("MainWindow", "Fac-Plan", None))
         self.label_27.setText(_translate("MainWindow", "Batch ID", None))
-        self.cbChipType.setItemText(0, _translate("MainWindow", "WROOM-02", None))
-        self.cbChipType.setItemText(1, _translate("MainWindow", "WROOM-32", None))
-        self.cbChipType.setItemText(2, _translate("MainWindow", "WROVER", None))
+        self.cbChipType.setItemText(0, _translate("MainWindow", "ESP-WROOM-02", None))
+        self.cbChipType.setItemText(1, _translate("MainWindow", "ESP-WROOM-32", None))
+        self.cbChipType.setItemText(2, _translate("MainWindow", "ESP32-WROVER", None))
         self.cbChipType.setItemText(3, _translate("MainWindow", "other", None))
         self.textBrowser_30.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"

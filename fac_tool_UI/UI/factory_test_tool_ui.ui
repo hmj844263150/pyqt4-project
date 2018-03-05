@@ -56,7 +56,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -2133,17 +2133,17 @@ border-color: rgb(0, 0, 0);</string>
          </property>
          <item>
           <property name="text">
-           <string>WROOM-02</string>
+           <string>ESP-WROOM-02</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>WROOM-32</string>
+           <string>ESP-WROOM-32</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>WROVER</string>
+           <string>ESP32-WROVER</string>
           </property>
          </item>
          <item>

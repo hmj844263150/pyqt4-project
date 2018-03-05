@@ -7,38 +7,38 @@ fac_sid = esp-own-test-FID-dbd42d01
 batch_sid = bf54c4adf0
 fac_plan = just-test
 cloud_no = tt1
-test_from = RAM
+test_from = FLASH
 bin_path = D:/VM/share/new_factory_tools/fac_tool_UI/bin/RSP8266_module_test_vdd33_26m_remove_powerup_test.bin
-auto_start = 1
+auto_start = 0
 tmp_server_ip = 192.168.16.186
 tmp_server_port = 8000
 
 [DUT1]
-port1 = COM5
+port1 = COM21
 rate1 = 115200
-port2 = COM5
+port2 = COM21
 rate2 = 115200
 
 [DUT2]
-port1 = COM7
+port1 = COM18
 rate1 = 115200
-port2 = COM7
+port2 = COM18
 rate2 = 115200
 
 [DUT3]
-port1 = COM10
+port1 = COM19
 rate1 = 115200
-port2 = COM10
+port2 = COM19
 rate2 = 115200
 
 [DUT4]
-port1 = COM17
+port1 = COM20
 rate1 = 115200
-port2 = COM17
+port2 = COM20
 rate2 = 115200
 
 [chip_conf]
 freq = 26M
 efuse_mode = 1
-chip_type = WROOM-02
+chip_type = ESP-WROOM-02
 

@@ -37,6 +37,8 @@ class esp_testThread(QtCore.QThread):
 	self.SIGNAL_STOP.connect(self.ui_stop)
 	self.SIGNAL_RESUME.connect(self.thread_resume)
 	self.param_read=1
+	self.logpath=''
+	self.esp_logstr=''
 	self.set_params(_stdout,dutconfig,testflow)
 	self.check_param()
 	self.thread_pause=1
@@ -44,6 +46,7 @@ class esp_testThread(QtCore.QThread):
 	self.MAC = '000000000000'
 	self.set_mac_en=0	
 	self.tool_ver='V0.0.1'
+	
 	#self.STOPFLAG=0	
 	#self.resflag = 1	
         self.rptstr='TESTITEM'+','+'TESTVALUE'+','+'SPEC_L'+','+'SPEC_H'+','+'RESULT'+'\n'
@@ -1299,6 +1302,7 @@ class esp_testThread(QtCore.QThread):
 	sys.stdout=sys.stdout
         esp_logpath=self.logpath
         try:
+	   # esp_logpath=self.logpath
             if(print_type==0):
                 temp_str=log_str+'\r\n'
 		print(log_str)
@@ -1498,7 +1502,12 @@ class esp_testThread(QtCore.QThread):
 	                          delay=self.user_fw_download_delay,baud=self.user_fw_download_baud)
 	    
 	elif(self.fw_cmdEn):
-	    for cmd,targetstr,tout in self.send_cmd,self.fwstr_withcmd,self.fwtmo_withcmd:
+	    for param in self.cmd_group:
+		temp_list=[]
+		temp_list=param.split(',')
+		cmd=temp_list[0]
+		targetstr=temp_list[1]
+		tout=temp_list[2]
 		self.l_print(0,'fw check with cmden=1')
 		res,data=self.read_fw(ser=self.fwser, cmd_str=cmd, pattern=targetstr,ser_tout=tout,
 		                      delay=0.5,baud=self.user_fw_download_baud)
@@ -1676,6 +1685,7 @@ class esp_testThread(QtCore.QThread):
 	    self.send_cmd=[]
 	    self.fwstr_withcmd=[]
 	    self.fwtmo_withcmd=[]
+	    self.cmd_group=[]
 	    self.testflow=testflow
 	    self.dutconfig=dutconfig
 	    self._stdout=stdout_
@@ -1706,10 +1716,12 @@ class esp_testThread(QtCore.QThread):
 	    for cmd in cmd_list:
 		
 		t_l=cmd.replace('"',',').split(',')
-		self.send_cmd.append(t_l[0])
-		self.fwstr_withcmd.append(t_l[2])
-		self.fwtmo_withcmd.append(t_l[4])
-		
+		t_str=t_l[0]+','+t_l[2]+','+t_l[4]
+		self.cmd_group.append(t_str)
+		print self.cmd_group
+		#self.send_cmd.append(t_l[0])
+		#self.fwstr_withcmd.append(t_l[2])
+		#self.fwtmo_withcmd.append(t_l[4])
 	except:
 	    self.l_print(3,'read fw check cmd and fw target str error,if fw no need cmd write,ignore it')
 	if self.fw_targetstr.upper()=='ESPCMD_EN':
@@ -1721,9 +1733,9 @@ class esp_testThread(QtCore.QThread):
 	elif(self.loadmode=='FLASH'):
 	    self.loadmode=2	
 	try:
-	    if(self.chip_type=='WROOM-02'):
+	    if(self.chip_type=='ESP-WROOM-02'):
 		self.chip_type='ESP8266'
-	    elif(self.chip_type=='WROOM-32'):
+	    elif self.chip_type in ('ESP-WROOM-32',"ESP32-WROVER"):
 		self.chip_type='ESP32'
 	except:
 	    self.l_print(0,'get chip type error')
