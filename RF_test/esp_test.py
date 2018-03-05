@@ -158,12 +158,6 @@ class esp_testThread(QtCore.QThread):
 	    elif rst==0:
 		self.ui_print('SYNC OK,START TO TEST')
 		
-	self.ui_print('[state]RUN')
-
-	while self.thread_pause:
-	    pass
-	print self.slot_num, "start wait"
-	
 	if not self.ui_STOPFLAG:   
 	    if(self.loadmode==2):
 		dl_result=self.test_download(2)
@@ -172,7 +166,15 @@ class esp_testThread(QtCore.QThread):
 		self.ui_print('END TEST SEQUENCE')
 		self.ui_print('[state]fail')
 		self.STOPTEST()
-		return
+		return	
+	    
+	self.ui_print('[state]RUN')
+
+	while self.thread_pause:
+	    pass
+	print self.slot_num, "start wait"
+	
+	
 	
 	if (not self.ui_STOPFLAG): 
 	    lg=self.get_serial_print()
@@ -991,7 +993,7 @@ class esp_testThread(QtCore.QThread):
         connect_status = 1
         #connect_res = 0
         self.memory_download.disconnect()
-        self.msleep(500)
+        self.msleep(250)
 	#self.window.former_mac=0
 	self.l_print(0,'target bin is %s'%image_path)
         try:
