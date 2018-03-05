@@ -7,7 +7,7 @@ import serial
 import serial.tools.list_ports 
 import threading
 import datetime
-import queue
+import Queue
 import win32api
 from memory_profiler import profile
 from my_widget import *
@@ -122,7 +122,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     
     def _test_init(self):
         self.esp_process={1:None, 2:None, 3:None, 4:None}
-        self.run_queue=queue.Queue(maxsize=4)
+        self.run_queue=Queue.Queue(maxsize=4)
         self.run_flag = True
         self.mutex = threading.Lock()
         

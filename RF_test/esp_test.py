@@ -1631,6 +1631,7 @@ class esp_testThread(QtCore.QThread):
 	    
     def stopthread(self):
 	self.ui_print('[state]finish btn up')
+	self.ui_print('[state]idle')
 	
 	if self.thread_pause==0:
 	    self.thread_pause = 1  # for rf test mutex
