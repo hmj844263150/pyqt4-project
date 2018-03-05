@@ -649,7 +649,7 @@ class esp_testThread(QtCore.QThread):
                 ser_test = serial.Serial(self.COM_PORT-1,115200,timeout=1.2)
                 ser_test.close()
                 while ser_test.isOpen()==True:
-                    time.sleep(0.1)
+                    self.msleep(100)
                     
 		    self.l_print(3,'test disconnect')
                 dl_result = True
@@ -689,7 +689,7 @@ class esp_testThread(QtCore.QThread):
 	
 
 	
-	time.sleep(0.2)
+	self.msleep(200)
 	
 	serTestRes = self.ser
 	if not serTestRes.isOpen():
@@ -892,7 +892,7 @@ class esp_testThread(QtCore.QThread):
         #send command  more times when test adc 
         self.l_print(3,'test item is %s'%test_name)
         
-        time.sleep(0.05)
+        self.msleep(50)
         timeout_ori = self.ser.timeout
         if timeout == None:
             self.ser.timeout = 0.8
@@ -991,7 +991,7 @@ class esp_testThread(QtCore.QThread):
         connect_status = 1
         #connect_res = 0
         self.memory_download.disconnect()
-        time.sleep(0.5)
+        self.msleep(500)
 	#self.window.former_mac=0
 	self.l_print(0,'target bin is %s'%image_path)
         try:
@@ -1003,7 +1003,7 @@ class esp_testThread(QtCore.QThread):
             self.STOPFLAG = 1
             return False
                 #sync_count += 1
-                #time.sleep(0.5)
+                #self.msleep(500)
                 #continue
             #if connect_res == 0:
                 #sync_count += 1
@@ -1019,7 +1019,7 @@ class esp_testThread(QtCore.QThread):
                 sync_count+=1
 		self.l_print(3,("sync_count is : %d "%sync_count))
 		self.ui_print("sync_count is : %d "%sync_count)
-                time.sleep(0.3)      #delay to run uart_connect() again , if shorter than 0.2, fail to connect again
+                self.msleep(300)      #delay to run uart_connect() again , if shorter than 0.2, fail to connect again
                 
                     
 		try:
@@ -1184,7 +1184,7 @@ class esp_testThread(QtCore.QThread):
             #self.print_dbg(("Start UartDownload...,",image_path))
 	    self.l_print(3,("Start UartDownload...,%s"%image_path))
 
-            #time.sleep( self.start_delay*1.0/1000)
+            #self.msleep(1000* self.start_delay*1.0/1000)
 
             last_time = None
          
@@ -1397,7 +1397,7 @@ class esp_testThread(QtCore.QThread):
 	try:
 	    self.ser.flushInput()
 	    self.ser.flushOutput()
-	    time.sleep(0.1)
+	    self.msleep(100)
 	    self.ser.write(cmdstr)
 	except:
 	    self.l_print(3,'write pass info nok1')
@@ -1423,7 +1423,7 @@ class esp_testThread(QtCore.QThread):
 	try:
 	    if self.ser.isOpen():
 		self.ser.close()
-		time.sleep(0.1)
+		self.msleep(100)
 	except:
 	    self.l_print(0,'close port exception')
 	    self.STOPFLAG=1
@@ -1569,7 +1569,7 @@ class esp_testThread(QtCore.QThread):
 	    else:
 		pass
 	    if delay>0:
-		time.sleep(delay)
+		self.msleep(int(1000*delay))
 	    if time.time() - start_time >= ser_tout:
 		self.l_print(3,'read firmware version timeout')
 		return (False, None)
@@ -1622,7 +1622,7 @@ class esp_testThread(QtCore.QThread):
 	elif self.resflag==2:
 	    self.l_print(0,'already passed module')
 	    self.ui_print('[state]passed')
-	self.sleep(3)
+	self.msleep(300)
 	
 	if not self.autostartEn:
 	    self.ui_STOPFLAG=1	    
@@ -1640,7 +1640,7 @@ class esp_testThread(QtCore.QThread):
 		self.ui_print('[state]RFMutex')            # for rf test mutex
 	
 	self.SIGNAL_RESUME.emit()
-	time.sleep(0.2)	
+	self.msleep(200)	
 	
 	try:
 	    self.ser.close()

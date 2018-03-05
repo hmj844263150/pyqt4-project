@@ -338,8 +338,10 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             try:
                 if self.esp_process[id].isRunning():
                     self.esp_process[id].SIGNAL_STOP.emit()
+                else:
+                    self.print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
             except:
-                pass
+                self.print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
     
     def single_stop(self, btn):
         id = int(btn.objectName()[len(btn.objectName())-1])
