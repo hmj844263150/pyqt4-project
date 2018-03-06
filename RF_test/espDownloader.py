@@ -1800,7 +1800,8 @@ class ESP8285FACTORY(ESP8285Downloader):
                 chip="ESP32", sub_chip='', num=1):
         #self.efuse_mode = param_save_load.get_Test_Param("chip_conf", "EFUSE_MODE")
         #self.crystal_freq = param_save_load.get_Test_Param("chip_conf", "FREQ")
-        self.efuse_mode=1
+        self.frame=frame
+        self.efuse_mode=self.frame.efusemode
         self.crystal_freq=26        
         self.efuse_err_halt = 1
         self.EFUSE_ERR_FLG = 0x1
@@ -1820,7 +1821,8 @@ class ESP8266FACTORY(ESP8266Downloader):
                 chip="ESP32", sub_chip='', num=1):
         #self.efuse_mode = param_save_load.get_Test_Param("chip_conf", "EFUSE_MODE")
         #self.crystal_freq = param_save_load.get_Test_Param("chip_conf", "FREQ")
-        self.efuse_mode=1
+        self.frame=frame
+        self.efuse_mode=self.frame.efusemode
         self.crystal_freq=26        
         self.efuse_err_halt = 1
         self.EFUSE_ERR_FLG = 0x1
@@ -1840,7 +1842,8 @@ class ESP32FACTORY(ESP32Downloader):
                 chip="ESP32", sub_chip='',num=1):
         #self.efuse_mode = param_save_load.get_Test_Param("chip_conf", "EFUSE_MODE")
         #self.crystal_freq = param_save_load.get_Test_Param("chip_conf", "FREQ")
-        self.efuse_mode=1
+        self.frame=frame
+        self.efuse_mode=self.frame.efusemode
         self.crystal_freq=40
         self.efuse_err_halt = 1
         self.EFUSE_ERR_FLG = 0x1

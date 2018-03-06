@@ -56,7 +56,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -2522,12 +2522,12 @@ p, li { white-space: pre-wrap; }
          </property>
          <item>
           <property name="text">
-           <string>normal</string>
+           <string>custom</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>cus_mac</string>
+           <string>normal</string>
           </property>
          </item>
         </widget>
@@ -2620,7 +2620,7 @@ p, li { white-space: pre-wrap; }
       </column>
       <item>
        <property name="text">
-        <string>RF</string>
+        <string>RF_TEST</string>
        </property>
        <property name="checkState">
         <enum>Checked</enum>
@@ -3692,7 +3692,10 @@ background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -3704,7 +3707,7 @@ background-color: rgb(200, 200, 200);</string>
      <rect>
       <x>260</x>
       <y>65</y>
-      <width>101</width>
+      <width>111</width>
       <height>21</height>
      </rect>
     </property>
@@ -3716,7 +3719,10 @@ background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -3728,7 +3734,7 @@ background-color: rgb(200, 200, 200);</string>
      <rect>
       <x>260</x>
       <y>88</y>
-      <width>101</width>
+      <width>111</width>
       <height>21</height>
      </rect>
     </property>
@@ -3740,7 +3746,10 @@ background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -3764,7 +3773,10 @@ background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -3788,7 +3800,10 @@ background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -3812,7 +3827,10 @@ background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -3836,7 +3854,10 @@ background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -3860,7 +3881,10 @@ background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -3884,7 +3908,10 @@ background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">
@@ -3908,7 +3935,10 @@ background-color: rgb(200, 200, 200);</string>
     </property>
     <property name="font">
      <font>
+      <family>Arial</family>
       <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
      </font>
     </property>
     <property name="text">

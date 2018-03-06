@@ -62,65 +62,66 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     def __init__(self, params={}, parent=None):
         super(QtGui.QMainWindow, self).__init__(parent=parent)
         self.setupUi(self)  # general by pyqt designer
-        self._ui_init()     # add spicial control module and init some ui settings
-        self._test_init()    # initial the settings for production test
-        self._setup_signal() # add signal for need
+        self.init_ui()     # add spicial control module and init some ui settings
+        self.init_parameters()    # initial the settings for production test
+        self.init_signal() # add signal for need
         
         tmp_path = os.getcwd().replace('\\', '//')
         self.logs_path = tmp_path[:tmp_path.find(tmp_path.split('//')[len(tmp_path.split('//'))-1])] + 'logs//'        
         
-    def _ui_init(self):
+    ### init functions ###
+    def init_ui(self):
         self.twTestArea.setCurrentIndex(0)
         for i in xrange(1,self.DUT_NUM+1):
-            self.print_log(eval('self.tbLog{}'.format(str(i))), '[state]idle')
+            self.signal_print_log(eval('self.tbLog{}'.format(str(i))), '[state]idle')
             for j in xrange(1,3):
                 self.DUT_PORTS.append(eval('self.cbPort'+str(i)+'_'+str(j)))
                 self.DUT_RATES.append(eval('self.cbPortRate'+str(i)+'_'+str(j)))
                 eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(True)
             
 
-    def _setup_signal(self):
-        QtCore.QObject.connect(self.trwTestFlow, QtCore.SIGNAL(_fromUtf8("itemChanged(QTreeWidgetItem*,int)")), self.testflow_check)
-        QtCore.QObject.connect(self.pbTFSubmit, QtCore.SIGNAL(_fromUtf8("clicked()")), self._testflow_submit)
-        QtCore.QObject.connect(self.pbTFReset, QtCore.SIGNAL(_fromUtf8("clicked()")), self.testflow_reset)
-        QtCore.QObject.connect(self.pbCloudSync, QtCore.SIGNAL(_fromUtf8("clicked()")), self.cloud_sync)
-        QtCore.QObject.connect(self.pbDutReset, QtCore.SIGNAL(_fromUtf8("clicked()")), self.dut_reset)
-        QtCore.QObject.connect(self.pbDutSubmit, QtCore.SIGNAL(_fromUtf8("clicked()")), self._dut_submit)
-        QtCore.QObject.connect(self.cbChipType, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.chip_type_change)
-        QtCore.QObject.connect(self.cbTestFrom, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.test_from_change)
-        QtCore.QObject.connect(self.pbBinPath, QtCore.SIGNAL(_fromUtf8("clicked()")), self.showFileDialog)
-        self.SIGNAL_PRINT.connect(self.print_log)
-        self.maCloud.changed.connect(self.change_position)        
+    def init_signal(self):
+        QtCore.QObject.connect(self.trwTestFlow, QtCore.SIGNAL(_fromUtf8("itemChanged(QTreeWidgetItem*,int)")), self._signal_testflow_check)
+        QtCore.QObject.connect(self.pbTFSubmit, QtCore.SIGNAL(_fromUtf8("clicked()")), self.button_testflow_submit)
+        QtCore.QObject.connect(self.pbTFReset, QtCore.SIGNAL(_fromUtf8("clicked()")), self.button_testflow_reset)
+        QtCore.QObject.connect(self.pbCloudSync, QtCore.SIGNAL(_fromUtf8("clicked()")), self.button_cloud_sync)
+        QtCore.QObject.connect(self.pbDutReset, QtCore.SIGNAL(_fromUtf8("clicked()")), self.button_dut_reset)
+        QtCore.QObject.connect(self.pbDutSubmit, QtCore.SIGNAL(_fromUtf8("clicked()")), self.button_dut_submit)
+        QtCore.QObject.connect(self.cbChipType, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.combobox_chip_type_change)
+        QtCore.QObject.connect(self.cbTestFrom, QtCore.SIGNAL(_fromUtf8("currentIndexChanged(int)")), self.combobox_test_from_change)
+        QtCore.QObject.connect(self.pbBinPath, QtCore.SIGNAL(_fromUtf8("clicked()")), self.button_showFileDialog)
+        self.SIGNAL_PRINT.connect(self.signal_print_log)
+        self.maCloud.changed.connect(self.button_change_position)        
         
-        QtCore.QObject.connect(self.pbAllStart, QtCore.SIGNAL(_fromUtf8("clicked()")), self.all_start)
-        QtCore.QObject.connect(self.pbAllStop, QtCore.SIGNAL(_fromUtf8("clicked()")), self.all_stop)        
-        self.pbStart1.clicked.connect(lambda :self.single_start(self.pbStart1))
-        self.pbStart2.clicked.connect(lambda :self.single_start(self.pbStart2))
-        self.pbStart3.clicked.connect(lambda :self.single_start(self.pbStart3))
-        self.pbStart4.clicked.connect(lambda :self.single_start(self.pbStart4))
-        self.pbStop1.clicked.connect(lambda :self.single_stop(self.pbStop1))
-        self.pbStop2.clicked.connect(lambda :self.single_stop(self.pbStop2))
-        self.pbStop3.clicked.connect(lambda :self.single_stop(self.pbStop3))
-        self.pbStop4.clicked.connect(lambda :self.single_stop(self.pbStop4))        
+        QtCore.QObject.connect(self.pbAllStart, QtCore.SIGNAL(_fromUtf8("clicked()")), self.button_all_start)
+        QtCore.QObject.connect(self.pbAllStop, QtCore.SIGNAL(_fromUtf8("clicked()")), self.button_all_stop)        
+        self.pbStart1.clicked.connect(lambda :self.button_single_start(self.pbStart1))
+        self.pbStart2.clicked.connect(lambda :self.button_single_start(self.pbStart2))
+        self.pbStart3.clicked.connect(lambda :self.button_single_start(self.pbStart3))
+        self.pbStart4.clicked.connect(lambda :self.button_single_start(self.pbStart4))
+        self.pbStop1.clicked.connect(lambda :self.button_single_stop(self.pbStop1))
+        self.pbStop2.clicked.connect(lambda :self.button_single_stop(self.pbStop2))
+        self.pbStop3.clicked.connect(lambda :self.button_single_stop(self.pbStop3))
+        self.pbStop4.clicked.connect(lambda :self.button_single_stop(self.pbStop4))        
         
-        for cb in self.DUT_PORTS: cb.clicked.connect(self.change_port) 
-        self.cbPortRate1_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate1_1))
-        self.cbPortRate1_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate1_2))
-        self.cbPortRate2_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate2_1))
-        self.cbPortRate2_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate2_2))
-        self.cbPortRate3_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate3_1))
-        self.cbPortRate3_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate3_2))
-        self.cbPortRate4_1.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate4_1))
-        self.cbPortRate4_2.currentIndexChanged.connect(lambda :self.change_baud(self.cbPortRate4_2))
+        for cb in self.DUT_PORTS: cb.clicked.connect(self.combobox_change_port) 
+        self.cbPortRate1_1.currentIndexChanged.connect(lambda :self.combobox_change_baud(self.cbPortRate1_1))
+        self.cbPortRate1_2.currentIndexChanged.connect(lambda :self.combobox_change_baud(self.cbPortRate1_2))
+        self.cbPortRate2_1.currentIndexChanged.connect(lambda :self.combobox_change_baud(self.cbPortRate2_1))
+        self.cbPortRate2_2.currentIndexChanged.connect(lambda :self.combobox_change_baud(self.cbPortRate2_2))
+        self.cbPortRate3_1.currentIndexChanged.connect(lambda :self.combobox_change_baud(self.cbPortRate3_1))
+        self.cbPortRate3_2.currentIndexChanged.connect(lambda :self.combobox_change_baud(self.cbPortRate3_2))
+        self.cbPortRate4_1.currentIndexChanged.connect(lambda :self.combobox_change_baud(self.cbPortRate4_1))
+        self.cbPortRate4_2.currentIndexChanged.connect(lambda :self.combobox_change_baud(self.cbPortRate4_2))
         
-        self.maLog1.triggered.connect(lambda :self.pop_log(1))
-        self.maLog2.triggered.connect(lambda :self.pop_log(2))
-        self.maLog3.triggered.connect(lambda :self.pop_log(3))
-        self.maLog4.triggered.connect(lambda :self.pop_log(4))
+        self.maLog1.triggered.connect(lambda :self.button_pop_log(1))
+        self.maLog2.triggered.connect(lambda :self.button_pop_log(2))
+        self.maLog3.triggered.connect(lambda :self.button_pop_log(3))
+        self.maLog4.triggered.connect(lambda :self.button_pop_log(4))
         
         QtCore.QMetaObject.connectSlotsByName(self)
     
-    def _test_init(self):
+    def init_parameters(self):
         self.esp_process={1:None, 2:None, 3:None, 4:None}
         self.run_queue=Queue.Queue(maxsize=4)
         self.run_flag = True
@@ -129,23 +130,20 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.dut_config = {}
         self.CHIP_TYPE_NUM = self.cbChipType.count()
         self.BAUD_NUM = self.cbPortRate1_1.count()
-        self.dut_reset('./config/dutConfig') 
+        self.button_dut_reset('./config/dutConfig') 
         
         self.test_flow = {}
-        self._testflow_init()
-        self._threshold_init()    
-        self.test_thread_init()
+        self.init_testflow()
+        self.init_threshold()    
+        self.init_test_thread()
         
-    def test_thread_init(self):
-        #id = int(btn.objectName()[len(btn.objectName())-1])
+    def init_test_thread(self):
         for i in range(1,5):
             stdout_ = self._Print(self, eval("self.tbLog"+str(i)))
-            self.dut_config['common_conf']['dut_num'] = str(i)  
-            
+            self.dut_config['common_conf']['dut_num'] = str(i)
             self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow)
-            #self.esp_process[id].start()
     
-    def _threshold_init(self):
+    def init_threshold(self):
         import openpyxl
         wb = openpyxl.load_workbook('config/ESP8266_Threshold_20180110_hmj.xlsx')
         sheet = wb.get_sheet_by_name(wb.sheetnames[0])
@@ -154,113 +152,29 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             self.twThreshold.setRowCount(sheet.max_row)
             for j in xrange(1, sheet.max_column+1):
                 twi = QtGui.QTableWidgetItem()
-                #twi.setFlags(QtCore.)
                 if sheet[str(chr(64+j))+str(i)].value != None:
                     twi.setText(str(sheet[str(chr(64+j))+str(i)].value))
                     self.twThreshold.setItem(i-1, j-1, twi)
         
-    def _testflow_init(self):
-        self.testflow_update('./config/tmp_testFlow')
+    def init_testflow(self):
+        self.ui_update_testflow('./config/tmp_testFlow')
         if self.dut_config['common_conf']['position'] == 'cloud':
             flow_path = './config/cloudTestFlow'
         else:
             flow_path = './config/testFlow'
         try:            
-            if self.testflow_reset(flow_path) != 0:
+            if self.button_testflow_reset(flow_path) != 0:
                 print ('Test Flow file was broken, load with default config')
-                self.testflow_reset('./config/tmp_testFlow')
+                self.button_testflow_reset('./config/tmp_testFlow')
         except:
             print ('Test Flow file was broken, load with default config')
-            self.testflow_reset('./config/tmp_testFlow')
-        self.testflow_update(flow_path)
+            self.button_testflow_reset('./config/tmp_testFlow')
+        self.ui_update_testflow(flow_path)
         os.remove('./config/tmp_testFlow')
         
     
-    def testflow_reset(self, file_path='./config/testFlow'):
-        parent = 'root'
-        with open(file_path, 'r') as fd:
-            rl = fd.readline()
-            while rl != '':
-                if not rl.startswith('['):
-                    rl = fd.readline()
-                    continue
-                rl = rl.strip().strip('[').strip(']')
-                if len(rl.split(self._SP_SIGN)) < 5:
-                    print 'config file is broken, please re-generate'
-                    return -1
-                level_index, childCount, checkable, editable, value = rl.split(self._SP_SIGN)
-                checkable = int(checkable.strip())
-                editable = editable.strip()
-                value = value.strip()
-                level_index = level_index.strip().split('-')
-                if editable == '1' or checkable >= 0:
-                    item = self.trwTestFlow.invisibleRootItem()
-                    for i in xrange(1,len(level_index)):
-                        tmp = item.text(0)
-                        item = item.child(int(level_index[i]))
-                    if editable == '1':
-                        item.setText(0, value)
-                        self.test_flow[parent] = value
-                    if checkable >= 0:
-                        item.setCheckState(0, checkable)
-                
-                parent = value
-                rl = fd.readline()
-                
-        self.lbFWVer.setText(self.test_flow['USER_FW_VER_STR'])
-        return 0
-    
-    def _testflow_submit(self):
-        first_flag = True
-        while(1):
-            tmp_time = time.strftime('%Y-%m-%d-%H',time.localtime(time.time()))
-            y,m,d,h = map(lambda x:int(x), tmp_time.split('-'))
-            print (tmp_time, (y+(m+d+h))%10000)
-            
-            if first_flag:
-                verify,rst = QtGui.QInputDialog().getText(self, "Verify Box", "Verify:",
-                                                          QtGui.QLineEdit().Normal, '')
-            else:
-                verify,rst = QtGui.QInputDialog().getText(self, "Verify Box", "Verify: (fail, retry!!)",
-                                                          QtGui.QLineEdit().Normal, '')
-            first_flag = False
-            if rst:       
-                try:
-                    print verify
-                    if int(verify) == (y+(m+d+h))%10000:
-                        self.testflow_update(pop_msg=True)
-                        print ('verify pass')
-                        break
-                    else:
-                        print ('verify fail')
-                except:
-                    print ('please input 4 bytes Number')
-            else:
-                break
-    
-    def testflow_update(self, file_path='./config/testFlow', pop_msg=False):
-        with open(file_path, 'w') as fd:
-            fd.write("- level-index $$ childCount$$ checkable$$ editable$$ value -\n")
-            self._testflow_general(fd, self.trwTestFlow.invisibleRootItem(), '0')
-        self.lbFWVer.setText(self.test_flow['USER_FW_VER_STR'])
-        if pop_msg:
-            msg = QtGui.QMessageBox(QtGui.QMessageBox.NoIcon, '!!!','The Test Flow update succ!!    ')
-            msg.exec_()
-    
-    def _testflow_general(self, fd, root, level_index):
-        if(root.flags()&QtCore.Qt.ItemIsEditable):            
-            self.test_flow[str(root.parent().text(0))] = str(root.text(0))
-        else:
-            self.test_flow[str(root.text(0))] = root.checkState(0)
-            
-        fd.write("[%-12s%s%2d%s%2d%s%2d%s %s]\n"%(level_index, self._SP_SIGN, int(root.childCount()), self._SP_SIGN, 
-                                                  int(root.checkState(0) if(root.flags()&QtCore.Qt.ItemIsUserCheckable) else -1), self._SP_SIGN, 
-                                                  int(1 if(root.flags()&QtCore.Qt.ItemIsEditable) else 0), self._SP_SIGN, str(root.text(0))))
-        for i in xrange(root.childCount()):
-            self._testflow_general(fd, root.child(i), level_index+'-'+str(i))
-    
-    def testflow_check(self, item
-                       =None, index=None):
+    ### signal deal functions ###
+    def _signal_testflow_check(self, item=None, index=None):
         def updateParentItem(item):
             try:
                 parent = item.parent()
@@ -304,8 +218,148 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             if checkalbeChildCount <= 0:
                 updateParentItem(item)
                 
+    def signal_print_log(self, tb, log):
+        show_flag = True
+        log=str(log)
+        state_flag = True
+        dut_num = str(tb.objectName()[-1])
+        if log.find('[state]') >= 0:
+            show_flag = False
+            if log.lower().find('idle') >= 0:
+                state = 'IDLE'
+                eval("self.tbLog"+str(dut_num)).clear()
+                style = "background-color: rgb(0, 170, 255);\n"
+            elif log.lower().find('sync') >= 0:
+                state = 'SYNC'
+                style = "background-color: rgb(0, 170, 255);\n"                
+            elif log.lower().find('run') >= 0:
+                state = 'RUN'
+                style = "background-color: rgb(255, 255, 0);\n"
+                
+                # thread operation
+                if not self.run_queue.full():
+                    self.run_queue.put(self.esp_process[int(str(dut_num))],block=False)
+                else:
+                    print 'thread num error'
+                
+                if self.run_flag == True:
+                    if not self.run_queue.empty():
+                        esp_process=self.run_queue.get(block=False)
+                        esp_process.SIGNAL_RESUME.emit()
+                    self.run_flag = False
+                
+            elif log.lower().find('passed') >= 0:
+                state = 'TESTED'
+                style = "background-color: rgb(0, 170, 0);\n"
+                if log.find('record') >= 0:
+                    self._local_count('pass', dut_num)                
+            elif log.lower().find('pass') >= 0:
+                state = 'PASS'
+                style = "background-color: rgb(0, 170, 0);\n"
+                if log.find('record') >= 0:
+                    self._local_count('pass', dut_num)
+            elif log.lower().find('fail') >= 0:
+                state = 'FAIL'
+                style = "background-color: rgb(255, 0, 0);\n"
+                if log.find('record') >= 0:
+                    self._local_count('fail', dut_num)
+            elif log.lower().find('upload-f') >= 0:
+                state = 'upload-f'
+                style = "background-color: rgb(255, 0, 0);\n"
+            elif log.lower().find('upload-p') >= 0:
+                state = 'upload-p'
+                style = "background-color: rgb(0, 0, 255);\n"    
+            elif log.lower().find('finish') >= 0:
+                state_flag = False
+                eval('self.pbStart{}'.format(dut_num)).setDown(False)
+                eval('self.pbStart{}'.format(dut_num)).setEnabled(True)
+            elif log.lower().find('rfmutex') >= 0:
+                print "switch:{}".format(time.time())
+                state_flag = False
+                if not self.run_queue.empty():
+                    esp_process=self.run_queue.get(block=False)
+                    esp_process.SIGNAL_RESUME.emit()
+                    
+                if self.run_queue.empty():
+                    self.run_flag = True
+                    
+            else:
+                state_flag = False
+                
+            if state_flag:
+                self._state_change(dut_num, state, style)
+                                
+        elif log.find('[upload]') >= 0:
+            self.lbTotalStatus.setText(log.split(']')[-1])
+        elif log.find('[mac]') >= 0:
+            eval("self.lbMAC{}".format(dut_num)).setText(log[-12:])
+        
+        if show_flag:
+            tb.append(log)
     
-    def all_start(self):
+    def button_testflow_reset(self, file_path='./config/testFlow'):
+        parent = 'root'
+        with open(file_path, 'r') as fd:
+            rl = fd.readline()
+            while rl != '':
+                if not rl.startswith('['):
+                    rl = fd.readline()
+                    continue
+                rl = rl.strip().strip('[').strip(']')
+                if len(rl.split(self._SP_SIGN)) < 5:
+                    print 'config file is broken, please re-generate'
+                    return -1
+                level_index, childCount, checkable, editable, value = rl.split(self._SP_SIGN)
+                checkable = int(checkable.strip())
+                editable = editable.strip()
+                value = value.strip()
+                level_index = level_index.strip().split('-')
+                if editable == '1' or checkable >= 0:
+                    item = self.trwTestFlow.invisibleRootItem()
+                    for i in xrange(1,len(level_index)):
+                        tmp = item.text(0)
+                        item = item.child(int(level_index[i]))
+                    if editable == '1':
+                        item.setText(0, value)
+                        self.test_flow[parent] = value
+                    if checkable >= 0:
+                        item.setCheckState(0, checkable)
+                
+                parent = value
+                rl = fd.readline()
+                
+        self.lbFWVer.setText(self.test_flow['USER_FW_VER_STR'])
+        return 0
+    
+    def button_testflow_submit(self):
+        first_flag = True
+        while(1):
+            tmp_time = time.strftime('%Y-%m-%d-%H',time.localtime(time.time()))
+            y,m,d,h = map(lambda x:int(x), tmp_time.split('-'))
+            print (tmp_time, (y+(m+d+h))%10000)
+            
+            if first_flag:
+                verify,rst = QtGui.QInputDialog().getText(self, "Verify Box", "Verify:",
+                                                          QtGui.QLineEdit().Normal, '')
+            else:
+                verify,rst = QtGui.QInputDialog().getText(self, "Verify Box", "Verify: (fail, retry!!)",
+                                                          QtGui.QLineEdit().Normal, '')
+            first_flag = False
+            if rst:       
+                try:
+                    print verify
+                    if int(verify) == (y+(m+d+h))%10000:
+                        self.ui_update_testflow(pop_msg=True)
+                        print ('verify pass')
+                        break
+                    else:
+                        print ('verify fail')
+                except:
+                    print ('please input 4 bytes Number')
+            else:
+                break
+    
+    def button_all_start(self):
         for id in (1,2,3,4):
             try:
                 if self.esp_process[id]==None or (not self.esp_process[id].isRunning()):
@@ -320,7 +374,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             except:
                 pass
     
-    def single_start(self, btn):
+    def button_single_start(self, btn):
         btn.setEnabled(False)
         btn.setDown(True)
         id = int(btn.objectName()[len(btn.objectName())-1])
@@ -333,23 +387,23 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         else:
             print('error: get strat btn err')
     
-    def all_stop(self):
+    def button_all_stop(self):
         for id in (1,2,3,4):
             try:
                 if self.esp_process[id].isRunning():
                     self.esp_process[id].SIGNAL_STOP.emit()
                 else:
-                    self.print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
+                    self.signal_print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
             except:
-                self.print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
+                self.signal_print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
     
-    def single_stop(self, btn):
+    def button_single_stop(self, btn):
         id = int(btn.objectName()[len(btn.objectName())-1])
         if self.esp_process.has_key(id):
            # if self.esp_process[id].isRunning():
             self.esp_process[id].SIGNAL_STOP.emit()
          
-    def pop_log(self, index):
+    def button_pop_log(self, index):
         log_path = self.logs_path
         if index in (1,2,3,4):       
             if self.esp_process[index] != None:
@@ -362,21 +416,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         else:
             print('error: get log btn err')
     
-    def change_port(self, cb_port):
-        port_list = list(serial.tools.list_ports.comports())
-        cb_port.clear()
-        for port in port_list:
-            print port[0]
-            cb_port.addItem(_fromUtf8(port[0]))
-        cb_port.showPopup()
-    
-    def change_baud(self, cb):
-        if cb.currentText() == 'custom':
-            eval('self.lePortRate{}'.format(cb.objectName()[-3:])).setHidden(False)
-        else:
-            eval('self.lePortRate{}'.format(cb.objectName()[-3:])).setHidden(True)
-     
-    def cloud_sync(self):
+    def button_cloud_sync(self):
         self.lbSyncState.setText('try sync cloud config by mpn')
         
         self.pbCloudSync.setEnabled(False)
@@ -411,13 +451,13 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             return
             
         try:
-            self.testflow_reset(file_path='./config/cloudTestFlow')
+            self.button_testflow_reset(file_path='./config/cloudTestFlow')
             self.lbSyncState.setText('sync success')
         except:
             self.lbSyncState.setText('sync fail')
-            self.testflow_reset(file_path='./config/testFlow')
+            self.button_testflow_reset(file_path='./config/testFlow')
         
-        self.dut_update()
+        self.ui_update_dut()
         self.pbCloudSync.setEnabled(True)
         self.pbCloudSync.setDown(False)
         
@@ -429,7 +469,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         return
 
         
-    def dut_reset(self, file_path='./config/dutConfig'):
+    def button_dut_reset(self, file_path='./config/dutConfig'):
         conf = ConfigParser.ConfigParser()
         try:
             conf.read(file_path)
@@ -471,7 +511,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 self.pbCloudSync.setEnabled(False)
                 self.lbPosition.setText('Local')
                 
-            self.change_position() 
+            self.button_change_position() 
             
             if conf.get('common_conf', 'test_from') == 'RAM':
                 self.cbTestFrom.setCurrentIndex(0)
@@ -491,7 +531,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         except:
             print ('load to config file fail')
     
-    def _dut_submit(self):
+    def button_dut_submit(self):
         first_flag = True
         while(1):
             tmp_time = time.strftime('%Y-%m-%d-%H',time.localtime(time.time()))
@@ -510,7 +550,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     print verify
                     if int(verify) == (y+(m+d+h))%10000:
                         print ('verify pass')
-                        self.dut_update()
+                        self.ui_update_dut()
                         break
                     else:
                         print ('verify fail')
@@ -519,7 +559,77 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             else:
                 break
     
-    def dut_update(self, file_path='./config/dutConfig'):
+    def button_change_position(self):
+        if self.maCloud.isChecked():
+            self.pbCloudSync.setEnabled(True)
+            self.twTestArea.widget(2).setEnabled(False)
+            self.lbPosition.setText('Cloud')
+            self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 0);\n"
+                                                    "border-color: rgb(0, 255, 255);"))
+        else:
+            self.pbCloudSync.setEnabled(False)
+            self.twTestArea.widget(2).setEnabled(True)
+            self.lbPosition.setText('Local')
+            self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
+                                                    "border-color: rgb(0, 255, 255);"))            
+    
+    def button_showFileDialog(self):
+        filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', './bin/', filter='firmware(*.bin);;all(*.*)', selectedFilter='firmware(*.bin)')
+        self.leBinPath.setText(filename)
+        self.dut_config['common_conf']['bin_path'] = filename
+        
+    def combobox_change_port(self, cb_port):
+        port_list = list(serial.tools.list_ports.comports())
+        cb_port.clear()
+        for port in port_list:
+            print port[0]
+            cb_port.addItem(_fromUtf8(port[0]))
+        cb_port.showPopup()
+    
+    def combobox_change_baud(self, cb):
+        if cb.currentText() == 'custom':
+            eval('self.lePortRate{}'.format(cb.objectName()[-3:])).setHidden(False)
+        else:
+            eval('self.lePortRate{}'.format(cb.objectName()[-3:])).setHidden(True)
+     
+    def combobox_chip_type_change(self, index):
+        if index == self.CHIP_TYPE_NUM - 1:
+            self.leChipType.setHidden(False)
+        else:
+            self.leChipType.setHidden(True)
+    
+    def combobox_test_from_change(self, index):
+        self.dut_config['common_conf']['test_from'] = self.cbTestFrom.currentText()
+        if self.cbTestFrom.currentText() == 'RAM':
+            self.pbBinPath.setEnabled(True)
+            self.leBinPath.setEnabled(True)
+        else:
+            self.pbBinPath.setEnabled(False)
+            self.leBinPath.setEnabled(False)            
+    
+    ### class function ###
+    def ui_update_testflow(self, file_path='./config/testFlow', pop_msg=False):
+        with open(file_path, 'w') as fd:
+            fd.write("- level-index $$ childCount$$ checkable$$ editable$$ value -\n")
+            self._testflow_general(fd, self.trwTestFlow.invisibleRootItem(), '0')
+        self.lbFWVer.setText(self.test_flow['USER_FW_VER_STR'])
+        if pop_msg:
+            msg = QtGui.QMessageBox(QtGui.QMessageBox.NoIcon, '!!!','The Test Flow update succ!!    ')
+            msg.exec_()
+    
+    def _testflow_general(self, fd, root, level_index):
+        if(root.flags()&QtCore.Qt.ItemIsEditable):            
+            self.test_flow[str(root.parent().text(0))] = str(root.text(0))
+        else:
+            self.test_flow[str(root.text(0))] = root.checkState(0)
+            
+        fd.write("[%-12s%s%2d%s%2d%s%2d%s %s]\n"%(level_index, self._SP_SIGN, int(root.childCount()), self._SP_SIGN, 
+                                                  int(root.checkState(0) if(root.flags()&QtCore.Qt.ItemIsUserCheckable) else -1), self._SP_SIGN, 
+                                                  int(1 if(root.flags()&QtCore.Qt.ItemIsEditable) else 0), self._SP_SIGN, str(root.text(0))))
+        for i in xrange(root.childCount()):
+            self._testflow_general(fd, root.child(i), level_index+'-'+str(i))
+    
+    def ui_update_dut(self, file_path='./config/dutConfig'):
         conf = ConfigParser.ConfigParser()
         conf.read(file_path)
         if not conf.has_section('common_conf'):
@@ -554,134 +664,18 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     conf.set('DUT'+str(i), 'RATE'+str(j), str(eval('self.lePortRate'+str(i)+'_'+str(j)).text()))
         conf.write(open(file_path, 'w'))
         
-        self.dut_reset(file_path)
+        self.button_dut_reset(file_path)
             
         if file_path=='./config/dutConfig':
             msg = QtGui.QMessageBox(QtGui.QMessageBox.NoIcon, '!!!','The DUT config update succ!!    ')
             msg.exec_()    
     
-    def state_change(self, dut_num, state, style):
+    def _state_change(self, dut_num, state, style):
         leState = eval("self.leStatus{}".format(dut_num))
         leState.setText(state)
         leState.setStyleSheet(_fromUtf8(style+"color: rgb(255, 255, 255);"))
         
-    def print_(self, log):
-        self.SIGNAL_PRINT.emit(log)
-        
-    def print_log(self, tb, log):
-        show_flag = True
-        log=str(log)
-        state_flag = True
-        dut_num = str(tb.objectName()[-1])
-        if log.find('[state]') >= 0:
-            show_flag = False
-            if log.lower().find('idle') >= 0:
-                state = 'IDLE'
-                eval("self.tbLog"+str(dut_num)).clear()
-                style = "background-color: rgb(0, 170, 255);\n"
-            elif log.lower().find('sync') >= 0:
-                state = 'SYNC'
-                style = "background-color: rgb(0, 170, 255);\n"                
-            elif log.lower().find('run') >= 0:
-                state = 'RUN'
-                style = "background-color: rgb(255, 255, 0);\n"
-                
-                # thread operation
-                if not self.run_queue.full():
-                    self.run_queue.put(self.esp_process[int(str(dut_num))],block=False)
-                else:
-                    print 'thread num error'
-                
-                if self.run_flag == True:
-                    if not self.run_queue.empty():
-                        esp_process=self.run_queue.get(block=False)
-                        esp_process.SIGNAL_RESUME.emit()
-                    self.run_flag = False
-                
-            elif log.lower().find('passed') >= 0:
-                state = 'TESTED'
-                style = "background-color: rgb(0, 170, 0);\n"
-                if log.find('record') >= 0:
-                    self.local_count('pass', dut_num)                
-            elif log.lower().find('pass') >= 0:
-                state = 'PASS'
-                style = "background-color: rgb(0, 170, 0);\n"
-                if log.find('record') >= 0:
-                    self.local_count('pass', dut_num)
-            elif log.lower().find('fail') >= 0:
-                state = 'FAIL'
-                style = "background-color: rgb(255, 0, 0);\n"
-                if log.find('record') >= 0:
-                    self.local_count('fail', dut_num)
-            elif log.lower().find('upload-f') >= 0:
-                state = 'upload-f'
-                style = "background-color: rgb(255, 0, 0);\n"
-            elif log.lower().find('upload-p') >= 0:
-                state = 'upload-p'
-                style = "background-color: rgb(0, 0, 255);\n"    
-            elif log.lower().find('finish') >= 0:
-                state_flag = False
-                eval('self.pbStart{}'.format(dut_num)).setDown(False)
-                eval('self.pbStart{}'.format(dut_num)).setEnabled(True)
-            elif log.lower().find('rfmutex') >= 0:
-                print "switch:{}".format(time.time())
-                state_flag = False
-                if not self.run_queue.empty():
-                    esp_process=self.run_queue.get(block=False)
-                    esp_process.SIGNAL_RESUME.emit()
-                    
-                if self.run_queue.empty():
-                    self.run_flag = True
-                    
-            else:
-                state_flag = False
-                
-            if state_flag:
-                self.state_change(dut_num, state, style)
-                                
-        elif log.find('[upload]') >= 0:
-            self.lbTotalStatus.setText(log.split(']')[-1])
-        elif log.find('[mac]') >= 0:
-            eval("self.lbMAC{}".format(dut_num)).setText(log[-12:])
-        
-        if show_flag:
-            tb.append(log)
-    
-    def chip_type_change(self, index):
-        if index == self.CHIP_TYPE_NUM - 1:
-            self.leChipType.setHidden(False)
-        else:
-            self.leChipType.setHidden(True)
-    
-    def test_from_change(self, index):
-        self.dut_config['common_conf']['test_from'] = self.cbTestFrom.currentText()
-        if self.cbTestFrom.currentText() == 'RAM':
-            self.pbBinPath.setEnabled(True)
-            self.leBinPath.setEnabled(True)
-        else:
-            self.pbBinPath.setEnabled(False)
-            self.leBinPath.setEnabled(False)            
-    
-    def change_position(self):
-        if self.maCloud.isChecked():
-            self.pbCloudSync.setEnabled(True)
-            self.twTestArea.widget(2).setEnabled(False)
-            self.lbPosition.setText('Cloud')
-            self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 0);\n"
-                                                    "border-color: rgb(0, 255, 255);"))
-        else:
-            self.pbCloudSync.setEnabled(False)
-            self.twTestArea.widget(2).setEnabled(True)
-            self.lbPosition.setText('Local')
-            self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
-                                                    "border-color: rgb(0, 255, 255);"))            
-    
-    def showFileDialog(self):
-        filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', './bin/', filter='firmware(*.bin);;all(*.*)', selectedFilter='firmware(*.bin)')
-        self.leBinPath.setText(filename)
-        self.dut_config['common_conf']['bin_path'] = filename
-        
-    def local_count(self, rst, dut_num):
+    def _local_count(self, rst, dut_num):
         self.mutex.acquire()
         # total, pass, fail, mac, time
         datas = [0,0,0,0,0]
