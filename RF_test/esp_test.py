@@ -68,7 +68,7 @@ class esp_testThread(QtCore.QThread):
     def run(self):
 	while not self.ui_STOPFLAG:
 	    self.ui_print("[state]idle clear")
-	    self.test()
+	    self.main_test()
 	self.ui_STOPFLAG = False
 	try:
 	    self.ser.close()
@@ -78,81 +78,11 @@ class esp_testThread(QtCore.QThread):
 	self.ui_print('USER QUIT TEST')
 	self.ui_print('[state]finish btn up')
     
-    def try_sync(self):
-	'''
-	try sycn with chip
-	Args:
-	    0: sync success
-	    1: fail
-	    2: already tested
-	'''
-	if(self.loadmode==1):	# ram test mode
-	    dl_result=self.test_download(1)
-	    return self.STOPFLAG
-	elif self.loadmode == 2:    # flash test mode 
-	    rst = self.try_sync_flash()
-	    try:
-		self.ser.close()
-	    except:
-		pass
-	    if rst < 0:
-		return 1
-	    elif rst == 1:
-		return 2
-	    elif rst==0:
-		return 0
-    
-    def try_sync_flash(self):
-	'''
-	try synchronous the chip with flash jump mode via uart, the program need deal with follow 4 case, within most 5 seconds
-	case 1: (chip already power on and running in test mode, serial baudrate in 115200) 
-	case 2: (chip already power on but runing in normal mode)
-	case 3: (chip from power off to power on)
-	case 4: (chip not power on, or other error)
-		
-	Return :
-	    0: sycn success
-	    1: into normal mode, and already test pass
-	    -2: into normal mode without test pass
-	    -3: sync timeout
-	    -4: error cause read from serial
-	'''
-	try:
-	    self.ser = serial.Serial(port=self.COMPORT, baudrate=self.BAUDRATE, timeout=0.1)
-	except:
-	    self.ui_print('open serial fail')
-	    return -1 # open serial fail
-	cmd='esp_read_efuse_128bit\r'
-	self.ser.write(cmd)
-	rst = self.ser.readline()
-	if rst.find('esp_read_efuse_128bit:') >= 0:
-	    return 0
-	
-	timeout = 5
-	if self.dutconfig['chip_conf']['freq'] == '26M':
-	    self.ser.baudrate = 74880
-	t = time.time()
-	while time.time()-t < timeout:
-	    try:
-		rl = self.ser.readline()
-	    except:
-		return -4 # error cause read from serial
-	    if rl.find('pass flag res:1') >= 0:
-		return 1 # into normal mode, and already test pass
-	    elif rl.find('pass flag res:0') >= 0:
-		return -2 # into normal mode without test pass
-	    elif rl.find('jump to run test bin') >= 0:
-		return 0 # into test mode
-	    if len(rl)>1: 
-		if DEBUG: print rl
-	    
-	return -3 # sync timeout 
-    
-    def test(self):
+    def main_test(self):
 	self.ui_STOPFLAG=0
 	self.STOPFLAG=0	
 	self.resflag = 1
-        self.flag_read_res=0
+	self.flag_read_res=0
 	self.tester_con_flg=1
 	self.skip_uartdownload=0
 	self.memory_download.stopFlg=False
@@ -160,140 +90,118 @@ class esp_testThread(QtCore.QThread):
 	self.rx_test_res=0
 	self.thread_pause=1
 	self.mutex_send_flag = 0
-        self._date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
-        self._time = time.strftime('%H:%M:%S',time.localtime(time.time()))
-        
-        self.tx_rx_log = ""   
+	self._date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
+	self._time = time.strftime('%H:%M:%S',time.localtime(time.time()))
+    
+	self.tx_rx_log = ""   
 	self.logpath=''
 	self.logstr=''
 	self.esp_logstr=''	
-        dl_result=0
-	self.l_print(0,str(self.THRESHOLD_DICT))
-	
-	def err_exit(err, stop_flag, resflag, ui_stop_flag=0):
-	    self.STOPFLAG = stop_flag
+	dl_result=0
+	self.l_print(0,str(self.THRESHOLD_DICT))	
+
+	err = 0
+	def err_exit(err_msg, resflag=0, ui_stop_flag=0):
 	    self.resflag = resflag
-	    self.ui_print(err)
+	    self.ui_print(err_msg)
 	    self.STOPTEST()
 	    return
-	    
-	if not self.check_param():
-	    err_exit('PARAM READ ERROR', 1, 0, 1)
+    
+	if self.check_param() != 0:
+	    err_exit('PARAM READ ERROR', 0, 1)
 	    return
 	
 	self.ui_print('[state]SYNC')
 	err = self.try_sync()
-	if err == 1: # sync fail
-	    err_exit('SYNC FAIL', 1, 0, 1)
-	elif err == 2: # already tested
-	    err_exit('SYNC FAIL', 1, 2, 1)
-	
-	self.check_chip()
-	if(self.STOPFLAG):
-	    self.ui_print('CHIP CHECK FAIL')
-	    self.STOPTEST()
-	    return 	
-	self.ui_print('[state]RUN')
+	if err == 1: 
+	    err_exit('SYNC FAIL', resflag=0, ui_stop_flag=1) # sync fail
+	    return
+	elif err == 2: 
+	    err_exit('SYNC FAIL', resflag=2, ui_stop_flag=1) # already tested
+	    return
 
-	while self.thread_pause:
-	    pass
-	print self.slot_num, "start wait"
-	
-	lg=self.get_serial_print()
-	if(self.STOPFLAG):
-	    self.ui_print('RECORD FAIL')
-	    self.ui_print('END TEST SEQUENCE')
-	    self.STOPTEST()
-	    return 
-			     
-	if(self.en_analog_test):
-	    self.test_analogtest(lg)
-	if(self.STOPFLAG):
-	    self.ui_print('ANALOG TEST FAIL')
-	    self.ui_print('END TEST SEQUENCE')
-	    self.STOPTEST()
-	    return 
-	    
-	if(self.en_tx_test):
-	    self.test_txtest(lg)
-	if(self.STOPFLAG):
-	    self.ui_print('TX TEST FAIL')
-	    self.ui_print('END TEST SEQUENCE')
-	    self.STOPTEST()
-	    return 
-		    
-	if(self.en_rx_test):
-	    self.test_rxtest(lg)
-	if(self.STOPFLAG):
-	    self.ui_print('RX TEST FAIL')
-	    self.ui_print('END TEST SEQUENCE')
-	    
-	    self.STOPTEST()
-	    return
-	    
-	print self.slot_num, "finish RF"
-	self.ui_print('[state]RFMutex')
-	self.mutex_send_flag = 1
-	    
-	if(self.chip_type=='ESP8266'):
-	    if self.en_gpio_8266_test:
-		self.gpio_02()
-	elif(self.chip_type=='ESP32'):
-	    if self.en_gpio_32_test:
-		self.gpio_32
-	if(self.STOPFLAG):
-	    self.ui_print('GPIO TEST FAIL')
-	    self.ui_print('END TEST SEQUENCE')
-	    self.STOPTEST()
-	    return
-		
-	if(self.resflag): 
-	    if(self.loadmode==2):
-		self.esp_write_flash()	
-		if(self.STOPFLAG):
-		    self.ui_print('WRITE PASS INFO  FAIL')
-		    self.ui_print('END TEST SEQUENCE')
-		    self.STOPTEST()
-		    return 		
+	self.ui_print('CHIP SYCN OK')
     
-	if(self.loadmode==2):
-	    res = -1
-	    if(self.resflag):
-		res=self.reboot()
-		try:
-		    if(self.ser.isOpen()):
-			self.ser.close()
-		except:
-		    self.l_print(3,'close port exception')
-	    if(res>=0):
-		self.l_print(0,'read pass flag ok')
-		self.ui_print('REBOOT OK')
-	    elif(res<0):
-		self.l_print(0,'read pass flag nok')
-		self.ui_print('REBOOT NOK')
-		self.STOPFLAG=1
-		self.resflag=0
-		self.STOPTEST()
+	err = self.check_chip()
+	if err != 0:
+	    err_exit('CHIP CHECK FAIL', 0)
+	    return
+	  
+	if self.loadmode == 1:  
+	    err = self.load_to_ram(self.IMGPATH)
+	    if err != 0:
+		err_exit('LOAD RAM FAIL')
 		return
 	    
-	if self.en_user_fw_check:
-	    if(self.loadmode==1):
-		self.fwcheck_ram_mode()
-	    elif(self.loadmode==2):
-		self.fwcheck()
-	if(self.STOPFLAG):
-	    self.ui_print('FIRMWARE CHECK FAIL')
-	    self.ui_print('END TEST SEQUENCE')
-	    self.STOPTEST()
+	self.ui_print('[state]RUN')
+	
+	err, log=self.rf_test_catch_log()
+	if err != 0:
+	    err_exit('GET TEST LOG FAIL')
+	    return
+			 
+	if(self.en_analog_test):
+	    if self.rf_test_analogtest(log) != 0:
+		err_exit('ANALOG TEST FAIL\nEND TEST SEQUENCE')
+		return 
+	
+	if(self.en_tx_test):
+	    if self.rf_test_txtest(log) != 0:
+		err_exit('TX TEST FAIL\nEND TEST SEQUENCE')
+		return 
+		
+	if(self.en_rx_test):
+	    if self.rf_test_rxtest(log) != 0:
+		err_exit('RX TEST FAIL\nEND TEST SEQUENCE')
+		return
+	
+	if(self.chip_type=='ESP8266'):
+	    if self.en_gpio_8266_test:
+		err = self.general_test_gpio_8266()
+	elif(self.chip_type=='ESP32'):
+	    if self.en_gpio_32_test:
+		err = self.general_test_gpio_32()
+	
+	if err != 0:
+	    err_exit('GPIO TEST FAIL\nEND TEST SEQUENCE')
 	    return
 	    
+
+	if(self.loadmode==2):
+	    if self.esp_write_flash() != 0:
+		err_exit('WRITE PASS INFO FAIL\nEND TEST SEQUENCE')
+		return
+
+	if(self.loadmode==2):		
+	    if self.reboot() != 0:
+		err_exit('REBOOT FAIL\nEND TEST SEQUENCE')
+		try:
+		    self.ser.close()
+		except:
+		    self.l_print(3,'close port exception')		    
+		return
+	    self.l_print(0,'read pass flag ok')
+	    self.ui_print('REBOOT OK')
+	
+	if self.en_user_fw_check:
+	    if(self.loadmode==1):
+		err = self.general_test_fwcheck_ram()
+	    elif(self.loadmode==2):
+		err = self.general_test_fwcheck_flash()
+	if err != 0:
+	    err_exit('FIRMWARE CHECK FAIL\nEND TEST SEQUENCE')
+	    return
+	
 	self.ui_print('ALL ITEM PASSED')
 	self.STOPTEST()
 	    
-    ### RF TEST-------------------------------- ###
-    def test_txtest(self, lg):
+    ### RF TEST -------------------------------- ###
+    def rf_test_txtest(self, lg):
 	"""
 	Run tx packet test
+	Returns: err
+	    0: success
+	    1: fail
 	"""
 	#================TXTEST===================================================
 	self.l_print(0,'start tx test')
@@ -321,7 +229,6 @@ class esp_testThread(QtCore.QThread):
 			freq_data = log_tmp.split(',')[1:-1]
 			freq_data = [int(x) for x in freq_data]
 			thres_freq = self.THRESHOLD_DICT['FREQ_OFFSET']
-		       
 			
 			if tx_data[0]>4:
 			#if True: #debug
@@ -342,11 +249,9 @@ class esp_testThread(QtCore.QThread):
 			else:
 			    self.rpt_append('FREQ_OFFSET','UaS-NA',thres_freq[0][0],thres_freq[1][0])
 			    self.tx_test_res=0
-			    self.l_print(3,'unavailable signal')
-			    self.STOPFLAG=1
-			    self.resflag=0
-			    
+			    self.l_print(3,'unavailable signal')			    
 			    tx_log = ''
+			
 		    elif 'txp_result' in log_tmp:
 			dlist = log_tmp.split(':')[1].split(',')[:-1]
 			txp_res = [int(x) for x in dlist]
@@ -362,7 +267,6 @@ class esp_testThread(QtCore.QThread):
 			    
 			    self.fail_list.append("txp_res[tx]")
 			
-			
 			tx_log = ''
 		    elif 'fb_rx_num' in log_tmp:
 			dlist = log_tmp.split(':')[1].split(',')[:-1]
@@ -372,24 +276,23 @@ class esp_testThread(QtCore.QThread):
 		if(self.tx_test_res==1):
 		    self.l_print(0,'TX TEST OK')
 		    self.ui_print('TX TEST OK')
-	      
+		    return 0	      
 		
 		elif self.tx_test_res==0:
-		    #self.fail_flg=1
-		    #self.retry_num+=1
-		    self.STOPFLAG=1
-		    self.resflag=0
 		    self.l_print(0,'TX TEST FAIL')
 		    self.ui_print('TX TEST FAIL')
+		    return 1
 	       
 	    else:
 		self.ui_print('TX TEST EXCEPTION')
-		self.STOPFLAG=1
-		self.resflag=0
+		return 1
     
-    def test_rxtest(self, lg):
+    def rf_test_rxtest(self, lg):
 	"""
 	Run RX packets test
+	Returns: err
+	    0: success
+	    1: fail
 	"""
 	#=============================rx test=============================================
 	self.l_print(0,'start rx test')
@@ -429,8 +332,6 @@ class esp_testThread(QtCore.QThread):
 			if self.chip_type == "ESP32":
 			    print "fb_rssi for ESP32"
 			    fb_rssi_v = [ max(fb_rssi_v), ]
-
-			
 			
 			for k in range(len(fb_rssi_v)):
 			    self.l_print(0,("fb_rxrssi \t%d~%d\n" %(self.THRESHOLD_DICT['fb_rxrssi'][0][k], self.THRESHOLD_DICT['fb_rxrssi'][1][k])))
@@ -438,10 +339,8 @@ class esp_testThread(QtCore.QThread):
 			    if fb_rssi_v[k]>self.THRESHOLD_DICT['fb_rxrssi'][1][k] or fb_rssi_v[k]<self.THRESHOLD_DICT['fb_rxrssi'][0][k] :
 				self.rx_test_res = 0
 				fb_rssi_flg = 1
-				#
 				self.l_print(3,"Part failure in FB_RXRSSI[%d] res: %d !< %d !< %d \r\n"%(k,self.THRESHOLD_DICT['fb_rxrssi'][0][k],fb_rssi_v[k],self.THRESHOLD_DICT['fb_rxrssi'][1][k]))
-				self.STOPFLAG=1
-				self.resflag=0
+				
 			if fb_rssi_flg == 1:
 			    self.fail_list.append("fb_rxrssi")
 
@@ -455,8 +354,6 @@ class esp_testThread(QtCore.QThread):
 			if self.chip_type == "ESP32":
 			    if DEBUG: print "dut_rssi for ESP32"
 			    dut_rssi_v = [ max(dut_rssi_v), ]
-
-			
 			
 			for k in range(len(fb_rssi_v)):
 			    self.l_print(3,("dut_rxrssi \t%d~%d\n" %(self.THRESHOLD_DICT['dut_rxrssi'][0][k], self.THRESHOLD_DICT['dut_rxrssi'][1][k])))
@@ -464,8 +361,6 @@ class esp_testThread(QtCore.QThread):
 			    if dut_rssi_v[k]>self.THRESHOLD_DICT['dut_rxrssi'][1][k] or dut_rssi_v[k]<self.THRESHOLD_DICT['dut_rxrssi'][0][k] :
 				self.rx_test_res = 0
 				dut_rssi_flg = 1
-				self.STOPFLAG=1
-				self.resflag=0
 				self.l_print(3,"Part failure in DUT_RXRSSI[%d] res: %d !< %d !< %d \r\n"%(k,self.THRESHOLD_DICT['dut_rxrssi'][0][k],dut_rssi_v[k],self.THRESHOLD_DICT['dut_rxrssi'][1][k]))
 				
 			if dut_rssi_flg == 1:
@@ -474,21 +369,15 @@ class esp_testThread(QtCore.QThread):
 			self.l_print(3,("rssi_diff \t%d~%d\n" %(self.THRESHOLD_DICT['rssi_diff'][0][0], self.THRESHOLD_DICT['rssi_diff'][1][0])))
 			
 			if (dut_rssi-fb_rssi)>self.THRESHOLD_DICT['rssi_diff'][1][0] or (dut_rssi-fb_rssi)<self.THRESHOLD_DICT['rssi_diff'][0][0] :
-			    
 			    self.rx_test_res = 0
-			    self.resflag=0
-			    self.STOPFLAG=1
 			    self.l_print(3,"Part failure in RSSI res: FB: %d ; DUT: %d, %d !< %d !< %d \r\n"%(fb_rssi,dut_rssi,self.THRESHOLD_DICT['rssi_diff'][0][0],(dut_rssi-fb_rssi),self.THRESHOLD_DICT['rssi_diff'][1][0]))
-			    
 			    #self.print_dbg( rssi_log)
 			    self.fail_list.append("rssi")
-			
 
 		    if 'txp_result' in log_tmp:
 			dlist = log_tmp.split(':')[1].split(',')[:-1]
 			txp_res = [int(x) for x in dlist]
 			thres_txp_res = self.THRESHOLD_DICT['TXP_RES']
-			
 			
 			idx = 1    #idx=1 means txp_res in rx 
 			val = txp_res[idx]
@@ -497,10 +386,7 @@ class esp_testThread(QtCore.QThread):
 			self.rpt_append('TXP_RES_1', val,thres_txp_res[0][0],thres_txp_res[1][0])			
 			if val < thres_txp_res[0][idx] or val > thres_txp_res[1][idx]:
 			    self.rx_test_res=0
-			    self.STOPFLAG=1
-			    self.resflag=0
 			    self.l_print(3,"Part failure in TXP_RES[rx] : #%d ,%d !< %d !< %d \n\r"%(idx, thres_txp_res[0][idx], val, thres_txp_res[1][idx]))
-			   
 			    self.fail_list.append("txp_res[rx]")
 			
 			rx_log = ''
@@ -510,35 +396,33 @@ class esp_testThread(QtCore.QThread):
 			if len(dlist) > 6:
 			    dlist = dlist[2:]
 			rx_data = [ int(x) for x in dlist]
+			
 		if(self.rx_test_res):
 		    self.l_print(0,'RX TEST OK')
 		    self.ui_print('RX TEST OK')
+		    return 0
 		elif(self.rx_test_res==0):
-		    self.STOPFLAG=1
-		    self.resflag=0
 		    self.l_print(0,'RX TEST NOK')
 		    self.l_print('RX TEST NOK')		    
+		    return 1
 		
-		
-
 	    else:
-		self.STOPFLAG=1
-		self.resflag=0
 		self.l_print(3,'RX TEST EXCEPTION')
 		self.ui_print('RX TEST EXCEPTION')
+		return 1
     	    
-    def test_analogtest(self,lg):
+    def rf_test_analogtest(self,lg):
 	if not lg[0]=='':
 	    self.l_print(0,lg[0])
 	    self.data_process(0)
 	    if(self.ana_test_result):
 		self.l_print(0,'analog test ok')
 		self.ui_print('ANALOG TEST OK')
+		return 0
 	    else:
 		self.l_print(0,'analog test nok')
 		self.ui_print('ANALOG TEST NOK')
-		self.STOPFLAG=1
-		self.resflag=0
+		return 1
 		
     def data_process(self,block_num):
 	self.l_print(0,"Data Processing...\n")
@@ -591,7 +475,17 @@ class esp_testThread(QtCore.QThread):
        # spud.record_log_test( _res[1] ,self.window.log_path+'/logs/log', self.fn.replace('prnt','log').replace('print','log'),TOOL_VERSION+"\r\nFACTORY: %s"%self.window.factory_info+"\r\n\n" )
         self.t_dataprocess=time.clock()-start    
 	 	
-    def get_serial_print(self):
+    def rf_test_catch_log(self):
+	'''
+	get the module self calibration and test result via uart
+	Return: err, logs
+	    0: get log success
+	    1: get log fail
+	'''
+	print self.slot_num, "start wait"
+	while self.thread_pause:
+	    pass
+	
         start=time.clock()
         #self._date = time.strftime('%Y-%m-%d',time.localtime(time.time()))
         #self._time = time.strftime('%H:%M:%S',time.localtime(time.time()))
@@ -602,69 +496,40 @@ class esp_testThread(QtCore.QThread):
         #print "retry: ",retry
         #print "&&&&&&&&&&&&&&&&&&&&&"
         if self.chip_type == "ESP8089":
-            lg=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','req_suc',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
+            log=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','req_suc',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
         elif self.chip_type == "ESP32":
-            lg=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','MODULE_TEST EDN!!!',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
+            log=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','MODULE_TEST EDN!!!',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
         else:
-            lg=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','MODULE_TEST END!!!',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
-        
-	if '' in lg:
-	    self.l_print(3,'seria print is null')
-	    self.STOPFLAG=1
-	    self.resflag=0
-	           
-        return lg    
-        
-    def test_download(self,mode):
-        """
-        Download test firmware to the chip memory
-        """
-        #===================UART_DOWNLOAD================================
-	
-        dl_result = False
-        self.st=time.clock()
-        start=time.clock()
-        if mode==1:
-	    
-	    self.l_print(0,'load to ram')
-            dl_result=self.uartdownload_gui(self.IMGPATH)
-	    self.l_print(3,'dl_result is %d'%dl_result)
-	elif mode==2:
-	    self.l_print(0,'load to flash')
-	    dl_result=self.flash_uartdownload_gui()
-            #self.print_dbg(('test dl_result : ',dl_result))
-	    self.l_print(3,'dl_result is %d'%dl_result)
-        else:
-	    self.l_print(3,'dl_result skiped')
-            self.ui_print('dl_result skiped')
-            try:
-                ser_test = serial.Serial(self.COM_PORT-1,115200,timeout=1.2)
-                ser_test.close()
-                while ser_test.isOpen()==True:
-                    self.msleep(100)
-                    
-		    self.l_print(3,'test disconnect')
-                dl_result = True
-            except:
-                self.STOPFLAG=1
-		self.resflag=0
-                self.memory_download.stopFlg=1
-		self.l_print(3,'open comport error...')
-                
-                dl_result=False
-        self.t_uartdownload=time.clock()-start
-        if dl_result:
-            self.ui_print('UART DOWNLOAD OK')
-        else:
-            self.ui_print('UART DOWNLOAD ERROR')
-	    self.resflag=0
-	    self.STOPFLAG=1
-        return dl_result
+            log=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','MODULE_TEST END!!!',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
     
-    '''
-    FUNCTION TEST
-    '''
-    def gpio_02(self):
+	print self.slot_num, "finish RF"
+	self.ui_print('[state]RFMutex')
+	self.mutex_send_flag = 1        
+    
+	if '' in log:
+	    self.l_print(3,'seria print is null')
+	    return 1, log  
+	
+        return 0, log
+    
+    def load_to_ram(self, image_path="image/init_data.bin"):
+	self.l_print(0,'target bin is %s'%image_path)
+	self.ui_print('UART DOWNLOADing...')
+	self.l_print(3,("Start UartDownload...,%s"%image_path))
+	last_time = None
+	dr=self.memory_download.memory_download(image_path)
+	if dr:
+	    return 0
+	else:
+	    self.memory_download.stopFlg=1
+	    self.memory_download.disconnect()
+	    self.l_print(0,"download disconnect...")
+	    return 1
+        
+ 
+
+    ### GENERAL TEST -------------------------------- ###
+    def general_test_gpio_8266(self):
 	i=0
 	self.gpio_02_test_pin=self.testflow['GPIO_8266_TEST_PIN']
 	self.gpio_02_test_value=self.testflow['GPIO_8266_TEST_VAL']
@@ -809,13 +674,13 @@ class esp_testThread(QtCore.QThread):
 	    try:
 		if self.gpio_02_read_en:
 		    if(self.gpio_test_res1) and (self.gpio_test_res2) and (self.gpio_test_res3) and (self.gpio_test_res4):
-			self.l_print(0,'gpio_02 test pass')
+			self.l_print(0,'general_test_gpio_8266 test pass')
 			self.ui_print('GPIO_02 TEST PASS')
 			self.gpio_test_res=1
 		else:
 		    self.l_print(3,'gpio02 read en=0')
 		    if(self.gpio_test_res1) and (self.gpio_test_res3):
-			self.l_print(0,'gpio_02 test pass')
+			self.l_print(0,'general_test_gpio_8266 test pass')
 			self.ui_print('GPIO_02 TEST PASS')
 			self.gpio_test_res=1			
 	    except:
@@ -824,7 +689,7 @@ class esp_testThread(QtCore.QThread):
 		self.STOPFLAG=1
 		self.gpio_test_res=0
 		
-    def gpio_32(self):
+    def general_test_gpio_32(self):
 	self.l_print(0,'start 32 gpio test')
 	self.gpio_32_test_val_0=self.testflow['GPIO_32_TEST_VAL_0']
 	self.gpio_32_test_val_1=self.testflow['GPIO_32_TEST_VAL_1']
@@ -832,10 +697,10 @@ class esp_testThread(QtCore.QThread):
 	gpio_cmd = "ESP_TEST_GPIO %s %s %s\r" %(self.gpio_32_test_val_0, self.gpio_32_test_val_1, self.gpio_32_test_val_2)
 	self.l_print(2,(("gpio cmd:%s"%gpio_cmd)))
 	
-	test_log = self.test_item('GPIO', gpio_cmd)
+	test_log = self._test_item('GPIO', gpio_cmd)
 	if test_log == []:
 	    self.gpio_test_res = 0
-	    self.l_print(0,'gpio_32 test fail,read value is null')
+	    self.l_print(0,'general_test_gpio_32 test fail,read value is null')
 	for i in test_log:
 	    if "Input result" in i:
 		gpio_index = i.find('0x')
@@ -845,7 +710,7 @@ class esp_testThread(QtCore.QThread):
 		if (int(gpio_result[0], 16) == int(self.gpio_32_test_target_0, 16)
 	            and int(gpio_result[1], 16) == int(self.gpio_32_test_target_1, 16)
 	            and int(gpio_result[2], 16) == int(self.gpio_32_test_target_2, 16)):
-		    self.l_print(3,'gpio_32 test ok')
+		    self.l_print(3,'general_test_gpio_32 test ok')
 		    self.gpio_test_res=1
 		    self.ui_print('GPIO_32 TEST OK')
 		    break
@@ -858,11 +723,11 @@ class esp_testThread(QtCore.QThread):
 		    
 		    break
 	    else:
-		self.l_print('line have no keyword  for gpio_32 test')
+		self.l_print('line have no keyword  for general_test_gpio_32 test')
 		self.gpio_test_res=0
 		
 	if(self.gpio_test_res==0):
-	    self.l_print(3,'gpio_32 test nok')
+	    self.l_print(3,'general_test_gpio_32 test nok')
 	    self.ui_print('GPIO_32 TEST NOK')
 	    self.resflag=0
 	    self.STOPFLAG=1	    
@@ -870,7 +735,7 @@ class esp_testThread(QtCore.QThread):
 
 	
 		
-    def test_item(self, test_name, test_cmd, break_str = None, timeout = None):
+    def _test_item(self, test_name, test_cmd, break_str = None, timeout = None):
         """
         Common method of sending a serial command and get response
         """
@@ -921,277 +786,388 @@ class esp_testThread(QtCore.QThread):
             i+=1
 
         return res_line     
-    def flash_uartdownload_gui(self):
-	sync_res=0
-	com_port=self.COMPORT
-	sync_count=0
-	connect_status=1
-	dl_result=0
-	getmac_res=0
-	self.memory_download.disconnect()
+    def general_test_fwcheck_flash(self):
+	self.l_print(0,'start firmware check')
+	self.l_print(2,'firmware check port is %s'%self.user_fw_download_port)
+	self.l_print(2,'firmware check baudrate is %d'%self.user_fw_download_baud)
 	try:
-            #connect_res = self.memory_download.com_connect(self.COMPORT, BR)
-	    self.ser = serial.Serial(port=com_port, baudrate=self.BAUDRATE,timeout=1)
-	   # cmd='esp_read_efuse_128bit\r'
-	   # self.ser.write(cmd)	    
-	    self.l_print(0,'serial open ok')
-	    self.ui_print('SER OPEN OK')
-        except serial.SerialException:
-            self.STOPFLAG = 1
-	    self.resflag=0
-            self.ui_print('SERIAL PORT EXCEPTION')
+	    self.ser.close()
+	except:
+	    pass
+	try:
+	    self.fwser=serial.Serial(port=self.user_fw_download_port, baudrate=self.user_fw_download_baud, 
+	                             timeout=3)
+	except:
+	    self.ui_print('OPEN FIRMWARE CHECK PORT ERROR')
+	    return 1
+	    
+	if(self.fw_cmdEn==0):
+	    self.l_print(0,'fw check with no cmd')
+	    res,data=self._read_fw(ser=self.fwser,cmd_str='',pattern=self.fw_targetstr,ser_tout=self.user_fw_download_timeout,
+	                          delay=self.user_fw_download_delay,baud=self.user_fw_download_baud)
+	    
+	elif(self.fw_cmdEn):
+	    for param in self.cmd_group:
+		temp_list=[]
+		temp_list=param.split(',')
+		cmd=temp_list[0]
+		targetstr=temp_list[1]
+		tout=temp_list[2]
+		self.l_print(0,'fw check with cmden=1')
+		res,data=self._read_fw(ser=self.fwser, cmd_str=cmd, pattern=targetstr,ser_tout=tout,
+		                      delay=0.5,baud=self.user_fw_download_baud)
+		self.l_print(3,'re-send cmd')
+		res,data=self._read_fw(ser=self.fwser, cmd_str=cmd, pattern=targetstr,ser_tout=tout,
+		                      delay=0.5,baud=self.user_fw_download_baud)
+		if not res==True:
+		    self.l_print(3,'%s cmd check firmware error'%cmd)
+		    break
+	try:
+	    self.fwser.close()
+	except:
+	    self.l_print(0,'close fw check port error1')
+	if res==True:
+	    self.l_print(0,'firmware check ok')
+	    self.ui_print('FIRMWARE CHECK OK')
+	    return 0
+	else:
+	    self.l_print(0,'firmware check nok')
+	    return 1
+	    
+    def general_test_fwcheck_ram(self):
+	try:
+	    if(self.ser.isOpen()):
+		self.ser.close()
+	except:
+	    self.l_print(0,'close port error for firmware check__loadmode=2')
+	    return 1
+	
+	if(self.fw_cmdEn==0):
+	    self.l_print(0,'fw check with no cmd')
+	    check_res=fwcheck_ramdownload.run(self.COMPORT,self.BAUDRATE,self.fw_cmdEn,'',self.chip_type,self.fw_targetstr,
+	                                      self.user_fw_download_delay,self.user_fw_download_timeout,self.user_fw_download_port,self.user_fw_download_baud)
+		    
+	elif(self.fw_cmdEn):
+	    for cmd,targetstr,tout in self.send_cmd,self.fwstr_withcmd,self.fwtmo_withcmd:
+		self.l_print(0,'fw check with cmden=1')
+		check_res=fwcheck_ramdownload.run(self.COMPORT, self.BAUDRATE, self.fw_cmdEn,cmd, self.chip_type, 
+		                                         targetstr, 
+		                                         0.5, 
+		                                         tout, 
+		                                         self.user_fw_download_port,self.user_fw_download_baud)		
+		if not check_res:
+		        self.l_print(3,'%s cmd check firmware error'%cmd)
+			break
+	if check_res:
+	    self.ui_print('FIRMWARE CHECK OK')
+	    return 0
+	else:
+	    self.ui_print('FIRMWARE CHECK ERROR')
+	    return 1
+	    
+    def _read_fw(self,ser,cmd_str,pattern,ser_tout = 1,delay = 1, baud = None):
+	if not ser.isOpen():
+	    
+	    ser.open()
+	if not baud == None:
+	    print "set new baud: ", baud
+	    ser.baudrate = baud
+	    
+	ser.timeout = 0.5
+	   
+	start_time = time.time()
+    
+	if not cmd_str == '':
+	    ser.write(cmd_str+"\r\n")
+	#ser.flush()
+	#ser_tout=1800
+	if pattern == None:
+	    return (True,None)
+	while True:
+	    line = ser.read(1024)
+	    self.l_print(3,'firmware check read line:%s'%line)
+	   # print "debug line:",line
+	    
+	    if pattern.upper() in line.upper():
+		#ser.close()
+		return (True,line)  
+	    elif line == '':
+		ser.close()
+		return (False,None)
+	    else:
+		pass
+	    if delay>0:
+		self.msleep(int(1000*delay))
+	    if time.time() - start_time >= ser_tout:
+		self.l_print(3,'read firmware version timeout')
+		return (False, None)
+	pass
+	
+    ### COMMON TEST -------------------------------- ###
+    def try_sync(self):
+	'''
+	try sycn with chip
+	Returns:
+	    0: sync success
+	    1: fail
+	    2: already tested
+	'''
+	if(self.loadmode==1):	# ram test mode
+	    return self.try_sync_ram()
+	elif self.loadmode == 2:    # flash test mode 
+	    rst = self.try_sync_flash()
+	    try:
+		self.ser.close()
+	    except:
+		pass
+	    if rst < 0:
+		return 1
+	    elif rst == 1:
+		return 2
+	    elif rst==0:
+		return 0
+    
+    def try_sync_flash(self):
+	'''
+	try synchronous the chip with flash jump mode via uart, the program need deal with follow 4 case, within most 5 seconds
+	case 1: (chip already power on and running in test mode, serial baudrate in 115200) 
+	case 2: (chip already power on but runing in normal mode)
+	case 3: (chip from power off to power on)
+	case 4: (chip not power on, or other error)
+		
+	Returns:
+	    0: sycn success
+	    1: into normal mode, and already test pass
+	    -2: into normal mode without test pass
+	    -3: sync timeout
+	    -4: error cause read from serial
+	'''
+	try:
+	    self.ser = serial.Serial(port=self.COMPORT, baudrate=self.BAUDRATE, timeout=0.1)
+	except:
+	    self.ui_print('open serial fail')
+	    return -1 # open serial fail
+	cmd='esp_read_efuse_128bit\r'
+	self.ser.write(cmd)
+	rst = self.ser.readline()
+	if rst.find('esp_read_efuse_128bit:') >= 0:
 	    return 0
 	
-	try:
-	    getmac_res=self.memory_download.esp_getmac(self.ser)
+	timeout = 5
+	if self.dutconfig['chip_conf']['freq'] == '26M':
+	    self.ser.baudrate = 74880
+	t = time.time()
+	while time.time()-t < timeout:
+	    try:
+		rl = self.ser.readline()
+	    except:
+		return -4 # error cause read from serial
+	    if rl.find('pass flag res:1') >= 0:
+		return 1 # into normal mode, and already test pass
+	    elif rl.find('pass flag res:0') >= 0:
+		return -2 # into normal mode without test pass
+	    elif rl.find('jump to run test bin') >= 0:
+		return 0 # into test mode
+	    if len(rl)>1: 
+		if DEBUG: print rl
 	    
-	except:
-	    self.l_print(3,'get mac error')
-	    self.STOPFLAG=1
-	    self.resflag=0
-	if(getmac_res):   
-	    self.l_print(1,self.memory_download.ESP_MAC)
-	    self.MAC=self.memory_download.ESP_MAC.replace('0x','').replace('-','').replace(':','')
-	    self.l_print(3,"mac sta: %s"%self.memory_download.ESP_MAC) 
-	    self.ui_print('[mac]{}'.format(self.MAC))
-	    self.logpath=self.esp_gen_log()
-	    if(self.logpath is not ''):
-		dl_result=1
-	    else:
-		self.ui_print('GEN LOG PRINT NOK')
-		dl_result=0
-		self.STOPFLAG=1
-		self.resflag=0
-	return dl_result
+	return -3 # sync timeout 
     
     def try_sync_ram(self):
-	pass
-
-    def check_chip(self):
-	if self.loadmode == 2:
-	    dl_result=self.test_download(2)
-	    if(self.STOPFLAG):
-		self.ui_print('DOWNLOAD FAIL')
-		self.ui_print('END TEST SEQUENCE')
-		self.STOPTEST()
-    
-    def uartdownload_gui(self,image_path="image/init_data.bin"):
-        #connect_res = 0
-        sync_res = 0
-        com_port = self.COMPORT
-        BR=self.BAUDRATE
-        sync_count=0
-        connect_status = 1
-        #connect_res = 0
-        self.memory_download.disconnect()
-        #self.msleep(250)
-	#self.window.former_mac=0
-	self.l_print(0,'target bin is %s'%image_path)
-        try:
-            connect_res = self.memory_download.com_connect(self.COMPORT, BR)
+	'''
+	try sycn the chip by slip cmd within 20 times
+	Returns:
+	    0: success
+	    1: fail
+	'''
+	sync_res = 0
+	sync_count=0
+	connect_status = 1
+	self.memory_download.disconnect()
+	try:
+	    connect_res = self.memory_download.com_connect(self.COMPORT, self.BAUDRATE)
 	    self.ser=self.memory_download.esp._port
 	    self.l_print(0,'conncet result is %d'%connect_res)
-        except serial.SerialException:
-	    self.resflag=0
-            self.STOPFLAG = 1
-            return False
-
-        if connect_res == 1:
-            self.memory_download.ESP_SET_BOOT_MODE(0)   #try outside io control boot mode
-            while(self.ui_STOPFLAG==0 and sync_count<=20):
+	except serial.SerialException:
+	    return 1
+    
+	if connect_res:
+	    self.memory_download.ESP_SET_BOOT_MODE(0)   #try outside io control boot mode
+	    while(self.ui_STOPFLAG==0 and sync_count<=20):
 		self.l_print(3,("test : self.STOPFLAG:%d"%self.STOPFLAG))
-                
-                sync_count+=1
+    
+		sync_count+=1
 		self.l_print(3,("sync_count is : %d "%sync_count))
 		self.ui_print("sync_count is : %d "%sync_count)
-                self.msleep(300)      #delay to run uart_connect() again , if shorter than 0.2, fail to connect again
-                
-                    
+		self.msleep(300)      #delay to run uart_connect() again , if shorter than 0.2, fail to connect again
+    
 		try:
 		    sync_res = self.memory_download.device_sync()
 		    self.l_print(2,'sync res is %d'%sync_res)
-		    if sync_res:    #should be status 1 or 2
-			self.memory_download.get_mac()
-			self.MAC=self.memory_download.ESP_MAC.replace('0x','').replace('-','').replace(':','')
-			self.l_print(3,"mac sta: %s"%self.memory_download.ESP_MAC) 
-			self.ui_print('[mac]{}'.format(self.MAC))			
-			
-			self.logpath=self.esp_gen_log()
-			try:
-			    if self.logpath is not '':
-				self.l_print(0,'log path is %s'%self.logpath)
-			except:
-			    pass
+		    if sync_res > 0:    #should be status 1 or 2
 			connect_status = 1
 			self.memory_download.esp._port.setDTR(False)
 			try:
 			    if not self.chip_type == "ESP32" and not self.chip_type == "ESP8089":
 				self.memory_download.set_higher_baud(1152000)
 			except:
-			    
 			    sync_res = 0
 		    else:
-			
 			connect_status = 0
 		except:
-		    		
 		    connect_status = 0
+    
 		if sync_res == 1:
 		    self.l_print(0,'chip sync ok')
-		    self.ui_print('CHIP SYNC OK')
-		    break
+		    return 0
 		else:
 		    self.l_print(3,'chip sync Nok,re-sync again')
-            else:
-                sync_res = 0
-		self.ui_print('CHIP SYNC NOK')
-                self.STOPFLAG=1
-		self.resflag=0
-                self.memory_download.stopFlg=1
-                
-        else:
-            
-	    self.l_print(4,("Failed to connect COM: %s  \n"%self.COMPORT))
-	    self.ui_print('CONNECT COMPORT NOK')
-            self.STOPFLAG=1
+	    else:
+		sync_res = 0
+		return 1
+
+    def check_chip(self):
+	if self.loadmode == 2:
+	    return self.check_chip_flash()
+	elif self.loadmode == 1:
+	    return self.check_chip_ram()
+    
+    def check_chip_flash(self):
+	'''
+	try check chip's mac and efuse
+	Returns:
+	    0: ok
+	    1: fail
+	'''
+	getmac_res=0
+	self.memory_download.disconnect()
+	try:
+	    self.ser = serial.Serial(port=self.COMPORT, baudrate=self.BAUDRATE,timeout=1)
+	    self.l_print(0,'serial open ok')
+	    self.ui_print('SER OPEN OK')
+	except serial.SerialException:
+	    self.STOPFLAG = 1
 	    self.resflag=0
-            self.memory_download.stopFlg=1
-
-        if self.sub_chip_type == 'ESP3D2WD':
-            self.memory_download.esp_config_spi_mode()
-        if connect_res==1 and sync_res==1:
-            #self.window.textCtrl_logWindow.Clear()
-            if self.en_tx_test>0 or self.en_rx_test>0:
-                if self.tester_con_flg==1:
-                    self.ui_print('CONNECT TESTER OK')
-                   
-                elif self.tester_con_flg==0:
-                    self.ui_print('CONNECT TESTER NOK')
-                  #  self.log_test_res(1,0)
-                
-		
-            else:
-		self.ui_print('CONNECT TESTER SKIPED') 
-            flash_res = self.memory_download.get_flash_id(self.memory_download.esp)
-            if flash_res == False:
-                self.STOPFLAG=1
-		self.resflag=0
-                return False
-            if(not self.chip_type == 'ESP8089'):
-                if(self.memory_download.flash_device_id != 0):
-		    self.l_print(3,'flash detected')
-                    #self.log_item("FLASH DETECTED")
-                else:
-		    self.l_print(3,'error,flash not detected')
-                    self.log_item("ERROR! FLASH NOT DETECTED!")
-                    return False
-           
-	    self.ui_print('UART DOWNLOADing...')
-            
-            if self.set_mac_en == 0 :
+	    self.ui_print('SERIAL PORT EXCEPTION')
+	    return 1
+    
+	try:
+	    getmac_res=self.memory_download.esp_getmac(self.ser)
+    
+	except:
+	    self.l_print(3,'get mac error')
+	    return 1
 	    
-               
-		pass
-
-            if True:
-                if connect_res==1 and sync_res==1:
-                    #res=self.memory_download.get_mac()
-                    #res = True
-                    res = self.memory_download.get_mac()
-
-                    
-
-                    if res == True:
-                        self.ESP_MAC_STA = self.memory_download.ESP_MAC_STA
-                        if(not self.chip_type == 'ESP8089'):
-                            self.flash_manufacturer_id=self.memory_download.flash_manufacturer_id
-                            self.flash_dev_id=self.memory_download.flash_device_id
-                        if self.set_mac_en==0:
-                           # wx.CallAfter(self.window.show_chip_id, self.memory_download.ESP_MAC_AP,self.memory_download.ESP_MAC_STA)
-                           # self.print_dbg( "mac ap: %s"%self.memory_download.ESP_MAC_AP)
-                           # self.print_dbg( "mac sta: %s"%self.memory_download.ESP_MAC_STA)
-			    self.l_print("mac ap: %s"%self.memory_download.ESP_MAC_AP)
-			    #self.ui_print("mac ap: %s"%self.memory_download.ESP_MAC_AP)
-			    #self.ui_print("mac sta: %s"%self.memory_download.ESP_MAC_STA)
-                    elif res==False:
-                        self.l_print(3,"get mac failed...")
-                        sync_res=0
-                        self.memory_download.disconnect()
-                        connect_res=0
-                        self.STOPFLAG=1
-			self.resflag=0
-                        self.memory_download.stopFlg=1
-			self.l_print(0,'read reg failed : reset connect_res and sync_res..')
-                        if self.testflow.set_mac_en==1:
-                            pass
-                        else:
-			    self.ui_print('GET MAC FAILED')
-                    elif res==-1:
-                        
-			self.l_print(3,"EFUSE CHECK failed...")
-                        sync_res=0
-                        self.memory_download.disconnect()
-                        connect_res=0
-                        self.STOPFLAG=1
-		        self.resflag=0
-                        self.memory_download.stopFlg=1
-                      
-			self.l_print(0,'EFUSE CHECK ERROR...')
-                        if self.testflow.set_mac_en==1:
-                            pass
-                        else:
-			    self.l_print(3,"CHIP EFUSE CHECK ERROR!!! FAIL")
-			    self.STOPFLAG=1
-			    self.resflag=0
-			self.STOPFLAG=1
-			self.resflag=0                       
-			self.ui_print("CHIP EFUSE CHECK ERROR!!! FAIL")
-			
-                    else:
-                      #  self.print_dbg("read reg failed...")
-			self.l_print(3,"read reg failed...")
-                        sync_res=0
-                        self.memory_download.disconnect()
-                        connect_res=0
-                        self.STOPFLAG=1
-			self.resflag=0
-                        self.memory_download.stopFlg=1
-			self.l_print(3,'read reg failed : reset connect_res and sync_res..')
-                       # self.print_dbg('read reg failed : reset connect_res and sync_res..')
-                        if self.window.set_mac_en==1:
-                            pass
-                        else:
-			    self.STOPFLAG=1
-			    self.resflag=0			    
-                           # wx.CallAfter(self.window.show_chip_id, "error","error")
-			    self.ui_print('READ REGISITER ERROR')
-        if connect_res==1 and sync_res==1:
-            #self.print_dbg(("Start UartDownload...,",image_path))
-	    self.l_print(3,("Start UartDownload...,%s"%image_path))
-
-            #self.msleep(1000* self.start_delay*1.0/1000)
-
-            last_time = None
-         
-           # dr=self.memory_download.memory_download('D:\\ESP_NEW_TOOL\\new_factory_tools\\RF_test\\image\\ESP32_Module_Test_V128_40M_20170117_IC1229_test_init.bin')
-            dr=self.memory_download.memory_download(image_path)
-            if dr==True:
-                return True
-            else:
-                self.STOPFLAG=1
-		self.resflag=0
-                self.memory_download.stopFlg=1
-                self.memory_download.disconnect()
-                self.l_print(0,"download disconnect...")
-                return False
-        else:
+	if getmac_res:   
+	    self.l_print(1,self.memory_download.ESP_MAC)
+	    self.MAC=self.memory_download.ESP_MAC.replace('0x','').replace('-','').replace(':','')
+	    self.l_print(3,"mac sta: %s"%self.memory_download.ESP_MAC) 
+	    self.ui_print('[mac]{}'.format(self.MAC))
+	    self.logpath=self.esp_gen_log()
+	    if(self.logpath is not ''):
+		return 0
+	    else:
+		self.ui_print('GEN LOG PRINT NOK')
+		return 1
+	return 1
+    
+    def check_chip_ram(self):
+	'''
+	try check chip's mac and efuse
+	Returns:
+	    0: ok
+	    1: fail
+	'''
+	if self.sub_chip_type == 'ESP3D2WD':
+	    self.memory_download.esp_config_spi_mode()
+    
+	if self.en_tx_test>0 or self.en_rx_test>0:
+	    if self.tester_con_flg==1:
+		self.ui_print('CONNECT TESTER OK')
+	    elif self.tester_con_flg==0:
+		self.ui_print('CONNECT TESTER NOK')
+	else:
+	    self.ui_print('CONNECT TESTER SKIPED') 
+	    
+	flash_res = self.memory_download.get_flash_id(self.memory_download.esp)
+	if flash_res == False:
+	    return 1
+	if(not self.chip_type == 'ESP8089'):
+	    if(self.memory_download.flash_device_id != 0):
+		self.l_print(3,'flash detected')
+	    else:
+		self.l_print(3,'error,flash not detected')
+		self.log_item("ERROR! FLASH NOT DETECTED!")
+		return 1
+    
+	if self.set_mac_en == 0 :
+	    pass
+    
+	try:
+	    res = self.memory_download.get_mac()
+	except:
+	    return 1
+	if res == True:
+	    self.MAC=self.memory_download.ESP_MAC.replace('0x','').replace('-','').replace(':','')
+	    self.l_print(3,"mac sta: %s"%self.memory_download.ESP_MAC) 
+	    self.ui_print('[mac]{}'.format(self.MAC))
+	    
+	    if(not self.chip_type == 'ESP8089'):
+		self.flash_manufacturer_id=self.memory_download.flash_manufacturer_id
+		self.flash_dev_id=self.memory_download.flash_device_id
+	    if self.set_mac_en==0:
+		self.l_print("mac ap: %s"%self.memory_download.ESP_MAC_AP)
+	elif res==False:
+	    self.l_print(3,"get mac failed...")
+	    sync_res=0
+	    self.memory_download.disconnect()
+	    connect_res=0
 	    self.STOPFLAG=1
-	    self.resflag=0	    
-	    self.l_print(0,'sync timeout')
-	    self.ui_print('SYNC TIMEOUT...')
-            #self.print_dbg('Error when connect and sync...try again ')
-            return False    
-        
+	    self.resflag=0
+	    self.memory_download.stopFlg=1
+	    self.l_print(0,'read reg failed : reset connect_res and sync_res..')
+	    if self.testflow.set_mac_en==1:
+		pass
+	    else:
+		self.ui_print('GET MAC FAILED')
+	elif res==-1:
+	    self.l_print(3,"EFUSE CHECK failed...")
+	    sync_res=0
+	    self.memory_download.disconnect()
+	    connect_res=0
+	    self.STOPFLAG=1
+	    self.resflag=0
+	    self.memory_download.stopFlg=1
+    
+	    self.l_print(0,'EFUSE CHECK ERROR...')
+	    if self.testflow.set_mac_en==1:
+		pass
+	    else:
+		self.l_print(3,"CHIP EFUSE CHECK ERROR!!! FAIL")
+	    ######################################## HXW
+	    self.ui_print("CHIP EFUSE CHECK ERROR!!! FAIL")
+    
+	else:
+	    self.l_print(3,"read reg failed...")
+	    self.memory_download.disconnect()
+	    self.memory_download.stopFlg=1
+	    self.l_print(3,'read reg failed : reset connect_res and sync_res..')
+	    if self.window.set_mac_en==1:
+		pass
+	    else:
+		self.ui_print('READ REGISITER ERROR')
+	
+	self.logpath=self.esp_gen_log()
+	try:
+	    if self.logpath is not '':
+		self.l_print(0,'log path is %s'%self.logpath)
+	except:
+	    self.ui_print('GENERAL LOG FAIL')
+	    return 1
+	
+	return 0
+	    
+    ### OTHER FUNCTIONS -------------------------------- ###
     def rpt_append(self,item,value,thres_l=-1000,thres_h=1000):
         testitem_str=item
         #if(eval(value)>eval(item_thres_h_dict[testitem[item]])) or (eval(value)<eval(item_thres_l_dict[testitem[item]])):
@@ -1388,22 +1364,23 @@ class esp_testThread(QtCore.QThread):
 	except:
 	    self.l_print(3,'write pass info nok1')
 	    self.ui_print('WRITE PASS INFO NOK1')
-	    self.STOPFLAG=1
-	    self.resflag=0
+	    return 1
 	
 	temp=self.ser.readline()
 	print temp
 	if 'esp_set_fac_info_pass' in temp:
 	    self.l_print(3,'write pass info ok2')
 	    self.ui_print('WRITE PASS INFO OK2')
+	    return 0
+	    
 	elif 'start ok' in temp:
 	    self.l_print(3,'write pass info ok4')
 	    self.ui_print('WRITE PASS INFO OK4')
+	    return 0
 	else:
 	    self.l_print(3,'write pass info nok3')
 	    self.ui_print('WRITE PASS INFO NOK3')
-	    self.STOPFLAG=1
-	    self.resflag=0	    
+	    return 1
     
     def reboot(self):
 	try:
@@ -1446,125 +1423,6 @@ class esp_testThread(QtCore.QThread):
 	    print rl
 	    
 	return -3 
-	
-    def fwcheck(self):
-	self.l_print(0,'start firmware check')
-	self.l_print(2,'firmware check port is %s'%self.user_fw_download_port)
-	self.l_print(2,'firmware check baudrate is %d'%self.user_fw_download_baud)
-	try:
-	    
-	    self.fwser=serial.Serial(port=self.user_fw_download_port, baudrate=self.user_fw_download_baud, 
-	                             timeout=3)
-	except:
-	    self.ui_print('OPEN FIRMWARE CHECK PORT ERROR')
-	    self.resflag=0
-	    self.STOPFLAG=1
-	    return -1
-	    
-	if(self.fw_cmdEn==0):
-	    self.l_print(0,'fw check with no cmd')
-	    res,data=self.read_fw(ser=self.fwser,cmd_str='',pattern=self.fw_targetstr,ser_tout=self.user_fw_download_timeout,
-	                          delay=self.user_fw_download_delay,baud=self.user_fw_download_baud)
-	    
-	elif(self.fw_cmdEn):
-	    for param in self.cmd_group:
-		temp_list=[]
-		temp_list=param.split(',')
-		cmd=temp_list[0]
-		targetstr=temp_list[1]
-		tout=temp_list[2]
-		self.l_print(0,'fw check with cmden=1')
-		res,data=self.read_fw(ser=self.fwser, cmd_str=cmd, pattern=targetstr,ser_tout=tout,
-		                      delay=0.5,baud=self.user_fw_download_baud)
-		self.l_print(3,'re-send cmd')
-		res,data=self.read_fw(ser=self.fwser, cmd_str=cmd, pattern=targetstr,ser_tout=tout,
-		                      delay=0.5,baud=self.user_fw_download_baud)
-		if not res==True:
-		    self.l_print(3,'%s cmd check firmware error'%cmd)
-		    break
-	    
-	if res==True:
-	    self.l_print(0,'firmware check ok')
-	    self.ui_print('FIRMWARE CHECK OK')
-	    
-	else:
-	    self.l_print(0,'firmware check nok')
-	    self.resflag=0
-	    self.STOPFLAG=1
-	try:
-	    self.fwser.close()
-	except:
-	    self.l_print(0,'close fw check port error1')
-	    
-    def fwcheck_ram_mode(self):
-	try:
-	    if(self.ser.isOpen()):
-		self.ser.close()
-	except:
-	    self.l_print(0,'close port error for firmware check__loadmode=2')
-	    self.resflag=0
-	    self.STOPFLAG=1
-	if(self.fw_cmdEn==0):
-	    self.l_print(0,'fw check with no cmd')
-	    check_res=fwcheck_ramdownload.run(self.COMPORT,self.BAUDRATE,self.fw_cmdEn,'',self.chip_type,self.fw_targetstr,
-	                                      self.user_fw_download_delay,self.user_fw_download_timeout,self.user_fw_download_port,self.user_fw_download_baud)
-		   
-		    
-	elif(self.fw_cmdEn):
-	    for cmd,targetstr,tout in self.send_cmd,self.fwstr_withcmd,self.fwtmo_withcmd:
-		self.l_print(0,'fw check with cmden=1')
-		check_res=fwcheck_ramdownload.run(self.COMPORT, self.BAUDRATE, self.fw_cmdEn,cmd, self.chip_type, 
-		                                         targetstr, 
-		                                         0.5, 
-		                                         tout, 
-		                                         self.user_fw_download_port,self.user_fw_download_baud)		
-		if not check_res:
-		        self.l_print(3,'%s cmd check firmware error'%cmd)
-			break
-	if check_res:
-	    self.ui_print('FIRMWARE CHECK OK')
-	else:
-	    self.ui_print('FIRMWARE CHECK ERROR')
-	    self.resflag=0
-	    self.STOPFLAG=1
-	    
-    def read_fw(self,ser,cmd_str,pattern,ser_tout = 1,delay = 1, baud = None):
-	if not ser.isOpen():
-	    
-	    ser.open()
-	if not baud == None:
-	    print "set new baud: ", baud
-	    ser.baudrate = baud
-	    
-	ser.timeout = 0.5
-	   
-	start_time = time.time()
-    
-	if not cmd_str == '':
-	    ser.write(cmd_str+"\r\n")
-	#ser.flush()
-	#ser_tout=1800
-	if pattern == None:
-	    return (True,None)
-	while True:
-	    line = ser.read(1024)
-	    self.l_print(3,'firmware check read line:%s'%line)
-	   # print "debug line:",line
-	    
-	    if pattern.upper() in line.upper():
-		#ser.close()
-		return (True,line)  
-	    elif line == '':
-		ser.close()
-		return (False,None)
-	    else:
-		pass
-	    if delay>0:
-		self.msleep(int(1000*delay))
-	    if time.time() - start_time >= ser_tout:
-		self.l_print(3,'read firmware version timeout')
-		return (False, None)
-	pass
 	
     def time2cmdstr(self):
 	timestr=time.strftime('%Y%m%d%H%M%S',time.localtime(time.time()))
@@ -1715,9 +1573,9 @@ class esp_testThread(QtCore.QThread):
 	if(self.loadmode==1):
 	    if not os.path.exists(self.IMGPATH):
 		self.l_print(1,'IAMGE un-avaiable')
-		return False
+		return 1
 	    
-	return True
+	return 0
 		
 	   
 if __name__=='__main':

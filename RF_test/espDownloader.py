@@ -1110,7 +1110,7 @@ class ESP8266Downloader(Downloader):
         if efuse_check_res == False and self.efuse_err_halt == 1:
             self.state = self.ESP_DL_EFUSE_ERROR
             self.append_log("set state: ESP_DL_EFUSE_ERROR\n")
-            return False
+            return -1
         #====================================
         #efuse_reg     = (reg3 << 96) | (reg2 << 64) | (reg1 << 32) | reg0
         efuse_flg     = (self.efuse >> 79) & 0x1

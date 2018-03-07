@@ -607,7 +607,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             self.pbBinPath.setEnabled(False)
             self.leBinPath.setEnabled(False)            
     
-    ### class function ###
+    ### class functions ###
     def ui_update_testflow(self, file_path='./config/testFlow', pop_msg=False):
         with open(file_path, 'w') as fd:
             fd.write("- level-index $$ childCount$$ checkable$$ editable$$ value -\n")
