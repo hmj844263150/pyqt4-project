@@ -799,9 +799,9 @@ class esp_testThread(QtCore.QThread):
                 self.l_print(0,'fw check with cmden=1')
                 check_res=fwcheck_ramdownload.run(self.COMPORT, self.BAUDRATE, self.fw_cmdEn,cmd, self.chip_type, 
                                                   targetstr, 
-                                                         0.5, 
-                                                         tout, 
-                                                         self.user_fw_download_port,self.user_fw_download_baud)		
+                                                  0.5, 
+                                                  tout, 
+                                                  self.user_fw_download_port,self.user_fw_download_baud)		
                 if not check_res:
                     self.l_print(3,'%s cmd check firmware error'%cmd)
                     break
@@ -1401,7 +1401,7 @@ class esp_testThread(QtCore.QThread):
         elif self.resflag==2:
             self.l_print(0,'already passed module')
             self.ui_print('[state]passed')
-        self.msleep(3000)
+        #self.msleep(3000)
 
         if self.autostartEn:
             self.ui_print('[state]idle clear')

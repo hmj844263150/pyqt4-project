@@ -398,8 +398,10 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     self.esp_process[id].SIGNAL_STOP.emit()
                 else:
                     self.signal_print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
+                    eval('self.lbMAC{}'.format(id)).setText('0x000000000000')
             except:
                 self.signal_print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
+                eval('self.lbMAC{}'.format(id)).setText('0x000000000000')
     
     def button_single_stop(self, btn):
         id = int(btn.objectName()[len(btn.objectName())-1])
@@ -743,6 +745,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.mutex.acquire()
         # total, pass, fail, mac, time
         datas = [0,0,0,0,0]
+        mac = eval("self.lbMAC{}".format(dut_num)).text()
         with open('./config/localCount.txt', 'a+') as fd:
             rls = fd.readlines()
             
@@ -760,7 +763,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 total = 0
                 pass_num = 0
                 fail_num = 0
-            mac = eval("self.lbMAC{}".format(dut_num)).text()
+            
             now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')[5:]
             if rst == 'pass':
                 pass_num += 1
@@ -769,6 +772,9 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             total += 1
             
             fd.write(str(total)+','+str(pass_num)+','+str(fail_num)+','+str(mac)+','+now_time+"\n")
+            
+        with open('./mac_list/'+self.dut_config['common_conf']['fac_plan']+'_'+rst+'.csv', 'a') as fd:
+            fd.write(mac+'\n')
             
         self.mutex.release()
         self.lbWorkStat.setText('pass:{}/ fail:{}'.format(pass_num, fail_num))
