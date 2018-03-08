@@ -9,6 +9,8 @@ import threading
 import datetime
 import Queue
 import win32api
+import requests
+import json
 from memory_profiler import profile
 from my_widget import *
 from io import StringIO
@@ -37,6 +39,8 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
     
     
+
+
 class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     _SP_SIGN = '$$'
     SIGNAL_PRINT = QtCore.pyqtSignal(QtGui.QTextBrowser, str)
@@ -130,11 +134,11 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.dut_config = {}
         self.CHIP_TYPE_NUM = self.cbChipType.count()
         self.BAUD_NUM = self.cbPortRate1_1.count()
-        self.button_dut_reset('./config/dutConfig') 
+        self.button_dut_reset(file_path='./config/dutConfig', try_login=True) 
         
         self.test_flow = {}
         self.init_testflow()
-        self.init_threshold()    
+        self.init_threshold()
         self.init_test_thread()
         
     def init_test_thread(self):
@@ -427,20 +431,9 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         port = conf.get('common_conf', 'tmp_server_port')
         #url = 'http://{}:{}/hp_register.py?opration=config&user_token={}'.format(ip,port,self.leMPNNo.text()) # test_config_002
         url = 'https://{}:{}/mpn?mpnSid={}'.format(ip, port, str(self.leMPNNo.text())+'_'+str(self.dut_config["chip_conf"]['chip_type']))
-        import requests
-        import json
-        def get(url, datas=None):
-            response = requests.get(url, data=datas, verify=False)
-            json = response.json()
-            return json
-        
-        def post(url, datas=None):
-            response = requests.post(url, data=datas, verify=False)
-            json = response.json()
-            return json            
-        
+           
         try:
-            rsp = get(url)
+            rsp = requests.get(url=url, verify=False).json()
             with open('./config/cloudTestFlow', 'w') as fd:
                 fd.write(str(rsp['data']))            
             #print str(rsp['data'])
@@ -463,33 +456,53 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         
         #url = 'https://{}:{}/mpn/'.format(ip, port)
         #data = '{}"mpnSid":"{}", "data":"{}"{}'.format("{", "tt3", "88888888", "}")
-        #rsp = post(url, data)
+        #rsp = requests.post(url=url, verify=False).json()
         #print rsp
         
         return
 
         
-    def button_dut_reset(self, file_path='./config/dutConfig'):
+    def button_dut_reset(self, file_path='./config/dutConfig', try_login=False):
         conf = ConfigParser.ConfigParser()
         try:
             conf.read(file_path)
+            # set dut_config
             for i in conf.sections():
                 self.dut_config[i] = dict(conf.items(i))
                 
-            index = self.cbChipType.findText(conf.get('chip_conf', 'CHIP_TYPE'))
+            index = self.cbChipType.findText(self.dut_config['chip_conf']['chip_type'])
             if index >= 0:
                 self.cbChipType.setCurrentIndex(index)  
                 self.leChipType.setHidden(True)
             else:
                 self.cbChipType.setCurrentIndex(self.CHIP_TYPE_NUM-1)
-                self.leChipType.setText(conf.get('chip_conf', 'CHIP_TYPE'))
+                self.leChipType.setText(self.dut_config['chip_conf']['chip_type'])
                 self.leChipType.setHidden(False)
-            self.lePoNo.setText(conf.get('common_conf', 'PO_NO'))
-            self.leMPNNo.setText(conf.get('common_conf', 'MPN_NO'))
-            self.leFacId.setText(conf.get('common_conf', 'FAC_SID'))
-            self.leBatchId.setText(conf.get('common_conf', 'BATCH_SID'))
-            self.leFacPlan.setText(conf.get('common_conf', 'FAC_PlAN'))
-            self.leBinPath.setText(conf.get('common_conf', 'BIN_PATH'))
+                
+            self.lePoNo.setText(self.dut_config['common_conf']['po_no'])
+            self.leMPNNo.setText(self.dut_config['common_conf']['mpn_no'])
+            self.leFacId.setText(self.dut_config['common_conf']['fac_sid'])
+            self.leBatchId.setText(self.dut_config['common_conf']['batch_sid'])
+            self.leFacPlan.setText(self.dut_config['common_conf']['fac_plan'])
+            self.leBinPath.setText(self.dut_config['common_conf']['bin_path'])
+            
+            if self.dut_config['common_conf']['test_from'] == 'RAM':
+                self.cbTestFrom.setCurrentIndex(0)
+            else:
+                self.cbTestFrom.setCurrentIndex(1)
+                
+            self.cbFREQ.setCurrentIndex(self.cbFREQ.findText(self.dut_config['chip_conf']['freq']))
+            self.cbAutoStart.setChecked(True if self.dut_config['common_conf']['auto_start'] == '1' else False)
+            self.cbEfuseMode.setCurrentIndex(int(self.dut_config['chip_conf']['efuse_mode']))
+                
+            self.lbChipType.setText(self.dut_config['chip_conf']['chip_type'])
+            self.lbPoNo.setText(self.lePoNo.text())
+            self.lbMPNNo.setText(self.leMPNNo.text())
+            self.lbBatchId.setText(self.leBatchId.text())
+            self.lbFacPlan.setText(self.leFacPlan.text())
+            self.lbAutoStart.setText('ON' if self.dut_config['common_conf']['auto_start'] == '1' else 'OFF')
+            self.lbTestMode.setText(self.dut_config['common_conf']['test_from'])
+            
             for i in xrange(1, self.DUT_NUM+1):
                 for j in xrange(1, 3):
                     eval('self.cbPort'+str(i)+'_'+str(j)).setItemText(0, conf.get('DUT'+str(i), 'PORT'+str(j)))
@@ -501,33 +514,35 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     else:
                         eval('self.cbPortRate'+str(i)+'_'+str(j)).setCurrentIndex(self.BAUD_NUM-1)
                         eval('self.lePortRate'+str(i)+'_'+str(j)).setText(conf.get('DUT'+str(i), 'RATE'+str(j)))
-                        eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(False)
+                        eval('self.lePortRate'+str(i)+'_'+str(j)).setHidden(False)            
             
-            if conf.get('common_conf', 'position') == 'cloud':
-                self.maCloud.setChecked(True)
-                self.pbCloudSync.setEnabled(True)
-            else:
-                self.maCloud.setChecked(False)
-                self.pbCloudSync.setEnabled(False)
-                self.lbPosition.setText('Local')
-                
-            self.button_change_position() 
-            
-            if conf.get('common_conf', 'test_from') == 'RAM':
-                self.cbTestFrom.setCurrentIndex(0)
-            else:
-                self.cbTestFrom.setCurrentIndex(1)
-                
-            self.cbFREQ.setCurrentIndex(self.cbFREQ.findText(conf.get('chip_conf', 'freq')))
-            self.cbAutoStart.setChecked(True if conf.get('common_conf', 'auto_start') == '1' else False)
-            self.cbEfuseMode.setCurrentIndex(int(conf.get('chip_conf', 'efuse_mode')))
-                
-            self.lbChipType.setText(conf.get('chip_conf', 'chip_type'))
-            self.lbPoNo.setText(self.lePoNo.text())
-            self.lbMPNNo.setText(self.leMPNNo.text())
-            self.lbFacId.setText(self.leFacId.text())
-            self.lbBatchId.setText(self.leBatchId.text())
-            self.lbFacPlan.setText(self.leFacPlan.text())
+            if try_login:
+                login_flag=False
+                if self.dut_config['common_conf']['position'] == 'cloud':
+                    token = self.dut_config['common_conf']['auth_token']
+                    try:
+                        if self._try_login(token)==0:
+                            QtCore.QObject.disconnect(self.maCloud, QtCore.SIGNAL(_fromUtf8("changed()")), self.button_change_position)
+                            self.maCloud.setChecked(True)
+                            self.maCloud.changed.connect(self.button_change_position) 
+                            self.wgCloudConfig.setHidden(False)
+                            self.wgCloudShow.setHidden(False)
+                            self.pbCloudSync.setEnabled(True)
+                            self.twTestArea.widget(2).setEnabled(False)
+                            self.lbPosition.setText('Cloud')
+                            self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 0);\n"
+                                                                    "border-color: rgb(0, 255, 255);"))
+                            login_flag=True
+                        else:
+                            print ('login fail')
+                    except:
+                        print ('login fail')
+                if not login_flag:
+                    self.maCloud.setChecked(False)
+                    self.wgCloudConfig.setHidden(True)
+                    self.wgCloudShow.setHidden(True)
+                    self.pbCloudSync.setEnabled(False)
+                    self.lbPosition.setText('Local')            
         except:
             print ('load to config file fail')
     
@@ -559,19 +574,68 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             else:
                 break
     
+    def _try_login(self, token):
+        ip = self.dut_config['common_conf']['tmp_server_ip']
+        port = self.dut_config['common_conf']['tmp_server_port']
+            
+        url = 'https://{}:{}/factorys'.format(ip, port)
+        headers = {'token':token}
+        try:
+            rsp = requests.get(url=url, headers=headers, verify=False).json()
+            print rsp
+            if rsp['status'] == 200:
+                return 0
+            else:
+                return 1
+        except:
+            return 1
+    
     def button_change_position(self):
-        if self.maCloud.isChecked():
-            self.pbCloudSync.setEnabled(True)
-            self.twTestArea.widget(2).setEnabled(False)
-            self.lbPosition.setText('Cloud')
-            self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 0);\n"
-                                                    "border-color: rgb(0, 255, 255);"))
-        else:
-            self.pbCloudSync.setEnabled(False)
-            self.twTestArea.widget(2).setEnabled(True)
-            self.lbPosition.setText('Local')
-            self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
-                                                    "border-color: rgb(0, 255, 255);"))            
+        QtCore.QObject.disconnect(self.maCloud, QtCore.SIGNAL(_fromUtf8("changed()")), self.button_change_position)
+        if self.maCloud.isChecked(): # local -> cloud
+            first_flag = True
+            while(1):
+                if first_flag:
+                    first_flag = False
+                    token,rst = QtGui.QInputDialog().getText(self, "Login", "Verify:",
+                                                              QtGui.QLineEdit().Normal, '')
+                else:
+                    token,rst = QtGui.QInputDialog().getText(self, "Login", "Verify: (fail, retry!!)",
+                                                              QtGui.QLineEdit().Normal, '')
+                if rst:
+                    try:
+                        if self._try_login(token)==0:
+                            self.maCloud.setChecked(True)
+                            self.maCloud.changed.connect(self.button_change_position)
+                            self.wgCloudConfig.setHidden(False)
+                            self.wgCloudShow.setHidden(False)
+                            self.pbCloudSync.setEnabled(True)
+                            self.twTestArea.widget(2).setEnabled(False)
+                            self.lbPosition.setText('Cloud')
+                            self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 0);\n"
+                                                                    "border-color: rgb(0, 255, 255);"))
+                            conf = ConfigParser.ConfigParser()
+                            conf.read('./config/dutConfig')
+                            conf.set('common_conf', 'auth_token', str(token))
+                            conf.write(open('./config/dutConfig', 'w'))
+                            self.ui_update_dut()
+                            return
+                        else:
+                            print ('login fail')
+                    except:
+                        print ('login fail')
+                else:
+                    break
+                
+        self.maCloud.setChecked(False)
+        self.wgCloudConfig.setHidden(True)
+        self.wgCloudShow.setHidden(True)
+        self.maCloud.changed.connect(self.button_change_position) 
+        self.pbCloudSync.setEnabled(False)
+        self.twTestArea.widget(2).setEnabled(True)
+        self.lbPosition.setText('Local')
+        self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
+                                                "border-color: rgb(0, 255, 255);"))            
     
     def button_showFileDialog(self):
         filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', './bin/', filter='firmware(*.bin);;all(*.*)', selectedFilter='firmware(*.bin)')
@@ -708,6 +772,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             
         self.mutex.release()
         self.lbWorkStat.setText('pass:{}/ fail:{}'.format(pass_num, fail_num))
+              
 
 def main():
     app = QtGui.QApplication(sys.argv)

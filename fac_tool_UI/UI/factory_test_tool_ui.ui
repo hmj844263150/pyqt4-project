@@ -56,7 +56,7 @@
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="tab">
      <attribute name="title">
@@ -1931,16 +1931,16 @@ background-color: rgb(200, 200, 200);</string>
          <string>SUBMIT</string>
         </property>
        </widget>
-       <widget class="QWidget" name="wgLocalConfig" native="true">
+       <widget class="QWidget" name="wgCloudConfig" native="true">
         <property name="enabled">
          <bool>true</bool>
         </property>
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>17</y>
+          <y>223</y>
           <width>521</width>
-          <height>241</height>
+          <height>197</height>
          </rect>
         </property>
         <property name="autoFillBackground">
@@ -1954,8 +1954,8 @@ border-color: rgb(0, 0, 0);</string>
          <property name="geometry">
           <rect>
            <x>19</x>
-           <y>130</y>
-           <width>71</width>
+           <y>50</y>
+           <width>70</width>
            <height>21</height>
           </rect>
          </property>
@@ -1973,7 +1973,7 @@ border-color: rgb(0, 0, 0);</string>
          <property name="geometry">
           <rect>
            <x>90</x>
-           <y>130</y>
+           <y>50</y>
            <width>131</width>
            <height>21</height>
           </rect>
@@ -1988,7 +1988,7 @@ border-color: rgb(0, 0, 0);</string>
         <widget class="QLabel" name="label_25">
          <property name="geometry">
           <rect>
-           <x>269</x>
+           <x>270</x>
            <y>50</y>
            <width>71</width>
            <height>21</height>
@@ -2004,31 +2004,12 @@ border-color: rgb(0, 0, 0);</string>
           <string>FAC ID</string>
          </property>
         </widget>
-        <widget class="QLabel" name="label_20">
-         <property name="geometry">
-          <rect>
-           <x>19</x>
-           <y>50</y>
-           <width>71</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Chip Type</string>
-         </property>
-        </widget>
         <widget class="QLabel" name="label_22">
          <property name="geometry">
           <rect>
            <x>19</x>
            <y>90</y>
-           <width>71</width>
+           <width>70</width>
            <height>21</height>
           </rect>
          </property>
@@ -2040,41 +2021,6 @@ border-color: rgb(0, 0, 0);</string>
          </property>
          <property name="text">
           <string>PO Number</string>
-         </property>
-        </widget>
-        <widget class="QLineEdit" name="leFacPlan">
-         <property name="geometry">
-          <rect>
-           <x>340</x>
-           <y>130</y>
-           <width>131</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="text">
-          <string/>
-         </property>
-         <property name="maxLength">
-          <number>100</number>
-         </property>
-        </widget>
-        <widget class="QLabel" name="label_26">
-         <property name="geometry">
-          <rect>
-           <x>269</x>
-           <y>130</y>
-           <width>71</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="sizePolicy">
-          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text">
-          <string>Fac-Plan</string>
          </property>
         </widget>
         <widget class="QLineEdit" name="leBatchId">
@@ -2106,9 +2052,9 @@ border-color: rgb(0, 0, 0);</string>
         <widget class="QLabel" name="label_27">
          <property name="geometry">
           <rect>
-           <x>269</x>
+           <x>270</x>
            <y>90</y>
-           <width>71</width>
+           <width>70</width>
            <height>21</height>
           </rect>
          </property>
@@ -2120,49 +2066,6 @@ border-color: rgb(0, 0, 0);</string>
          </property>
          <property name="text">
           <string>Batch ID</string>
-         </property>
-        </widget>
-        <widget class="QComboBox" name="cbChipType">
-         <property name="geometry">
-          <rect>
-           <x>90</x>
-           <y>50</y>
-           <width>131</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <item>
-          <property name="text">
-           <string>ESP-WROOM-02</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>ESP-WROOM-32</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>ESP32-WROVER</string>
-          </property>
-         </item>
-         <item>
-          <property name="text">
-           <string>other</string>
-          </property>
-         </item>
-        </widget>
-        <widget class="QLineEdit" name="leChipType">
-         <property name="geometry">
-          <rect>
-           <x>90</x>
-           <y>50</y>
-           <width>111</width>
-           <height>21</height>
-          </rect>
-         </property>
-         <property name="maxLength">
-          <number>100</number>
          </property>
         </widget>
         <widget class="QLineEdit" name="lePoNo">
@@ -2209,14 +2112,14 @@ color: rgb(85, 0, 0);</string>
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'Arial Black'; font-size:9pt; font-weight:600; font-style:normal;&quot;&gt;
-&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;COMMON CONFIG&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p align=&quot;center&quot; style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;CLOUD CONFIG&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
          </property>
         </widget>
         <widget class="QLabel" name="lbSyncState">
          <property name="geometry">
           <rect>
-           <x>140</x>
-           <y>190</y>
+           <x>130</x>
+           <y>150</y>
            <width>341</width>
            <height>21</height>
           </rect>
@@ -2234,8 +2137,8 @@ p, li { white-space: pre-wrap; }
         <widget class="QPushButton" name="pbCloudSync">
          <property name="geometry">
           <rect>
-           <x>30</x>
-           <y>190</y>
+           <x>20</x>
+           <y>150</y>
            <width>91</width>
            <height>21</height>
           </rect>
@@ -2251,19 +2154,15 @@ background-color: rgb(200, 200, 200);</string>
         <zorder>label_23</zorder>
         <zorder>leMPNNo</zorder>
         <zorder>label_25</zorder>
-        <zorder>label_20</zorder>
         <zorder>label_22</zorder>
-        <zorder>leFacPlan</zorder>
-        <zorder>label_26</zorder>
         <zorder>leBatchId</zorder>
         <zorder>leFacId</zorder>
         <zorder>label_27</zorder>
-        <zorder>cbChipType</zorder>
         <zorder>lePoNo</zorder>
-        <zorder>leChipType</zorder>
         <zorder>textBrowser_30</zorder>
         <zorder>lbSyncState</zorder>
         <zorder>pbCloudSync</zorder>
+        <zorder>wgSPConfig</zorder>
        </widget>
        <widget class="QComboBox" name="cbPortRate3_2">
         <property name="geometry">
@@ -2317,9 +2216,9 @@ background-color: rgb(200, 200, 200);</string>
         <property name="geometry">
          <rect>
           <x>20</x>
-          <y>270</y>
+          <y>17</y>
           <width>521</width>
-          <height>151</height>
+          <height>197</height>
          </rect>
         </property>
         <property name="autoFillBackground">
@@ -2331,8 +2230,8 @@ background-color: rgb(200, 200, 200);</string>
         <widget class="QPushButton" name="pbBinPath">
          <property name="geometry">
           <rect>
-           <x>480</x>
-           <y>60</y>
+           <x>460</x>
+           <y>150</y>
            <width>21</width>
            <height>21</height>
           </rect>
@@ -2348,8 +2247,8 @@ background-color: rgb(200, 200, 200);</string>
         <widget class="QLabel" name="lbBinPath">
          <property name="geometry">
           <rect>
-           <x>180</x>
-           <y>60</y>
+           <x>20</x>
+           <y>150</y>
            <width>71</width>
            <height>21</height>
           </rect>
@@ -2367,9 +2266,9 @@ background-color: rgb(200, 200, 200);</string>
         <widget class="QLineEdit" name="leBinPath">
          <property name="geometry">
           <rect>
-           <x>250</x>
-           <y>60</y>
-           <width>231</width>
+           <x>90</x>
+           <y>150</y>
+           <width>370</width>
            <height>21</height>
           </rect>
          </property>
@@ -2414,9 +2313,9 @@ p, li { white-space: pre-wrap; }
         <widget class="QComboBox" name="cbTestFrom">
          <property name="geometry">
           <rect>
-           <x>90</x>
-           <y>59</y>
-           <width>71</width>
+           <x>400</x>
+           <y>50</y>
+           <width>81</width>
            <height>21</height>
           </rect>
          </property>
@@ -2434,9 +2333,9 @@ p, li { white-space: pre-wrap; }
         <widget class="QLabel" name="label_30">
          <property name="geometry">
           <rect>
-           <x>20</x>
-           <y>60</y>
-           <width>71</width>
+           <x>320</x>
+           <y>50</y>
+           <width>80</width>
            <height>21</height>
           </rect>
          </property>
@@ -2453,9 +2352,9 @@ p, li { white-space: pre-wrap; }
         <widget class="QLabel" name="label_24">
          <property name="geometry">
           <rect>
-           <x>20</x>
-           <y>100</y>
-           <width>71</width>
+           <x>320</x>
+           <y>80</y>
+           <width>80</width>
            <height>21</height>
           </rect>
          </property>
@@ -2472,9 +2371,9 @@ p, li { white-space: pre-wrap; }
         <widget class="QLabel" name="label_32">
          <property name="geometry">
           <rect>
-           <x>180</x>
-           <y>100</y>
-           <width>81</width>
+           <x>320</x>
+           <y>110</y>
+           <width>80</width>
            <height>21</height>
           </rect>
          </property>
@@ -2491,9 +2390,9 @@ p, li { white-space: pre-wrap; }
         <widget class="QComboBox" name="cbFREQ">
          <property name="geometry">
           <rect>
-           <x>90</x>
-           <y>100</y>
-           <width>71</width>
+           <x>400</x>
+           <y>80</y>
+           <width>81</width>
            <height>21</height>
           </rect>
          </property>
@@ -2511,9 +2410,9 @@ p, li { white-space: pre-wrap; }
         <widget class="QComboBox" name="cbEfuseMode">
          <property name="geometry">
           <rect>
-           <x>260</x>
-           <y>100</y>
-           <width>71</width>
+           <x>400</x>
+           <y>110</y>
+           <width>81</width>
            <height>21</height>
           </rect>
          </property>
@@ -2534,8 +2433,8 @@ p, li { white-space: pre-wrap; }
         <widget class="QCheckBox" name="cbAutoStart">
          <property name="geometry">
           <rect>
-           <x>380</x>
-           <y>100</y>
+           <x>20</x>
+           <y>110</y>
            <width>71</width>
            <height>20</height>
           </rect>
@@ -2544,8 +2443,122 @@ p, li { white-space: pre-wrap; }
           <string>AUTOSTART</string>
          </property>
         </widget>
+        <widget class="QLineEdit" name="leChipType">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>50</y>
+           <width>111</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="maxLength">
+          <number>100</number>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_20">
+         <property name="geometry">
+          <rect>
+           <x>19</x>
+           <y>50</y>
+           <width>71</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Chip Type</string>
+         </property>
+        </widget>
+        <widget class="QComboBox" name="cbChipType">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>50</y>
+           <width>131</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <item>
+          <property name="text">
+           <string>ESP-WROOM-02</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>ESP-WROOM-32</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>ESP32-WROVER</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>other</string>
+          </property>
+         </item>
+        </widget>
+        <widget class="QLabel" name="label_26">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>80</y>
+           <width>70</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text">
+          <string>Fac-Plan</string>
+         </property>
+        </widget>
+        <widget class="QLineEdit" name="leFacPlan">
+         <property name="geometry">
+          <rect>
+           <x>90</x>
+           <y>80</y>
+           <width>131</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string/>
+         </property>
+         <property name="maxLength">
+          <number>100</number>
+         </property>
+        </widget>
+        <zorder>pbBinPath</zorder>
+        <zorder>lbBinPath</zorder>
+        <zorder>leBinPath</zorder>
+        <zorder>textBrowser_33</zorder>
+        <zorder>cbTestFrom</zorder>
+        <zorder>label_30</zorder>
+        <zorder>label_24</zorder>
+        <zorder>label_32</zorder>
+        <zorder>cbFREQ</zorder>
+        <zorder>cbEfuseMode</zorder>
+        <zorder>cbAutoStart</zorder>
+        <zorder>wgSPConfig_2</zorder>
+        <zorder>label_20</zorder>
+        <zorder>cbChipType</zorder>
+        <zorder>leChipType</zorder>
+        <zorder>label_26</zorder>
+        <zorder>leFacPlan</zorder>
        </widget>
-       <zorder>wgLocalConfig</zorder>
+       <zorder>wgCloudConfig</zorder>
        <zorder>textBrowser_21</zorder>
        <zorder>textBrowser_23</zorder>
        <zorder>textBrowser_20</zorder>
@@ -3382,20 +3395,20 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>300</x>
       <y>10</y>
-      <width>281</width>
+      <width>311</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Arial Black</family>
-      <pointsize>16</pointsize>
+      <pointsize>14</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Overall production state</string>
+     <string>TEST CONFIG STATE</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -3403,26 +3416,26 @@ p, li { white-space: pre-wrap; }
      <rect>
       <x>680</x>
       <y>10</y>
-      <width>271</width>
+      <width>311</width>
       <height>21</height>
      </rect>
     </property>
     <property name="font">
      <font>
       <family>Arial Black</family>
-      <pointsize>16</pointsize>
+      <pointsize>14</pointsize>
       <weight>75</weight>
       <bold>true</bold>
      </font>
     </property>
     <property name="text">
-     <string>Local production state</string>
+     <string>PRODUCT SCHEDULE</string>
     </property>
    </widget>
    <widget class="QLabel" name="lbChipType">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>400</x>
       <y>42</y>
       <width>211</width>
       <height>21</height>
@@ -3430,7 +3443,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="font">
      <font>
-      <family>Arial Rounded MT Bold</family>
+      <family>Arial</family>
       <pointsize>12</pointsize>
      </font>
     </property>
@@ -3441,7 +3454,7 @@ p, li { white-space: pre-wrap; }
    <widget class="QLabel" name="lbFWVer">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>400</x>
       <y>65</y>
       <width>211</width>
       <height>21</height>
@@ -3449,7 +3462,7 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="font">
      <font>
-      <family>Arial Rounded MT Bold</family>
+      <family>Arial</family>
       <pointsize>12</pointsize>
      </font>
     </property>
@@ -3457,86 +3470,10 @@ p, li { white-space: pre-wrap; }
      <string>Ver_1.0.0</string>
     </property>
    </widget>
-   <widget class="QLabel" name="lbPoNo">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>88</y>
-      <width>211</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial Rounded MT Bold</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>c0392</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lbMPNNo">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>111</y>
-      <width>211</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial Rounded MT Bold</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>hehe</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lbTotalStatus">
-    <property name="geometry">
-     <rect>
-      <x>380</x>
-      <y>134</y>
-      <width>211</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial Rounded MT Bold</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>WORKING</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="lbFacPlan">
     <property name="geometry">
      <rect>
-      <x>770</x>
-      <y>111</y>
-      <width>211</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial Rounded MT Bold</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>XXXX</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lbBatchId">
-    <property name="geometry">
-     <rect>
-      <x>770</x>
+      <x>400</x>
       <y>88</y>
       <width>211</width>
       <height>21</height>
@@ -3544,50 +3481,12 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="font">
      <font>
-      <family>Arial Rounded MT Bold</family>
+      <family>Arial</family>
       <pointsize>12</pointsize>
      </font>
     </property>
     <property name="text">
      <string>XXXX</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lbFacId">
-    <property name="geometry">
-     <rect>
-      <x>770</x>
-      <y>65</y>
-      <width>211</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial Rounded MT Bold</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>XXXX</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="lbWorkStat">
-    <property name="geometry">
-     <rect>
-      <x>770</x>
-      <y>134</y>
-      <width>211</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial Rounded MT Bold</family>
-      <pointsize>12</pointsize>
-     </font>
-    </property>
-    <property name="text">
-     <string>xx/xxx</string>
     </property>
    </widget>
    <widget class="QLabel" name="lbPosition">
@@ -3680,7 +3579,7 @@ background-color: rgb(200, 200, 200);</string>
      <rect>
       <x>260</x>
       <y>42</y>
-      <width>101</width>
+      <width>131</width>
       <height>21</height>
      </rect>
     </property>
@@ -3699,7 +3598,7 @@ background-color: rgb(200, 200, 200);</string>
      </font>
     </property>
     <property name="text">
-     <string>Chip Type   :</string>
+     <string>Chip Type      :</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_33">
@@ -3707,7 +3606,7 @@ background-color: rgb(200, 200, 200);</string>
      <rect>
       <x>260</x>
       <y>65</y>
-      <width>111</width>
+      <width>131</width>
       <height>21</height>
      </rect>
     </property>
@@ -3729,174 +3628,12 @@ background-color: rgb(200, 200, 200);</string>
      <string>Firmware Ver:</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_34">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>88</y>
-      <width>111</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>PO Number   :</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_35">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>111</y>
-      <width>101</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>MPN No      :</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_36">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>134</y>
-      <width>101</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Total Status:</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_37">
-    <property name="geometry">
-     <rect>
-      <x>634</x>
-      <y>42</y>
-      <width>351</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Server address:  factory.espressif.com</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_38">
-    <property name="geometry">
-     <rect>
-      <x>634</x>
-      <y>65</y>
-      <width>121</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Factory ID   :</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_39">
-    <property name="geometry">
-     <rect>
-      <x>634</x>
-      <y>88</y>
-      <width>121</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Batch ID     :</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="label_40">
     <property name="geometry">
      <rect>
-      <x>634</x>
-      <y>111</y>
-      <width>121</width>
+      <x>260</x>
+      <y>88</y>
+      <width>131</width>
       <height>21</height>
      </rect>
     </property>
@@ -3915,34 +3652,7 @@ background-color: rgb(200, 200, 200);</string>
      </font>
     </property>
     <property name="text">
-     <string>Fac Plan ID  :</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_41">
-    <property name="geometry">
-     <rect>
-      <x>634</x>
-      <y>134</y>
-      <width>121</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="font">
-     <font>
-      <family>Arial</family>
-      <pointsize>12</pointsize>
-      <weight>75</weight>
-      <bold>true</bold>
-     </font>
-    </property>
-    <property name="text">
-     <string>Local Status :</string>
+     <string>Fac Plan ID   :</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_42">
@@ -3969,6 +3679,345 @@ background-color: rgb(200, 200, 200);</string>
      <string>Position:</string>
     </property>
    </widget>
+   <widget class="QLabel" name="label_46">
+    <property name="geometry">
+     <rect>
+      <x>259</x>
+      <y>111</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Test Mode      :</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbTestMode">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>111</y>
+      <width>211</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Flash</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_47">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>134</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Auto Start      :</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbAutoStart">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>134</y>
+      <width>211</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>OFF</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_41">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>40</y>
+      <width>131</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Local Status :</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="lbWorkStat">
+    <property name="geometry">
+     <rect>
+      <x>780</x>
+      <y>40</y>
+      <width>211</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>xx/xxx</string>
+    </property>
+   </widget>
+   <widget class="QWidget" name="wgCloudShow" native="true">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>64</y>
+      <width>360</width>
+      <height>91</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgb(255, 255, 255);</string>
+    </property>
+    <widget class="QLabel" name="label_36">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>70</y>
+       <width>131</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Total Status  :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbTotalStatus">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>70</y>
+       <width>211</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>WORKING</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_35">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>47</y>
+       <width>131</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>MPN No        :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbMPNNo">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>47</y>
+       <width>211</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>hehe</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_39">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>1</y>
+       <width>131</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Batch ID        :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbPoNo">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>24</y>
+       <width>211</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>c0392</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_34">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>24</y>
+       <width>131</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>PO Number  :</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="lbBatchId">
+     <property name="geometry">
+      <rect>
+       <x>150</x>
+       <y>1</y>
+       <width>211</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Arial</family>
+       <pointsize>12</pointsize>
+      </font>
+     </property>
+     <property name="text">
+      <string>XXXX</string>
+     </property>
+    </widget>
+   </widget>
+   <zorder>textBrowser_2</zorder>
    <zorder>fraLogo</zorder>
    <zorder>line</zorder>
    <zorder>twTestArea</zorder>
@@ -3976,17 +4025,10 @@ background-color: rgb(200, 200, 200);</string>
    <zorder>line_3</zorder>
    <zorder>line_4</zorder>
    <zorder>textBrowser</zorder>
-   <zorder>textBrowser_2</zorder>
    <zorder>tePosition</zorder>
    <zorder>lbChipType</zorder>
    <zorder>lbFWVer</zorder>
-   <zorder>lbPoNo</zorder>
-   <zorder>lbMPNNo</zorder>
-   <zorder>lbTotalStatus</zorder>
    <zorder>lbFacPlan</zorder>
-   <zorder>lbBatchId</zorder>
-   <zorder>lbFacId</zorder>
-   <zorder>lbWorkStat</zorder>
    <zorder>lbPosition</zorder>
    <zorder>label</zorder>
    <zorder>label_2</zorder>
@@ -3994,15 +4036,15 @@ background-color: rgb(200, 200, 200);</string>
    <zorder>pbAllStop</zorder>
    <zorder>label_31</zorder>
    <zorder>label_33</zorder>
-   <zorder>label_34</zorder>
-   <zorder>label_35</zorder>
-   <zorder>label_36</zorder>
-   <zorder>label_37</zorder>
-   <zorder>label_38</zorder>
-   <zorder>label_39</zorder>
    <zorder>label_40</zorder>
-   <zorder>label_41</zorder>
    <zorder>label_42</zorder>
+   <zorder>label_46</zorder>
+   <zorder>lbTestMode</zorder>
+   <zorder>label_47</zorder>
+   <zorder>lbAutoStart</zorder>
+   <zorder>label_41</zorder>
+   <zorder>lbWorkStat</zorder>
+   <zorder>wgCloudShow</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

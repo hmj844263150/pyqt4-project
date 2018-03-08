@@ -1,5 +1,5 @@
 [common_conf]
-position = local
+position = cloud
 fw_ver = ver_1.1.1
 po_no = c0393
 mpn_no = 2018020004
@@ -12,6 +12,8 @@ bin_path = D:/VM/share/new_factory_tools/fac_tool_UI/bin/RSP8266_module_test_vdd
 auto_start = 0
 tmp_server_ip = 192.168.16.186
 tmp_server_port = 8000
+auto_login = 1
+auth_token = esp-own-test-FID-dbd42d01-86e0ee8a023b5b346115
 
 [DUT1]
 port1 = COM21
@@ -39,6 +41,6 @@ rate2 = 115200
 
 [chip_conf]
 freq = 26M
-efuse_mode = 1
+efuse_mode = 0
 chip_type = ESP-WROOM-02
 

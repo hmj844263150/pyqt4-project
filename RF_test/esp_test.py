@@ -86,6 +86,7 @@ class esp_testThread(QtCore.QThread):
             try:
                 self.main_test()
             except:
+                self.msleep(3000)
                 pass
             if not self.autostartEn:
                 break
@@ -124,11 +125,11 @@ class esp_testThread(QtCore.QThread):
         self.ui_print('CHIP SYCN OK')
         CHECK(self.check_chip(), 'CHIP CHECK FAIL')
 
-        if self.loadmode == 1:  
+        if self.loadmode == 1:  # need load bin on ram mode 
             CHECK(self.load_to_ram(self.IMGPATH), 'LOAD RAM FAIL')
 
         self.ui_print('[state]RUN')
-
+        
         err, log=self.rf_test_catch_log()
         CHECK(err, 'GET TEST LOG FAIL')
         if(self.en_analog_test):
@@ -988,19 +989,19 @@ class esp_testThread(QtCore.QThread):
         getmac_res=0
         self.memory_download.disconnect()
         try:
-            self.ser = serial.Serial(port=self.COMPORT, baudrate=self.BAUDRATE,timeout=1)
+            self.ser = serial.Serial(port=self.COMPORT, baudrate=self.BAUDRATE,timeout=0.5)
             self.l_print(0,'serial open ok')
             self.ui_print('SER OPEN OK')
         except serial.SerialException:
             self.ui_print('SERIAL PORT EXCEPTION')
             return 1
 
-        try:
-            getmac_res=self.memory_download.esp_getmac(self.ser)
+        #try:
+        getmac_res=self.memory_download.esp_getmac(self.ser)
 
-        except:
-            self.l_print(3,'get mac error')
-            return 1
+        #except:
+            #self.l_print(3,'get mac error')
+            #return 1
 
         if getmac_res:   
             self.l_print(1,self.memory_download.ESP_MAC)
@@ -1117,20 +1118,7 @@ class esp_testThread(QtCore.QThread):
         self.rptstr=self.rptstr+tempstr
         return 0  
 
-    def str_format(value):
-
-        if(isinstance(value,str)):
-            value=value
-
-        else:
-            value=str(value)
-        re_filling=20
-        fill_num=re_filling-len(value)
-        re_fill_str=' '
-        re_fill_str=re_fill_str*fill_num
-        re_fill_str=value+re_fill_str
-
-        return re_fill_str
+    
     def esp_gen_rpt(self):
         tool_ver=self.tool_ver
         chip_type=self.chip_type
@@ -1229,6 +1217,15 @@ class esp_testThread(QtCore.QThread):
         return logpath
 
     def ui_print(self,log):
+        if log.endswith('OK'):
+            v_l=log.split(' ')
+            temp_str=log[:len(v_l[-1])*-1]
+            re_filling=25
+            fill_num=re_filling-len(temp_str)
+            re_fill_str=' '
+            re_fill_str=re_fill_str*fill_num
+            log=temp_str+re_fill_str+v_l[-1]
+            
         self._stdout.write(log)
 
     def upload_server(self, rst):
@@ -1377,10 +1374,12 @@ class esp_testThread(QtCore.QThread):
                 print self.slot_num, "finish RF"
                 self.ui_print('[state]RFMutex')            # for rf test mutex
                 self.ui_print('[state]fail_record')
-                self.upload_server('fail')
+                if self.position == 'cloud':
+                    self.upload_server('fail')
             else:
                 self.ui_print('[state]pass_record')
-                self.upload_server('success')
+                if self.position == 'cloud':
+                    self.upload_server('success')
 
         try:
             self.ser.close()
@@ -1456,7 +1455,7 @@ class esp_testThread(QtCore.QThread):
             self.IMGPATH=self.dutconfig['common_conf']['bin_path']
             self.fac_=self.dutconfig['common_conf']['fac_sid']
             self.po=self.dutconfig['common_conf']['po_no']
-            self.test_mode=self.dutconfig['common_conf']['position']
+            self.position=self.dutconfig['common_conf']['position']
             self.en_user_fw_check=int(self.testflow['USER_FW_CHECK'])
             self.fw_targetstr=self.testflow['USER_FW_VER_STR']
             self.fw_cmd_combin=self.testflow['USER_TEST_CMD<cmd,rsp,tmo>']
