@@ -435,7 +435,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         url = 'https://{}:{}/mpn?mpnSid={}'.format(ip, port, str(self.leMPNNo.text())+'_'+str(self.dut_config["chip_conf"]['chip_type']))
            
         try:
-            rsp = requests.get(url=url, verify=False).json()
+            rsp = requests.get(url=url, verify=False,timeout=3).json()
             with open('./config/cloudTestFlow', 'w') as fd:
                 fd.write(str(rsp['data']))            
             #print str(rsp['data'])
@@ -583,13 +583,15 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         url = 'https://{}:{}/factorys'.format(ip, port)
         headers = {'token':token}
         try:
-            rsp = requests.get(url=url, headers=headers, verify=False).json()
+            rsp = requests.get(url=url, headers=headers, verify=False, timeout=3).json()
             print rsp
             if rsp['status'] == 200:
                 return 0
             else:
+                print 'login fail'
                 return 1
         except:
+            print 'login fail'
             return 1
     
     def button_change_position(self):
