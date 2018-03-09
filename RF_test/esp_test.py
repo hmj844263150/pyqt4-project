@@ -86,10 +86,12 @@ class esp_testThread(QtCore.QThread):
             try:
                 self.main_test()
             except:
-                self.msleep(3000)
                 pass
-            if not self.autostartEn:
+            if self.autostartEn:
+                self.msleep(3000)
+            else:
                 break
+            
         try:
             self.ser.close()
         except:
@@ -1220,7 +1222,7 @@ class esp_testThread(QtCore.QThread):
         if log.endswith('OK'):
             v_l=log.split(' ')
             temp_str=log[:len(v_l[-1])*-1]
-            re_filling=25
+            re_filling=22
             fill_num=re_filling-len(temp_str)
             re_fill_str=' '
             re_fill_str=re_fill_str*fill_num
@@ -1402,9 +1404,8 @@ class esp_testThread(QtCore.QThread):
             self.l_print(0,'already passed module')
             self.ui_print('[state]passed')
         #self.msleep(3000)
-
-        if self.autostartEn:
-            self.ui_print('[state]idle clear')
+        #if self.autostartEn:
+            #self.ui_print('[state]idle clear')
 
     def stopthread(self):
         self.ui_print('[state]finish btn up')
