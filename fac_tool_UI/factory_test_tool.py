@@ -437,7 +437,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         try:
             rsp = requests.get(url=url, verify=False,timeout=3).json()
             with open('./config/cloudTestFlow', 'w') as fd:
-                fd.write(str(rsp['data']))            
+                fd.write(str(rsp['data']))
             #print str(rsp['data'])
         except:
             self.lbSyncState.setText('sync fail!!! please check the mpn and chip type')
