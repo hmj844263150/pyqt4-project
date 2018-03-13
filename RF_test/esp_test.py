@@ -741,8 +741,12 @@ class esp_testThread(QtCore.QThread):
                 res,data=self._read_fw(ser=self.fwser, cmd_str=cmd, pattern=targetstr,ser_tout=tout,
                                        delay=0.5,baud=self.user_fw_download_baud)
                 self.l_print(3,'re-send cmd')
-                res,data=self._read_fw(ser=self.fwser, cmd_str=cmd, pattern=targetstr,ser_tout=tout,
-                                       delay=0.5,baud=self.user_fw_download_baud)
+                try:
+                    res,data=self._read_fw(ser=self.fwser, cmd_str=cmd, pattern=targetstr,ser_tout=tout,
+                                           delay=0.5,baud=self.user_fw_download_baud)
+                except:
+                    self.ui_print("FW COM FAIL")
+                    return 1                    
                 if not res==True:
                     self.l_print(3,'%s cmd check firmware error'%cmd)
                     break
@@ -768,17 +772,29 @@ class esp_testThread(QtCore.QThread):
 
         if(self.fw_cmdEn==0):
             self.l_print(0,'fw check with no cmd')
-            check_res=fwcheck_ramdownload.run(self.COMPORT,self.BAUDRATE,self.fw_cmdEn,'',self.chip_type,self.fw_targetstr,
+            try:
+                check_res=fwcheck_ramdownload.run(self.COMPORT,self.BAUDRATE,self.fw_cmdEn,'',self.chip_type,self.fw_targetstr,
                                               self.user_fw_download_delay,self.user_fw_download_timeout,self.user_fw_download_port,self.user_fw_download_baud)
-
+            except:
+                self.ui_print("FW COM FAIL")
+                return 1
         elif(self.fw_cmdEn):
-            for cmd,targetstr,tout in self.send_cmd,self.fwstr_withcmd,self.fwtmo_withcmd:
+            for param in self.cmd_group:
+                temp_list=[]
+                temp_list=param.split(',')
+                cmd=temp_list[0]
+                targetstr=temp_list[1]
+                tout=temp_list[2]
                 self.l_print(0,'fw check with cmden=1')
-                check_res=fwcheck_ramdownload.run(self.COMPORT, self.BAUDRATE, self.fw_cmdEn,cmd, self.chip_type, 
+                try:
+                    check_res=fwcheck_ramdownload.run(self.COMPORT, self.BAUDRATE, self.fw_cmdEn,cmd, self.chip_type, 
                                                   targetstr, 
                                                   0.5, 
                                                   tout, 
-                                                  self.user_fw_download_port,self.user_fw_download_baud)		
+                                                  self.user_fw_download_port,self.user_fw_download_baud)
+                except:
+                    self.ui_print("FW COM FAIL")
+                    return 1                
                 if not check_res:
                     self.l_print(3,'%s cmd check firmware error'%cmd)
                     break
@@ -788,6 +804,7 @@ class esp_testThread(QtCore.QThread):
         else:
             self.ui_print('FIRMWARE CHECK ERROR')
             return 1
+
 
     def _read_fw(self,ser,cmd_str,pattern,ser_tout = 1,delay = 1, baud = None):
         if not ser.isOpen():
