@@ -592,6 +592,7 @@ class esp_testThread(QtCore.QThread):
         #serTestRes.close()
         if(self.gpio_test_res==0):
             self.l_print(3,'gpio test fail,please check step log for err info')
+            return 1
         else:
             try:
                 if self.gpio_02_read_en:
@@ -610,6 +611,7 @@ class esp_testThread(QtCore.QThread):
                 self.l_print(3,'gpio test fail,please check the which step err')
                 self.gpio_test_res=0
                 return 1
+            
 
     def general_test_gpio_32(self):
         self.l_print(0,'start 32 gpio test')
