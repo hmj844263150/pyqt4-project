@@ -3,9 +3,6 @@ import os
 #import xlwt
 import xlrd
 
-
-
-
 csv_list=[               #item whose failed data will be put into a .csv 
                          
                          'dco_sweep_test_ADC_STEP',           
@@ -35,13 +32,6 @@ judge_list=[             # check list: item in this list will be checked in the 
                          'fb_rx_num_max',
                          'RXIQ_TEST_5M_diff',
                          
-                         #'VDD33',
-                         #'FREQ_OFFSET',
-                         #'rc_cal_dout',
-                         #'filepath',
-                         #'CHIP_ID',
-                        #'CHIP_VERSION',
-                        #'vdd33',
                         'VDD33',
                         'FREQ_OFFSET',
                         'rc_cal_dout',
@@ -68,51 +58,20 @@ judge_list=[             # check list: item in this list will be checked in the 
                         'RX_NOISEFLOOR',
                         'RXIQ',
                         'RXDC',
-                        #'DVDD_testV1',
-                        #'VDD_RTC_testV1',
-                        #'DVDD_testV2' ,
-                        #'VDD_RTC_testV2',
-                        #'LightSleep_IDD_VBAT',
-                        #'LightSleep_IDD_DVDD_IO',
-                        #'DeepSleep_IDD_VBAT',
-                        #'DeepSleep_IDD_DVDD_IO',
-                        #'Chip_PD_IDD_VBAT',
-                        #'Chip_PD_IDD_DVDD_IO',       
-                        #'AnaWorkIDD_VBAT',
-                        #'AnaWorkIDD_DVDD_IO'   , 
                         'RTC_freq_170khz',
                         'RTC_freq_70khz',
-                        #'rssi',
-                        #'rx_suc_num'  ,  
-                        #'RXIQ_TEST_-5M',
-                        #'RXIQ_TEST_5M', 
                         'RXIQ_TEST_5M_diff',
                         'rxiq_cover_fail_num',
-                        #'rxiq_compute_num',
                         'rombist_rslt',
                         'timeout_fail', 
                         'site_num',
                         'RXIQ_REMAIN',
-                        #'txp_pwctrl_atten',
                         'fb_rxrssi',
                         'dut_rxrssi',
-                        #'fb_rx_num',
                         'fb_rx_num_max',
-                        #'dut_rx_num',
                         'fb_rx_num_sum',
-                        #'txp_state',
-                        #'rxsdut_cnt',
-                        #'rxsdut_max_rssi'   , 
-                        #'txp_result',
-                        #'txreq_start_time',
-                        #'check_result_t',
                         'io_test_result',
                         'wifi_init_time',
-                        #'WIFI_INIT_ITEM',
-                        #'SVN_Version'                        
-                             
-                         
-                         
                          ]
 
 
@@ -130,23 +89,8 @@ threshold={              #threshold for checking items
                          'FREQ_OFFSET':[[0],[32]],
                          'fb_rx_num_max':[[15],[16]],
                          'RXIQ_TEST_5M_diff':[[-8],[8]] ,
-                         
-                         #'VDD33':[[],[]],  # ['VDD33', ' temp_code', ' offset']
-                         #'FREQ_OFFSET':[[],[]],
-                         #'rc_cal_dout'
-                         #'filepath':[[],[]],
-                         #'CHIP_ID':[[],[]],
-                        #'CHIP_VERSION':[[],[]],
-                        #'vdd33':[[3200,0,-1],[3600,116,0]],
                         'VDD33':[[3200,0,-100],[3600,180,0]],
-                        #'FREQ_OFFSET':[[0],[32]],
                         'rc_cal_dout':[[3],[60]],
-                        #'dco_sweep_test_ADC_STEP':[[0],[5]],#  ['_min_i', '_max_i', '_min_q', '_max_q']
-                        #'dco_sweep_test_DCO':[[116,369,116,364],[147,397,145,395]],#['_low_i', '_hgh_i', '_low_q', '_hgh_q']
-                        #'TXIQ':[[-12,-25],[12,25]], #['_gain', '_phase']
-                        #'TXBB_TXIQ':[[-6],[6]],#['_gain', '_phase']
-                        #'TXDC':[[3],[124]],#['_i', '_q']
-                        #'TXBB_TXDC':[[],[]],##############################
                         'TXCAP_TMX2G_CCT_LOAD':[[0],[15]],
                         'TXCAP_PA2G_CCT_STG1':[[0],[12]],
                         'TXCAP_PA2G_CCT_STG2':[[0],[6]],   
@@ -164,50 +108,20 @@ threshold={              #threshold for checking items
                         'RX_NOISEFLOOR':[[-390],[-370]],
                         'RXIQ':[[-13,-27],[13,27]],
                         'RXDC':[[128],[384]],
-                        #'DVDD_testV1':[[1.05],[1.2]],
-                        #'VDD_RTC_testV1':[[],[]],
-                        #'DVDD_testV2' :[[],[]],
-                        #'VDD_RTC_testV2':[[],[]],
-                        #'LightSleep_IDD_VBAT':[[],[]],
-                        #'LightSleep_IDD_DVDD_IO':[[],[]],
-                        #'DeepSleep_IDD_VBAT':[[],[]],
-                        #'DeepSleep_IDD_DVDD_IO':[[],[]],
-                        #'Chip_PD_IDD_VBAT':[[],[]],
-                        #'Chip_PD_IDD_DVDD_IO':[[],[]],       
-                        #'AnaWorkIDD_VBAT':[[],[]],
-                        #'AnaWorkIDD_DVDD_IO'   :[[],[]], 
                         'RTC_freq_170khz':[[140],[210]],
                         'RTC_freq_70khz':[[60],[90]],
-                        #'rssi':[[],[]],
-                        #'rx_suc_num'  :[[],[]],  
-                        #'RXIQ_TEST_-5M':[[-10,-31],[15,26]],
-                        #'RXIQ_TEST_5M':[[-12,-21],[15,31]], 
                         'RXIQ_TEST_5M_diff':[[-8],[8]],
                         'rxiq_cover_fail_num':[[0],[0]],
-                        #'rxiq_compute_num':[[0],[3]],
                         'rombist_rslt':[[0],[0]],
                         'timeout_fail':[[0,0,0],[1,1,0]], 
                         'site_num':[[0,1,1,0],[100,1,100,96]],
                         'RXIQ_REMAIN':[[-200],[-30]],
-                        #'txp_pwctrl_atten':[[32],[96]],
                         'fb_rxrssi':[[0,0,0,0,0,40],[100,100,100,100,100,50]],
                         'dut_rxrssi':[[0,0,0,0,0,50],[100,100,100,100,100,60]],
-                        #'fb_rx_num':[[0],[16]],
                         'fb_rx_num_max':[[15],[16]],
-                        #'dut_rx_num':[[0],[16]],
                         'fb_rx_num_sum':[[64,0],[96,2]],
-                        #'txp_state':[[],[]],
-                        #'rxsdut_cnt':[[],[]],
-                        #'rxsdut_max_rssi'   :[[],[]], 
-                        #'txp_result':[[],[]],
-                        #'txreq_start_time':[[],[]],
-                        #'check_result_t':[[],[]],
                         'io_test_result':[[0],[0]],
                         'wifi_init_time':[[370000],[470000]],
-                        #'WIFI_INIT_ITEM':[[],[]],
-                        #'SVN_Version':[[4329],[4329]],                           
-                         
-        
         }
 
 
@@ -220,21 +134,6 @@ fail_dict_1st_order={ }
 for litem in judge_list:
     fail_dict_1st_order[litem]=[0,[]]
     
-                         #'dco_sweep_test_ADC_STEP':[0,[]],
-                         #'RX_PATH_GAIN':[0,[]],
-                         #'RX_SWITCH_GAIN':[0,[]],
-                         #'TXIQ':[0,[]],
-                         #'TXBB_TXIQ':[0,[]],
-                         #'TXDC':[0,[]],
-                         #'FREQ_OFFSET':[0,[]],
-                         #'fb_rx_num':[0,[]],
-                         #'RXIQ_TEST_-5M':[0,[]],
-                         #'pass':[0,[]]
-                         
-                         #}
-
-
-
 def read_log_data(file_path,mode,block_num):
     value_list=[]
     end_flg=''
@@ -249,19 +148,11 @@ def read_log_data(file_path,mode,block_num):
                 'TX_VDD33_DIFF':[[''],[]],#add for new version
                 'txp_result':[[],[]],#add for new version
                 'TOUT':[[],[]],#ADD FOR TOUT TEST
-                #'temp_code':[[],[]],
-                #'offset':[[],[]],
                 'cal_rf_ana_gain':[[],[]],
-                #'TXBB_TXIQ_gain':[[],[]],
-                #'TXBB_TXIQ_phase':[[],[]],
                 'TXBB_TXIQ':[['_gain','_phase'],[ ]],
-                #'TXBB_TXDC_i':[[],[]],
-                #'TXBB_TXDC_q':[[],[]],
                 'TXBB_TXDC':[['_i','_q'],[]],##############################
                 'RX_GAIN_CHECK':[['_CH1','_CH6','_CH11'],[]],
                 'RX_GAIN_CHECK_POWER_hdb':[['_1','_2'],[]],
-                #'BBRX2_RXIQ_gain':[[],[]],
-                #'BBRX2_RXIQ_phase':[[],[]],
                 'BBRX2_RXIQ':[['_gain','_phase'],[]],
                 'RX_NOISEFLOOR':[['_CH1','_CH6','_CH11'],[]],
                 'TXCAP_TMX2G_CCT_LOAD':[[''],[]],
@@ -270,43 +161,24 @@ def read_log_data(file_path,mode,block_num):
                 'TX_POWER_BACKOFF':[[''],[]],#add for new version
                 'TX_PWRCTRL_ATTEN':[[''],[]],
                 'TX_PWCTRL_CHAN_OFFSET':[[''],[]],
-                #'TXIQ_gain':[[],[]],
-                #'TXIQ_phase':[[],[]],
                 'TXIQ':[['_gain','_phase'],[]],
                 'BT_TXIQ':[['_gain','_phase'],[]],
-                #'TXDC_i':[[],[]],
-                #'TXDC_q':[[],[]],
                 'TXDC':[['_i','_q'],[]],
                 'BT_TXDC':[['_i','_q'],[]],
-                #'RXIQ_gain':[[],[]],
-                #'RXIQ_phase':[[],[]],
                 'RXIQ':[['_gain','_phase'],[]],
                 
-                #'RXDC_c_i':[[],[]],
-                #'RXDC_c_q':[[],[]],
-                #'RXDC_f_i':[[],[]],
-                #'RXDC_f_q':[[],[]],
                 'RXDC':[['_c_i','_c_q','_f_i','_f_q'],[]],
                 'RXDC_RFRX_BT':[[],[]],
                 'RXDC_RFRX_WIFI':[[],[]],
                 'RXDC_RXBB_BT':[[],[]],
                 
-                #'freq_offset_cal_total_pwr':[[],[]],
-                #'freq_offset_cal_bb_gain':[[],[]],
                 'freq_offset_cal':[[],[]],
                 'RX_PATH_GAIN':[[''],[]],
                 'RXIQ_tot_power':[[''],[]],
                 'FREQ_OFFSET':[[''],[]],
                 'RX_PATH_SNR':[[''],[]],
-                #'adc_dac_snr_2tone_gain':[[],[]],
-                #'adc_dac_snr_2tone_total_pwr':[[],[]],
                 'adc_dac_snr_2tone':[[],[]],
                 'ADC_DAC_SNR':[[''],[]],
-                #'rx_switch_gain_check_bbrx1':[[],[]],
-                #'rx_switch_gain_check_bbrx2':[[],[]],
-                #'rx_switch_gain_check_total_pwr_db':[[],[]],
-                #'rx_switch_gain_check_sig_pwr_db':[[],[]],
-                #'rx_switch_gain_check_sw_g':[[],[]],
                 'rx_switch_gain_check':[['_bbrx1','_bbrx2','_total_pwr_db','_sig_pwr_db','_sw_g'],[]],#####################################
                 'RX_SWITCH_GAIN':[[''],[]],#######################################
                 'dco_sweep_test_ADC_STEP':[[],[]],
@@ -338,7 +210,6 @@ def read_log_data(file_path,mode,block_num):
                 
                 'RXIQ_TEST_5M_diff':[['_gain','_phase'],[]],
                 
-                
                 'rxiq_cover_fail_num':[[],[]],
                 'rxiq_compute_num':[[''],[]],
                 'rombist_rslt':[[],[]],
@@ -346,18 +217,15 @@ def read_log_data(file_path,mode,block_num):
                 'site_num':[[],[]],
                 'RXIQ_REMAIN':[[''],[]],            # maintain IQ OR DC , print according to the name str in value[item] [0]
                 
-                
                 'txp_pwctrl_atten':[[''],[]],
                 'fb_rxrssi':[[''],[]],
                 'dut_rxrssi':[[''],[]],
                 'fb_rx_num':[[''],[]],
                 'fb_rx_num_max':[[''],[]],
                 
-                
                 'dut_rx_num':[[''],[]],
                 
                 'fb_rx_num_sum':[[],[]],
-                
                 
                 'txp_state':[[''],[]],
                 'rxsdut_cnt':[[''],[]],
@@ -371,27 +239,14 @@ def read_log_data(file_path,mode,block_num):
                 'WIFI_INIT_ITEM':[[''],[]],
                 'SVN_Version':[[''],[]],
                 
-                
                 'rx_para_cal_tone':[[''],[]],
                 'rx_para_cal_tone_sig_pwr_db_1':[[''],[]],
                 'rx_para_cal_tone_sig_pwr_db_2':[[''],[]],
                 'rx_para_cal_tone_sig_pwr_db_3':[[''],[]],
                 'rx_para_cal_tone_sig_pwr_db_4':[[''],[]],
                 
-                
-                
                 'filepath':'',
                 'timer expire':''
-                
-                #'Light_sleep_RTC_freq_before':[[''],[]],
-                #'Light_sleep_RTC_freq_after':[[''],[]]
-                
-                
-                #'check_result':[[],[]],
-                
-                #'rssi':[[''],[]],
-                #'rx_suc_num':[[''],[]]
-                
                 }   
     v_tmp={ 'rc_cal_dout': [[],[]],
             'rx_para_cal':[['_1','_2','_3'],[]],
@@ -405,19 +260,11 @@ def read_log_data(file_path,mode,block_num):
                 'txp_result':[[],[]],#add for new version
                 'TOUT':[[],[]],#ADD FOR TOUT TEST
                 
-                #'temp_code':[[],[]],
-                #'offset':[[],[]],
                 'cal_rf_ana_gain':[[],[]],
-                #'TXBB_TXIQ_gain':[[],[]],
-                #'TXBB_TXIQ_phase':[[],[]],
                 'TXBB_TXIQ':[['_gain','_phase'],[ ]],
-                #'TXBB_TXDC_i':[[],[]],
-                #'TXBB_TXDC_q':[[],[]],
                 'TXBB_TXDC':[['_i','_q'],[]],##############################
                 'RX_GAIN_CHECK':[['_CH1','_CH6','_CH11'],[]],
                 'RX_GAIN_CHECK_POWER_hdb':[['_ '],[]],
-                #'BBRX2_RXIQ_gain':[[],[]],
-                #'BBRX2_RXIQ_phase':[[],[]],
                 'BBRX2_RXIQ':[['_gain','_phase'],[]],
                 'RX_NOISEFLOOR':[['_CH1','_CH6','_CH11'],[]],
                 'TXCAP_TMX2G_CCT_LOAD':[[''],[]],
@@ -427,42 +274,23 @@ def read_log_data(file_path,mode,block_num):
                 
                 'TX_PWRCTRL_ATTEN':[[''],[]],
                 'TX_PWCTRL_CHAN_OFFSET':[[''],[]],
-                #'TXIQ_gain':[[],[]],
-                #'TXIQ_phase':[[],[]],
                 'TXIQ':[['_gain','_phase'],[]],
                 'BT_TXIQ':[['_gain','_phase'],[]],
-                #'TXDC_i':[[],[]],
-                #'TXDC_q':[[],[]],
                 'TXDC':[['_i','_q'],[]],
                 'BT_TXDC':[['_i','_q'],[]],
-                #'RXIQ_gain':[[],[]],
-                #'RXIQ_phase':[[],[]],
                 'RXIQ':[['_gain','_phase'],[]],
                 
-                #'RXDC_c_i':[[],[]],
-                #'RXDC_c_q':[[],[]],
-                #'RXDC_f_i':[[],[]],
-                #'RXDC_f_q':[[],[]],
                 'RXDC':[['_c_i','_c_q','_f_i','_f_q'],[]],
                 'RXDC_RFRX_BT':[[],[]],
                 'RXDC_RFRX_WIFI':[[],[]],
                 'RXDC_RXBB_BT':[[],[]],                
-                #'freq_offset_cal_total_pwr':[[],[]],
-                #'freq_offset_cal_bb_gain':[[],[]],
                 'freq_offset_cal':[[],[]],
                 'RX_PATH_GAIN':[[''],[]],
                 'RXIQ_tot_power':[[''],[]],
                 'FREQ_OFFSET':[[''],[]],
                 'RX_PATH_SNR':[[''],[]],
-                #'adc_dac_snr_2tone_gain':[[],[]],
-                #'adc_dac_snr_2tone_total_pwr':[[],[]],
                 'adc_dac_snr_2tone':[[],[]],
                 'ADC_DAC_SNR':[[''],[]],
-                #'rx_switch_gain_check_bbrx1':[[],[]],
-                #'rx_switch_gain_check_bbrx2':[[],[]],
-                #'rx_switch_gain_check_total_pwr_db':[[],[]],
-                #'rx_switch_gain_check_sig_pwr_db':[[],[]],
-                #'rx_switch_gain_check_sw_g':[[],[]],
                 'rx_switch_gain_check':[['_bbrx1','_bbrx2','_total_pwr_db','_sig_pwr_db','_sw_g'],[]],#####################################
                 'RX_SWITCH_GAIN':[[''],[]],#######################################
                 'dco_sweep_test_ADC_STEP':[[],[]],
@@ -528,19 +356,9 @@ def read_log_data(file_path,mode,block_num):
                 'rx_para_cal_tone_sig_pwr_db_3':[[''],[]],
                 'rx_para_cal_tone_sig_pwr_db_4':[[''],[]],                
                 
-                
-                
                 'filepath':'',
                 'timer expire':''
                 
-                #'Light_sleep_RTC_freq_before':[[''],[]],
-                #'Light_sleep_RTC_freq_after':[[''],[]],                
-                ##'check_result':[[],[]],
-                
-                #'rssi':[[''],[]],
-                #'rx_suc_num':[[''],[]]    
-                
-
                 } 
     
     if mode=='module':
@@ -586,17 +404,10 @@ def read_log_data(file_path,mode,block_num):
         v_tmp['RX_NOISEFLOOR'][0].append('_CH14')   
     elif mode=='ESP32':
         end_flg='MODULE_TEST EDN!!!'
-        #end_flg='TEST_NUM'
         values['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
         values['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q'] 
-        #values["BT_TXIQ"]=[['_gain','_phase'],[]]
-        #values["BT_TXDC"]=[['_i','_q'],[]]        
-        #values['RX_NOISEFLOOR'][0].append('_CH14')
         v_tmp['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
-        v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q'] 
-        #v_tmp["BT_TXIQ"]=[['_gain','_phase'],[]]
-        #v_tmp["BT_TXDC"]=[['_i','_q'],[]]
-        #v_tmp['RX_NOISEFLOOR'][0]       
+        v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']
     elif mode=='ate' :
         end_flg='---------------CHECK'  
         values['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
@@ -606,46 +417,34 @@ def read_log_data(file_path,mode,block_num):
     elif mode=='130608_fpga' :
         #end_flg='user code done' 
         end_flg='rx_suc_num'
-        #values['rc_cal_dout']= [[''],[]]
         values['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
         values['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']
         values['RX_NOISEFLOOR'][0].pop()  
-        #v_tmp['rc_cal_dout']= [[''],[]]
         v_tmp['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
         v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']   
         v_tmp['RX_NOISEFLOOR'][0].pop()  
     elif mode=='130624_fpga' :
         #end_flg='user code done' 
         end_flg='rxsdut_max_rssi'
-        #values['rc_cal_dout']= [[''],[]]
         values['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
         values['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']
-        values['RX_NOISEFLOOR'][0].pop()  
-        #v_tmp['rc_cal_dout']= [[''],[]]
+        values['RX_NOISEFLOOR'][0].pop()
         v_tmp['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
         v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']   
         v_tmp['RX_NOISEFLOOR'][0].pop()     
     elif mode=='130626_fpga' :
-        #end_flg='user code done' 
-        #end_flg='txp_state'
-        #end_flg='AnaWorkIDD_DVDD_IO'
-        #end_flg='txp_result'
         end_flg='txp_result'
-        #values['rc_cal_dout']= [[''],[]]
         values['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
         values['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']
-        values['RX_NOISEFLOOR'][0].pop()  
-        #v_tmp['rc_cal_dout']= [[''],[]]
+        values['RX_NOISEFLOOR'][0].pop()
         v_tmp['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
         v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']   
         v_tmp['RX_NOISEFLOOR'][0].pop()   
     elif mode =='ate130716':
         end_flg='AnaWorkIDD_DVDD_IO'
-        #values['rc_cal_dout']= [[''],[]]
         values['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
         values['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']
-        values['RX_NOISEFLOOR'][0].pop()  
-        #v_tmp['rc_cal_dout']= [[''],[]]
+        values['RX_NOISEFLOOR'][0].pop()
         v_tmp['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
         v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']   
         v_tmp['RX_NOISEFLOOR'][0].pop()           
@@ -658,8 +457,6 @@ def read_log_data(file_path,mode,block_num):
             line=line.replace(',','=').replace(';',',')
         elif 'dco_sweep_test_ADC_STEP' in line or 'dco_sweep_test_DCO' in line:
             line=line.replace(';',',')
-        #elif 'rc_cal_dout' in line or 'RTC_freq_170khz' in line or 'RTC_freq_70khz' in line:
-            #line=line.replace('=',',')
         elif 'RTC_freq_170khz' in line or 'RTC_freq_70khz' in line:
             line=line.replace('=',',')            
         elif 'rssi' in line or 'rx_suc_num' in line:
@@ -680,17 +477,13 @@ def read_log_data(file_path,mode,block_num):
         for i in range(len(line)):
             line[i]=line[i].split(',')
         if item in values.keys():
-            #print "test item:", item,'\r\n'
             if item == "TX_VDD33":
-                #print "test line: ",line,'\r\n'
-                #print "values['vdd33'],",values['vdd33']
                 if not values['vdd33'][1]==[]:
                     values['TX_VDD33_DIFF'][1].append([(values['vdd33'][1][0][0]-int(line[0][0].split('=')[1]))])
                 else:
                     values['TX_VDD33_DIFF'][1].append([(3300-int(line[0][0].split('=')[1]))])
             if item == "TOUT":
                 values['TOUT'][1].append(int(line[0][0]))
-                #print "values tout:",values['TOUT']
             elif '=' in line[0][0]:
                 line=line[0]
                 v=[]
@@ -699,8 +492,6 @@ def read_log_data(file_path,mode,block_num):
                         line[i]=line[i].split('=')
                         values[item][0].append(line[i][0])
                         try:
-                            #print "debug : LINE;"
-                            #print line
                             v.append(int(line[i][1]))
                         except:
                             v.append(line[i][1])
@@ -811,8 +602,6 @@ def read_log_data(file_path,mode,block_num):
                 'site_num':[[],[]],
                 'RXIQ_REMAIN':[[''],[]],
                 
-
-
                 'txp_pwctrl_atten':[[''],[]],
                 'fb_rxrssi':[[''],[]],
                 'dut_rxrssi':[[''],[]],
@@ -822,7 +611,6 @@ def read_log_data(file_path,mode,block_num):
                 'dut_rx_num':[[''],[]],
                 
                 'fb_rx_num_sum':[[],[]],
-                
                 
                 'txp_state':[[''],[]],
                 'rxsdut_cnt':[[''],[]],
@@ -867,8 +655,7 @@ def read_log_data(file_path,mode,block_num):
                 #end_flg='TEST_NUM'
                 end_flg='MODULE_TEST EDN!!!'
                 v_tmp['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
-                v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q'] 
-                #v_tmp['RX_NOISEFLOOR'][0].append('_CH14')             
+                v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']      
             elif mode=='ate' :
                 end_flg='---------------CHECK'  
                 v_tmp['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
@@ -890,7 +677,6 @@ def read_log_data(file_path,mode,block_num):
             elif mode=='130608_fpga' :
                 end_flg='rx_suc_num'
                 
-                #v_tmp['rc_cal_dout']= [[''],[]]
                 v_tmp['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
                 v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']   
                 v_tmp['RX_NOISEFLOOR'][0].pop()               
@@ -898,7 +684,6 @@ def read_log_data(file_path,mode,block_num):
                 #end_flg='user code done' 
                 end_flg='rxsdut_max_rssi'
                 
-                #v_tmp['rc_cal_dout']= [[''],[]]
                 v_tmp['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
                 v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']   
                 v_tmp['RX_NOISEFLOOR'][0].pop()   
@@ -906,17 +691,11 @@ def read_log_data(file_path,mode,block_num):
                 #end_flg='user code done' 
                 end_flg='txp_state'
                 
-                #v_tmp['rc_cal_dout']= [[''],[]]
                 v_tmp['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
                 v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']   
                 v_tmp['RX_NOISEFLOOR'][0].pop()  
             elif mode =='ate130716':
                 end_flg='AnaWorkIDD_DVDD_IO'
-                #values['rc_cal_dout']= [[''],[]]
-                #values['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
-                #values['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']
-                #values['RX_NOISEFLOOR'][0].pop()  
-                #v_tmp['rc_cal_dout']= [[''],[]]
                 v_tmp['dco_sweep_test_ADC_STEP'][0]=['_min_i','_max_i','_min_q','_max_q']
                 v_tmp['dco_sweep_test_DCO'][0]=['_low_i','_hgh_i','_low_q','_hgh_q']   
                 v_tmp['RX_NOISEFLOOR'][0].pop()              
@@ -957,19 +736,8 @@ def sv_item_to_csv(_dict,mode,fname):
                     'BBRX2_RXIQ',
                     'RX_NOISEFLOOR',
                     
-                    
-                    
-                    
-                    
                     'RXIQ',
                     'RXDC',
-                    
-                                     
-                    
-                    
-                   
-                    
-                    
                     
                     'DVDD_testV1',
                     'VDD_RTC_testV1',
@@ -983,8 +751,7 @@ def sv_item_to_csv(_dict,mode,fname):
                     'Chip_PD_IDD_VBAT',
                     'Chip_PD_IDD_DVDD_IO',       
                     'AnaWorkIDD_VBAT',
-                    'AnaWorkIDD_DVDD_IO'   ,    
-                    
+                    'AnaWorkIDD_DVDD_IO',    
                     
                     'RTC_freq_170khz',
                     'RTC_freq_70khz',
@@ -1010,7 +777,6 @@ def sv_item_to_csv(_dict,mode,fname):
                     
                     'fb_rx_num_sum',
                     
-                    
                     'txp_state',
                     'rxsdut_cnt',
                     'rxsdut_max_rssi'   , 
@@ -1022,7 +788,6 @@ def sv_item_to_csv(_dict,mode,fname):
                     'wifi_init_time',
                     'WIFI_INIT_ITEM',
                     'SVN_Version',
-                    
                     
                     'rx_para_cal_tone',
                     'rx_para_cal_tone_sig_pwr_db_1',
@@ -1041,9 +806,6 @@ def sv_item_to_csv(_dict,mode,fname):
                     'rx_switch_gain_check',
                     'wi_pad 0 and ri_pad 4',
                     'wi_pad 3 and ri_pad 5'
-                    
-                                       
-                    
                     
                     ]  
     else: # module
@@ -1081,8 +843,6 @@ def sv_item_to_csv(_dict,mode,fname):
                 'RX_SWITCH_GAIN',
                 'dco_sweep_test_ADC_STEP',
                 'dco_sweep_test_DCO',
-                
-                
                 
                 'DVDD_testV1',
                 'VDD_RTC_testV1',
@@ -1155,24 +915,10 @@ def sv_item_to_csv(_dict,mode,fname):
     a=open(fname,'w')
     
     cstr=''
-    #print('len dictlist:',len(dict_list))
-    #for i in range(len(dict_list)):
-    #print('tttttttttt3')
     values=_dict
-    #print('dco_sweep_test_ADC_STEP',values['dco_sweep_test_ADC_STEP'])
-    #print('dco_sweep_test_DCO',values['dco_sweep_test_DCO'])
-    #print('RTC_freq_170khz',values['RTC_freq_170khz'])
-    
-    #print('RTC_freq_70khz',values['RTC_freq_70khz'])
-    
-    
+   
     for item in ORDER_LIST:
-        #print('test item   :',item)
-        #debug
-        #print("""
-        #=============================================================================
-        #""")
-        
+
         if item in values.keys():
             if type( values[item] ) ==type(''):
                 #print(item , values[item] ) #debug
@@ -1202,8 +948,6 @@ def sv_log_to_csv(dict_list,mode,fname):
         ORDER_LIST=[ 'filepath',
                      'CHIP_ID',
                     'CHIP_VERSION',
-                    
-                    
                     'vdd33',
                     'VDD33',
                     'FREQ_OFFSET',
@@ -1221,7 +965,6 @@ def sv_log_to_csv(dict_list,mode,fname):
                     'TX_PWRCTRL_ATTEN',
                     'TX_PWCTRL_CHAN_OFFSET',
                     'RX_PATH_GAIN',
-                    
                     
                     'RX_PATH_SNR',    
                     'ADC_DAC_SNR',
@@ -1254,7 +997,6 @@ def sv_log_to_csv(dict_list,mode,fname):
                     'RTC_freq_70khz',
                     'rssi',
                     'rx_suc_num'  ,  
-                    
                     
                     'RXIQ_TEST_-5M',
                     'RXIQ_TEST_5M',   
@@ -1378,7 +1120,6 @@ def sv_log_to_csv(dict_list,mode,fname):
                     'site_num',
                     'RXIQ_REMAIN',
                     
-                    
                     'txp_pwctrl_atten',
                     'fb_rxrssi',
                     'dut_rxrssi',
@@ -1387,7 +1128,6 @@ def sv_log_to_csv(dict_list,mode,fname):
                     'dut_rx_num',
                     
                     'fb_rx_num_sum',
-                    
                     
                     'txp_state',
                     'rxsdut_cnt',
@@ -1400,13 +1140,11 @@ def sv_log_to_csv(dict_list,mode,fname):
                     'WIFI_INIT_ITEM',
                     'SVN_Version',
                     
-                    
                     'rx_para_cal_tone',
                     'rx_para_cal_tone_sig_pwr_db_1',
                     'rx_para_cal_tone_sig_pwr_db_2',
                     'rx_para_cal_tone_sig_pwr_db_3',
                     'rx_para_cal_tone_sig_pwr_db_4',  
-                    
                     
                     'rx_para_cal'
                     ]         
@@ -1417,11 +1155,6 @@ def sv_log_to_csv(dict_list,mode,fname):
     for i in range(len(dict_list)):
         
         values=dict_list[i]
-        #print("tttttttttttttttttttttttttttttt",type(values))
-        
-        
-        #print("item rx_switch_gain_check",values['rx_switch_gain_check'])
-        #print("vdd33 :   :",values['vdd33'])
         for item in ORDER_LIST:
             if item in values.keys():
                 if type( values[item] )==type(''):
@@ -1443,13 +1176,8 @@ def sv_log_to_csv(dict_list,mode,fname):
     a.write(cstr)
     a.close()
     del a
-                
-                
-        
-        
-        
-
-
+    
+    
 def read_binary_log(file_path):
     offset=15
     f=open(file_path,'r')
@@ -1510,8 +1238,6 @@ def read_binary_log(file_path):
              
              }
              
-             
-    #print('line0:',lines[0])
     v=''
     vl=[]
     counter=0
@@ -1521,7 +1247,6 @@ def read_binary_log(file_path):
     for i in range(len(lines)):
         if lines[i]=='0\n':
             offset=i
-            #print('maaaaaaaaaaaaaaa',i)
         for key in values.keys():
             if i in range(offset+values[key][0][0],offset+values[key][0][1]):
                 v=lines[i].strip('\n')+v
@@ -1549,8 +1274,6 @@ def read_binary_log(file_path):
                     else:
                         print("uuuuuuuuuuuuuuuuuuuuuuuuuuunexpected///////")
                     
-                            
-                        
                         pass
                     print(stmp,'   ',v)
                     vl.append(v)
@@ -1709,38 +1432,6 @@ def make_thresh():
     
     return [[THR_H],[THR_L]]
     
-        
-        
-
-#def judge_thr():
-    #data=xlrd.open_workbook('record.xlsx')
-    #table=data.sheets()[0]
-    
-    #nrows=table.nrows
-    #ncols=table.ncols
-    
-    #for col in range(ncols):
-        #ltmp=table.col_values(col)
-        #thr_h=ltmp[0]
-        #thr_l=ltmp[1]
-        #values=ltmp[3:]
-        
-        #for i in range(len(values)):
-            #if values[i]<thr_l or values[i]>thr_h:
-                #table.put_cell(i+3,col,2,values[i],0)
-                
-    #table.put_cell(11,2,2,123456,1)
-    
-                
-        
-    
-    #for col in range(table.ncols):
-        #print("col: ",col, table.col_values(col))
-        
-        #clist=table.col_values(col)
-        ##if 'RX_GAIN_CHECK' in clist:
-            ##THR_H[44:
-    
 
 def make_csv():
     folder='ate'
@@ -1809,8 +1500,6 @@ def make_csv():
             del a             
         
         
-
-
 def log_csv(ftype,folder,mode):
     if not os.path.isdir('./csv_files'):
         os.makedirs('./csv_files')
@@ -1827,7 +1516,6 @@ def log_csv(ftype,folder,mode):
             fpath=folder+'/'+filename
             vl=read_log_data(fpath, mode)
             
-            
             #====================================================================
             if 'ate' in mode or 'fpga' in mode:
                 value_dict=vl[0]
@@ -1836,24 +1524,16 @@ def log_csv(ftype,folder,mode):
                     
                     if item in value_dict.keys():                              #    
                         if item =='fb_rx_num_max':
-                            #fb_rx_num_max=max([ float(data) for data in value_dict[item][1][0] ])
                             fb_rx_num_max=int( value_dict[item][1][0][0])
                             if fb_rx_num_max<threshold[item][0][0] or fb_rx_num_max>threshold[item][1][0]:
-                                # print('failed in %s   ;  %s'%(item,filename) )
-                                # print('%f  !< %f !< %f '%( float(threshold[item][0][0]),float(fb_rx_num_max),float(threshold[item][1][0])))
                                 fail_dict_1st_order[item][0]+=1
                                 fail_dict_1st_order[item][1].append(filename)
                                 break_flg=1
                                 break;      
                         elif item=='RXIQ_TEST_5M_diff':
-                            #RXIQ_TEST_data_gain=float(value_dict['RXIQ_TEST_-5M'][1][0][0])-float(value_dict['RXIQ_TEST_5M'][1][0][0])
-                            #RXIQ_TEST_data_phase=float(value_dict['RXIQ_TEST_-5M'][1][1][0])-float(value_dict['RXIQ_TEST_5M'][1][1][0])
                             RXIQ_TEST_data_gain=float(value_dict['RXIQ_TEST_5M_diff'][1][0][0])#-float(value_dict['RXIQ_TEST_5M_diff'][1][0][0])
                             RXIQ_TEST_data_phase=float(value_dict['RXIQ_TEST_5M_diff'][1][1][0])#-float(value_dict['RXIQ_TEST_5M_diff'][1][1][0])                            
                             if RXIQ_TEST_data_gain<threshold[item][0][0] or RXIQ_TEST_data_gain>threshold[item][1][0] or RXIQ_TEST_data_phase<threshold[item][0][0] or RXIQ_TEST_data_phase>threshold[item][1][0] :
-                                # print('failed in %s   ;  %s'%(item,filename) )
-                                # print('%f  !< %f !< %f '%( float(threshold[item][0][0]),float(RXIQ_TEST_data_gain),float(threshold[item][1][0])))
-                                 #print('%f  !< %f !< %f '%( float(threshold[item][0][0]),float(RXIQ_TEST_data_phase),float(threshold[item][1][0])))
                                 fail_dict_1st_order[item][0]+=1
                                 fail_dict_1st_order[item][1].append(filename)
                                 break_flg=1
@@ -1861,16 +1541,9 @@ def log_csv(ftype,folder,mode):
                             
                         
                         elif len(threshold[item][0])==1 :  #[[1,2,3],[1,2,3]]   ;   [[1],[4]]
-                            #if item=='ADC_DAC_SNR':
-                                #cnttmp+=1
-                            #judge
-                            #print('error:3  ',item, value_dict[item]) #debug
-                            #print(threshold[item])   #debug
                             for i in range(len(value_dict[item][1])):
                                 for j in range(len(value_dict[item][1][i])):
                                     if float(value_dict[item][1][i][j])<float(threshold[item][0][0]) or float(value_dict[item][1][i][j])>float(threshold[item][1][0]):
-                                        # print('failed in %s   ;  %s'%(item,filename) )
-                                        # print('%f  !< %f !< %f '%( float(threshold[item][0][0]),float(value_dict[item][1][i][j]),float(threshold[item][1][0])))
                                         fail_dict_1st_order[item][0]+=1
                                         fail_dict_1st_order[item][1].append(filename)
                                         break_flg=1
@@ -1881,28 +1554,10 @@ def log_csv(ftype,folder,mode):
                                 break                        
                         
                         elif len(value_dict[item][1])==len(threshold[item][0]):  #[[5,5,5],[14,14,14]]  ; [[0,2],[8,15]]
-                            #if len(value_dict[item][1][0])==len(threshold[item][0]):
-                                
-                                # print("""
-                                # ===================================
-                                # warning : 
-                                
-                                # n*n data detected 
-                                # """)
-                                 #print(item,value_dict[item])
-                                 #print('===================================')
-                                
-                            #else:
-                            #judge   num:1
-                            
-                            #print('error:1  ',item, value_dict[item]) #debug
-                            #print(threshold[item])   #debug
                             for i in range(len(value_dict[item][1])):
                                 
                                 for j in range(len(value_dict[item][1][i])):
                                     if float( value_dict[item][1][i][j] ) < float( threshold[item][0][i] ) or float( value_dict[item][1][i][j]) > float(threshold[item][1][i]):
-                                         #print('failed in %s   ;  %s'%(item,filename) )
-                                         #print('%f  !< %f !< %f '%( float(threshold[item][0][i]),float(value_dict[item][1][i][j]),float(threshold[item][1][i])))
                                         fail_dict_1st_order[item][0]+=1
                                         fail_dict_1st_order[item][1].append(filename)
                                         break_flg=1
@@ -1911,25 +1566,11 @@ def log_csv(ftype,folder,mode):
                                     break
                             if break_flg==1:
                                 break
-                                            
-                                            #pass
-                                               
-                                    #pass
-                                           
-                                               
-                                
-                                #pass
                             
                         elif len(value_dict[item][1][0])==len(threshold[item][0]): #[[1,2,3,4],[1,2,3,4],[1,2,3,4]] ; [[1,1,1,1],[4,4,4,4]]
-                            #judge
-                            #judge   num:2
-                            #print('error:2  ',item, value_dict[item]) #debug
-                            #print(threshold[item])   #debug
                             for i in range(len(value_dict[item][1])):
                                 for j in range(len(value_dict[item][1][i])):
                                     if float( value_dict[item][1][i][j])<float(threshold[item][0][j]) or float( value_dict[item][1][i][j]) > float(threshold[item][1][j]):
-                                        #print('failed in %s   ;  %s'%(item,filename) )
-                                         #print('%f  !< %f !< %f '%( float(threshold[item][0][j]),float(value_dict[item][1][i][j]),float(threshold[item][1][j])))
                                         fail_dict_1st_order[item][0]+=1
                                         fail_dict_1st_order[item][1].append(filename)
                                         break_flg=1
@@ -1939,29 +1580,6 @@ def log_csv(ftype,folder,mode):
                             if break_flg==1:
                                 break
                             
-                            
-                            
-                            
-                            #pass
-                        
-                        #else:
-                            #print('pass!')
-                            
-                                        
-                                        
-                            
-                            #pass
-                            
-                    
-                    
-                    #pass
-                    
-                #pass
-            
-            
-            
-            
-            
                 if break_flg==0:
                     if not 'pass' in log_flg_list:
                         log_flg_list.append('pass')
@@ -1981,21 +1599,13 @@ def log_csv(ftype,folder,mode):
                         sv_item_to_csv(vl[0],mode,'csv_files/data_fail_altogether.csv')
                     sv_log_to_csv(vl,mode,'csv_files/data_fail_altogether.csv')
                     
-                    
-                    
             #====================================================================
             #print ('len vl:::',len(vl))
             if ii==0:
-                
-            
-            
-                #a=open('data_csv_all.csv','w')
-                #print('test vl ,' ,vl)
                 sv_item_to_csv(vl[0],mode,'csv_files/data_csv_all.csv')
                 
             sv_log_to_csv(vl,mode,'csv_files/data_csv_all.csv')
     #print("---------------------failed item statistic---------------------------")
-    #print('')
     f_str='item , fail_num , total_num , fail_rate \n'
     rate_list=[]
     fail_num_t=0
@@ -2005,8 +1615,6 @@ def log_csv(ftype,folder,mode):
             rate_list.append(fitem)
             if not fitem == 'pass':
                 fail_num_t+=int(fail_dict_1st_order[fitem][0])
-            #print(fitem,'  ,  ',fail_dict_1st_order[fitem][0] )
-            #print(fail_dict_1st_order[fitem][1])
             f_str+='%s , %d , %d , %f  \n'%(fitem,fail_dict_1st_order[fitem][0],file_counter,(fail_dict_1st_order[fitem][0]*1.0/file_counter) )
     f_str+="total fail, %d , %d, %f \n"%(fail_num_t,file_counter,(fail_num_t*1.0/file_counter) )
     #print('______________________________________________________________________')
@@ -2110,11 +1718,7 @@ def data_process_dictList_2(dict_list,THRESHOLD_DICT,adc_en=1):
     else:
         log+='get test result print failed !\n '
         
-    
-    
-    
     if 'Part failure' in log:
-    #if not log=='logs here: \n':
         print('Failure Detected....')
         print(log)
                            
@@ -2129,13 +1733,10 @@ def data_process_dictList(dict_list,THRESHOLD_DICT):# dict_list=[{},{},...],
                                                     #  THRESHOLD_DICT:{'item':[[upper],[lower]],...}
     log='logs here: \n'
    
-   
     test_list1=['TXBB_TXIQ','BBRX2_RXIQ','TXIQ','TXDC','RXIQ','RXDC','dco_sweep_test_DCO','dco_sweep_test_ADC_STEP','wi_pad 0 and ri_pad 4','wi_pad 3 and ri_pad 5']
     r='pass'
     for i in range(len(dict_list)):                
         values=dict_list[i]
-        #print(values['wi_pad 0 and ri_pad 4'])
-        #print(values['wi_pad 3 and ri_pad 5'])
         print("""values['TXIQ'] : """,values['TXIQ'])
         print("""values['RXIQ'] : """,values['RXIQ'])
         THRESHOLD_DICT['TXBB_TXIQ'][0]=[ int(values['TXIQ'][1][0][0])+int(THRESHOLD_DICT['TXIQ_DIFF'][0][0]),int(values['TXIQ'][1][1][0])+int(THRESHOLD_DICT['TXIQ_DIFF'][0][1])]
@@ -2159,27 +1760,18 @@ def data_process_dictList(dict_list,THRESHOLD_DICT):# dict_list=[{},{},...],
                             log+="Part Fail In %s #%i %s: [ %s !> %s !> %s ] \r\n"%(item,k+1,values[item][0][j],THRESHOLD_DICT[item][0][j],v_tmp[j][k],THRESHOLD_DICT[item][1][j])
                             #r="FAIL"
                 pass
-            #elif item=='timer expire':
-                #print('test:',values[item])
-                #if values[item]=='pass':
-                    #log+='Part fail in light sleep test..'
             elif item=='RXIQ_DIFF' or item=='TXIQ_DIFF':
                 pass
             else:
                 for j in range(len(v_tmp)):
                     for k in range(len(v_tmp[j])):
-                        
-                        #print('item',item,'j:' , j , 'k:', k)
-                        
                         if int( v_tmp[j][k] )<int( THRESHOLD_DICT[item][1][k] ) or int( v_tmp[j][k] )>int( THRESHOLD_DICT[item][0][k] ):
                             log+="Part Fail In %s #%i %s: [ %s !> %s !> %s ] \r\n"%(item,k+1,values[item][0][j],THRESHOLD_DICT[item][0][k],v_tmp[j][k],THRESHOLD_DICT[item][1][k])
                             #r="FAIL"
                 pass
         if not log=='logs here: \n':
             log+='------------------------------TEST_NUM= %s ------------------------------\n'%values['TEST_NUM'][1][0][0]
-        #print('3333333333333',values['timer expire'])
         if values['TEST_NUM'][1][0][0]==9 and (not values['timer expire']=='pass'):
-            #print('3333333333333',values['timer expire'])
             log+='Part fail in light sleep test..'
     if not log=='logs here: \n':
         print('Failure Detected....')
@@ -2212,13 +1804,8 @@ def get_threshold_dict(sheetName='ATE',tname='Threshold.xlsx'):
                 if 'UPPER' in line[0]:
                     threshold_dict[line[0][6:]]=[[],line[1:]]
                 elif 'LOWER' in line[0]:
-                    #print("""111threshold_dict[line[0].strip('LOWER_')]""",threshold_dict[line[0].strip('LOWER_')])
                     threshold_dict[line[0][6:]][0]=line[1:]
-                    #print("""222threshold_dict[line[0].strip('LOWER_')]""",threshold_dict[line[0][6:]])
-                #ok find
-    #for k in threshold_dict.keys():
-        #print "key: ",k
-        #print 'val :',threshold_dict[k]
+                    
     return threshold_dict        
         
 def get_file_list(folder):
@@ -2229,85 +1816,11 @@ def get_file_list(folder):
             flist.append(folder+'/'+subitem)
     print("""
     
-    
-    
     list:
     """)
     for item in flist:
         print(item)
     return flist
-
-
-#def judge_in_log:
-    #fail_list_1st_order=['dco_sweep_test_ADC_STEP','RX_PATH_GAIN','RX_SWITCH_GAIN','TXIQ','TXBB_TXIQ','TXDC','FREQ_OFFSET','fb_rx_num',]
-    #fail_list_2nd_order=[]
-    #fail_list_3nd_order=[]
-    #mode='ate130716'
-    
-    
-    #cnt=0
-    #filelist=get_file_list('test')
-    #for file_path in filelist:
-        #value_dict=read_log_data(file_path,mode)[0]
-        #for item in value_dict.keys():
-            #print(item,value_dict[item])
-        #for item 
-        
-        
-        
-#=============================================================================================
-    
-#def judge_in_csv():
-    
-    #filelist=get_file_list('test')
-    
-    
-    #fail_dict_1st_order={
-                         #'dco_sweep_test_ADC_STEP':[0,[]],
-                         #'RX_PATH_GAIN':[0,[]],
-                         #'RX_SWITCH_GAIN':[0,[]],
-                         #'TXIQ':[0,[]],
-                         #'TXBB_TXIQ':[0,[]],
-                         #'TXDC':[0,[]],
-                         #'FREQ_OFFSET':[0,[]],
-                         #'fb_rx_num':[0,[]]
-                         
-                         #}
-    #threshold={
-                         #'dco_sweep_test_ADC_STEP':[[0],[5]],
-                         #'RX_PATH_GAIN':[[40],[48]],
-                         #'RX_SWITCH_GAIN':[[1,-9,3],[4,-6,6]],
-                         #'TXIQ':[[-12,-25],[12,25]],
-                         #'TXBB_TXIQ':[[-6],[6]],
-                         #'TXDC':[[3],[124]],
-                         #'FREQ_OFFSET':[[0],[32]],
-                         #'fb_rx_num':[[15],[16]]        
-        
-        #}
-    
-    
-    #print('======================================')
-    #print(fail_dict_1st_order.keys() )
-    #for k in fail_dict_1st_order.keys():
-        #print(fail_dict_1st_order[k])
-    #print('======================================')
-    ##fail_list_2nd_order=[]
-    ##fail_list_3nd_order=[]    
-    
-    #f=open('data_csv.csv','r')
-    #line=f.readline()
-    #item_list=line.split(',')
-    #for i in range(len(item_list)):
-        #for j in range(len(fail_dict_1st_order)):
-            #if fail_dict_1st_order[j] in item_list[i]:
-                
-            
-            
-            
-        ##if item_list[i] 
-    
-    
-    ##pass
 
 #=============================================================================================
 
@@ -2320,8 +1833,6 @@ def read_csv_to_list(fname='chip_datalog_ATE_20130604.csv',col=0,start=1,end='')
     f=open(fname,'r')
     lines=f.readlines()
     
-    
-    
     if type(col)==type(''):
         ltmp=lines[0].split(',')
         for i in range(len( ltmp) ):
@@ -2330,9 +1841,6 @@ def read_csv_to_list(fname='chip_datalog_ATE_20130604.csv',col=0,start=1,end='')
                 #print('col :',col)
                 break
         
-        
-        
-    #print('col 222   ',col)
     for i in range(len(lines)):
         if i==0:
             print("len col :",len(lines[i].split(',')))
@@ -2348,7 +1856,6 @@ def read_csv_to_list(fname='chip_datalog_ATE_20130604.csv',col=0,start=1,end='')
     return line  
 
 
-            
 if __name__=='__main__':
     #judge_thr()
     #make_csv()
@@ -2356,21 +1863,4 @@ if __name__=='__main__':
     thre=get_threshold_dict('ATE','./Threshold/full_Threshold.xlsx')
     values_dictlist=read_log_data('./logs/print/2015-08-18_print/0x0_A132AA_prnt_1_2015-08-18_13_51_43.txt','module2515')
     data_process_dictList_2(values_dictlist,thre)
-    
-    #log_csv('.log','./test/chip_id','ate_0530_4noisefloor')
-    #=====================================================
-    #folder=raw_input("please enter the folder name : \n")
 
-    
-    #try:
-        #log_csv('.log',folder,'ate130716')
-    #except:
-        #print("wrong folder name ,or other error")
-    #=====================================================
-    #judge_in_csv()
-    
-    
-    
-    
-    
-    #pass

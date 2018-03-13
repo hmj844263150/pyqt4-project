@@ -1,9 +1,0 @@
-combine:
-        esp8266_fac_jump_test_v1.bin 0x00
-	choose donotchanbin
-flash map:
-        boot.bin  0x00
-	user1.2048.new.5.bin 0x1000
-	esp8266_init_data_setting.bin 0x1fc000
-	esp_fac_test_cfg.bin 0x1fa000
-	ESP8266_MOD_TEST_V118_2nd_JUMP_BIN_V1_26M_20180202.bin 0x101000

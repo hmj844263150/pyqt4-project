@@ -389,29 +389,18 @@ class esp_testThread(QtCore.QThread):
             if self.chip_type == "ESP32":
                 print "ESP32:"
                 values_dictlist=rl.read_log_data(self.logpath,'ESP32',block_num)
-                #for key in values_dictlist[0].keys():
-                    #if "BT" in key or "WIFI" in key or "TXDC" in key or "RXDC" in key:
-                        #print "key:",key
-                        #print "val:",values_dictlist[0][key]
-                        #print "------------"
             else:
                 values_dictlist=rl.read_log_data(self.logpath,'module2515',block_num)
 
             print "test len : ",len(values_dictlist)
-            #print "dut_rxrssi:",values_dictlist[0]['dut_rxrssi']
-            #print "fb_rxrssi :",values_dictlist[0]["fb_rxrssi"]
         else:#debug
             ##debug for print
             print("=============================\r\n\r\n")
             print("this is only for log process debug\r\n")
             print("should never be here in a formal version\r\n")
-            #values_dictlist=rl.read_log_data('./logs/print/'+"2015-06-07_print/0x0_A132AA_prnt_1_2015-06-07_18_58_05.txt",'module2515')
             print("===============================\r\n\r\n")
         value_tmp = []
-        #self.print_dbg(("block num:",block_num))
-    # self.print_dbg(("self.retry:",self.retry_num))
         value_tmp.append( values_dictlist[block_num])
-        #_res=rl.data_process_dictList_2(values_dictlist,self.THRESHOLD_DICT,self.window.adc_test_en)
         _res=rl.data_process_dictList_2(value_tmp,self.THRESHOLD_DICT,0)
 
         if 1:
@@ -443,9 +432,6 @@ class esp_testThread(QtCore.QThread):
         self.l_print(0,'record serial print ')
 
         retry = False
-        #print "&&&&&&&&&&&&&&&&&&&&&"
-        #print "retry: ",retry
-        #print "&&&&&&&&&&&&&&&&&&&&&"
         if self.chip_type == "ESP8089":
             log=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','req_suc',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
         elif self.chip_type == "ESP32":
@@ -477,8 +463,6 @@ class esp_testThread(QtCore.QThread):
             self.l_print(0,"download disconnect...")
             return 1
 
-
-
     ### GENERAL TEST -------------------------------- ###
     def general_test_gpio(self):
         if(self.chip_type=='ESP8266'):
@@ -495,12 +479,7 @@ class esp_testThread(QtCore.QThread):
         self.gpio_02_test_value=self.testflow['GPIO_8266_TEST_VAL']
         self.gpio_02_read_en=int(self.testflow['GPIO_8266_TEST_READ_EN'])
         self.gpio_02_target_testvalue=self.testflow['GPIO_8266_TEST_VAL_TARGET']
-
-
         self.l_print(0,'start 02 gpio test')
-
-
-
         self.msleep(200)
 
         serTestRes = self.ser
@@ -534,7 +513,6 @@ class esp_testThread(QtCore.QThread):
                 self.gpio_test_res=0
                 i+=1
 
-
         if self.gpio_02_read_en == 1:
             i=0
             serTestRes.flushInput()
@@ -563,11 +541,9 @@ class esp_testThread(QtCore.QThread):
                 self.l_print(3,'step2,read gpio value exception')
                 self.gpio_test_res=0
 
-        #if self.gpio_test_res == 1:
         gpio_v = int(self.gpio_02_test_value,16)
         gpio_v = hex(0xffff^gpio_v)
         gpio_cmd = "gpio_test %s %s %s\n\r"%(self.gpio_02_test_pin,gpio_v,self.gpio_02_test_value)
-        #self.print_dbg(("gpio cmd 2:",gpio_cmd))
         serTestRes.write(gpio_cmd)
 
         while True:
@@ -674,7 +650,6 @@ class esp_testThread(QtCore.QThread):
             return 1
 
         return 0	    
-
 
     def _test_item(self, test_name, test_cmd, break_str = None, timeout = None):
         """
@@ -828,15 +803,11 @@ class esp_testThread(QtCore.QThread):
 
         if not cmd_str == '':
             ser.write(cmd_str+"\r\n")
-        #ser.flush()
-        #ser_tout=1800
         if pattern == None:
             return (True,None)
         while True:
             line = ser.read(1024)
             self.l_print(3,'firmware check read line:%s'%line)
-        # print "debug line:",line
-
             if pattern.upper() in line.upper():
                 #ser.close()
                 return (True,line)  
@@ -926,9 +897,6 @@ class esp_testThread(QtCore.QThread):
     def try_sync_ram(self):
         '''
         try sycn the chip by slip cmd within 20 times
-        Returns:
-            0: success
-            1: fail
         '''
         sync_res = 0
         sync_count=0
@@ -984,9 +952,6 @@ class esp_testThread(QtCore.QThread):
     def check_chip_flash(self):
         '''
         try check chip's mac and efuse
-        Returns:
-            0: ok
-            1: fail
         '''
         getmac_res=0
         self.memory_download.disconnect()
@@ -998,12 +963,11 @@ class esp_testThread(QtCore.QThread):
             self.ui_print('SERIAL PORT EXCEPTION')
             return 1
 
-        #try:
-        getmac_res=self.memory_download.esp_getmac(self.ser)
-
-        #except:
-            #self.l_print(3,'get mac error')
-            #return 1
+        try:
+            getmac_res=self.memory_download.esp_getmac(self.ser)
+        except:
+            self.l_print(3,'get mac error')
+            return 1
 
         if getmac_res:   
             self.l_print(1,self.memory_download.ESP_MAC)
@@ -1137,7 +1101,6 @@ class esp_testThread(QtCore.QThread):
         timestr=time.strftime('%Y%m%d%H-%M-%S',time.localtime(time.time()))
         try:
             if(not os.path.exists(_path)):
-                #os.makedirs('C:\\ESP_REPORT\\'+po+'__'+res+mac+timestr)
                 os.makedirs(_path)
 
 
@@ -1165,7 +1128,6 @@ class esp_testThread(QtCore.QThread):
         sys.stdout=sys.stdout
         esp_logpath=self.logpath
         try:
-            # esp_logpath=self.logpath
             if(print_type==0):
                 temp_str=log_str+'\r\n'
                 print(log_str)
@@ -1189,10 +1151,7 @@ class esp_testThread(QtCore.QThread):
                 print(log_str) 
                 with open(esp_logpath,'a') as fn:
                     fn.write(temp_str)
-
-
         except IOError:
-
             self.esp_logstr=self.esp_logstr+temp_str    
 
     def esp_gen_log(self):
@@ -1337,7 +1296,6 @@ class esp_testThread(QtCore.QThread):
         timeout = 10
         t = time.time()
         while time.time()-t < timeout:
-        #while 1:
             rl = self.ser.readline()
             print '2'+rl
             if rl.find('pass flag res:1') >= 0:
@@ -1403,9 +1361,6 @@ class esp_testThread(QtCore.QThread):
         elif self.resflag==2:
             self.l_print(0,'already passed module')
             self.ui_print('[state]passed')
-        #self.msleep(3000)
-        #if self.autostartEn:
-            #self.ui_print('[state]idle clear')
 
     def stopthread(self):
         self.ui_print('[state]finish btn up')
