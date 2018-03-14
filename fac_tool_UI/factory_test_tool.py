@@ -149,7 +149,14 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     
     def init_threshold(self):
         import openpyxl
-        wb = openpyxl.load_workbook('config/ESP8266_Threshold_20180110_hmj.xlsx')
+        self.dut_config['common_conf']['threshold_path'] = os.getcwd().replace('\\','/')+self.dut_config['common_conf']['threshold_path']
+        threshold_path = self.dut_config['common_conf']['threshold_path']
+        
+        if str(self.cbChipType.currentText()).find('32')>=0 or str(self.cbChipType.currentText()).lower().find('wrover')>=0:
+            wb = openpyxl.load_workbook(threshold_path+'full_Threshold_8266.xlsx')
+        else:
+            wb = openpyxl.load_workbook(threshold_path+'full_Threshold_8266.xlsx')
+
         sheet = wb.get_sheet_by_name(wb.sheetnames[0])
         
         for i in xrange(1, sheet.max_row+1):
@@ -405,6 +412,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     
     def button_single_stop(self, btn):
         id = int(btn.objectName()[len(btn.objectName())-1])
+        eval('self.lbMAC{}'.format(id)).setText('0x000000000000')
         if self.esp_process.has_key(id):
            # if self.esp_process[id].isRunning():
             self.esp_process[id].SIGNAL_STOP.emit()
@@ -568,6 +576,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     if int(verify) == (y+(m+d+h))%10000:
                         print ('verify pass')
                         self.ui_update_dut()
+                        self.init_threshold()
                         break
                     else:
                         print ('verify fail')
@@ -639,7 +648,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.twTestArea.widget(2).setEnabled(True)
         self.lbPosition.setText('Local')
         self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
-                                                "border-color: rgb(0, 255, 255);"))            
+                                                "border-color: rgb(0, 255, 255);"))
+        self.ui_update_dut()
     
     def button_showFileDialog(self):
         filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', './bin/', filter='firmware(*.bin);;all(*.*)', selectedFilter='firmware(*.bin)')

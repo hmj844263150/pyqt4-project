@@ -64,9 +64,9 @@ class esp_testThread(QtCore.QThread):
 
         self.rptstr='TESTITEM'+','+'TESTVALUE'+','+'SPEC_L'+','+'SPEC_H'+','+'RESULT'+'\n'
         if(self.chip_type == "ESP32"):
-            self.THRESHOLD_DICT=rl.get_threshold_dict('ATE','.//Threshold//full_Threshold_32.xlsx')
+            self.THRESHOLD_DICT=rl.get_threshold_dict('ATE', self.threshold_path+'full_Threshold_32.xlsx')
         elif(self.chip_type=='ESP8266'):
-            self.THRESHOLD_DICT=rl.get_threshold_dict('ATE','../RF_test/Threshold/full_Threshold_8266.xlsx')  
+            self.THRESHOLD_DICT=rl.get_threshold_dict('ATE', self.threshold_path+'full_Threshold_8266.xlsx')  
 
             if self.chip_type=='ESP32':
                 self.memory_download= espDownloader.ESP32FACTORY(frame=self, port=self.COMPORT, baudrate=self.BAUDRATE,
@@ -1251,6 +1251,7 @@ class esp_testThread(QtCore.QThread):
         except:
             err_msg["err_code"] = err_conn
             err_msg["err_info"] = "tcp conn error"
+            return 1
 
         print (err_msg)
         if err_msg['err_code'] == '0x00':
@@ -1258,8 +1259,10 @@ class esp_testThread(QtCore.QThread):
             total= str(rsp['batch_cnt'])
             self.ui_print('[upload]'+index+'/'+total)
             self.ui_print('UPLOAD OK')
+            return 0
         else:
             self.ui_print('[state]upload-f')
+            return 1
 
     def esp_write_flash(self):
         self.l_print(0,'ALL TEST PASS,WRITE PASS FLAG')
@@ -1354,11 +1357,13 @@ class esp_testThread(QtCore.QThread):
                 self.ui_print('[state]RFMutex')            # for rf test mutex
                 self.ui_print('[state]fail_record')
                 if self.position == 'cloud':
-                    self.upload_server('fail')
+                    if self.upload_server('fail') != 0:
+                        return
             else:
                 self.ui_print('[state]pass_record')
                 if self.position == 'cloud':
-                    self.upload_server('success')
+                    if self.upload_server('success') != 0:
+                        return
 
         try:
             self.ser.close()
@@ -1434,6 +1439,7 @@ class esp_testThread(QtCore.QThread):
             self.en_user_fw_check=int(self.testflow['USER_FW_CHECK'])
             self.fw_targetstr=self.testflow['USER_FW_VER_STR']
             self.fw_cmd_combin=self.testflow['USER_TEST_CMD<cmd,rsp,tmo>']
+            self.threshold_path = self.dutconfig['common_conf']['threshold_path']
         except:
             self.l_print(1,'read param error')
             self.param_read=0	        #check it before start test
