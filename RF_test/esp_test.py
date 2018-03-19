@@ -48,16 +48,15 @@ class TestError(RuntimeError):
 
 class esp_testThread(QtCore.QThread):
     SIGNAL_STOP = QtCore.pyqtSignal()
-    SIGNAL_RESUME = QtCore.pyqtSignal()
-    def __init__(self,_stdout,dutconfig,testflow):
+    def __init__(self,_stdout,dutconfig,testflow, rfmutex):
         super(esp_testThread,self).__init__(parent=None)
+        self.rfmutex = rfmutex
+        self.stop_flag = 0
         self.SIGNAL_STOP.connect(self.ui_stop)
-        self.SIGNAL_RESUME.connect(self.thread_resume)
         self.param_read=1
         self.logpath=''
         self.esp_logstr=''
         self.set_params(_stdout,dutconfig,testflow)
-        self.thread_pause=2 # init:2, wait:1, pass:0
         self.MAC = '000000000000'
         self.set_mac_en=0    
         self.tool_ver='V0.0.1'
@@ -81,14 +80,16 @@ class esp_testThread(QtCore.QThread):
 
 
     def run(self):
-        while True:
+        while not self.stop_flag:
             self.ui_print("[state]idle clear")
             try:
                 self.main_test()
             except:
                 pass
+            #if self.autostartEn:
+                #self.msleep(10000)
             if self.autostartEn:
-                self.msleep(10000)
+                pass
             else:
                 break
             
@@ -101,18 +102,15 @@ class esp_testThread(QtCore.QThread):
         self.ui_print('[state]finish btn up')
 
     def main_test(self):
+        self.stop_flag = 0
         self.resflag = 0
         self.tester_con_flg=1
         self.memory_download.stopFlg=0
         self.tx_test_res=0
         self.rx_test_res=0
-        self.thread_pause=2 # init:2, wait:1, pass:0
-        self.mutex_send_flag = 0
 
         self.logpath=''
         self.esp_logstr=''
-        self.l_print(0,str(self.THRESHOLD_DICT))    
-
         err = 0
         def CHECK(err, err_msg, err_code=0x0):
             if err == 0:
@@ -123,8 +121,9 @@ class esp_testThread(QtCore.QThread):
             raise TestError(err_msg)
 
         CHECK(self.check_param(), 'PARAM READ ERROR')
-        CHECK(self.try_sync(), 'SYNC FAIL')
+        CHECK(self.try_sync(), 'SYNC FAIL', -1)
         self.ui_print('CHIP SYCN OK')
+        self.l_print(0,str(self.THRESHOLD_DICT))   
         CHECK(self.check_chip(), 'CHIP CHECK FAIL')
 
         if self.loadmode == 1:  # need load bin on ram mode 
@@ -425,9 +424,7 @@ class esp_testThread(QtCore.QThread):
             1: get log fail
         '''
         print self.slot_num, "start wait"
-        self.thread_pause = 1
-        while self.thread_pause:
-            pass
+        self.rfmutex.acquire()
 
         start=time.clock()
         self.l_print(0,'record serial print ')
@@ -442,12 +439,10 @@ class esp_testThread(QtCore.QThread):
                 log=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','MODULE_TEST END!!!',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
             
             print self.slot_num, "finish RF"
-            self.ui_print('[state]RFMutex')
-            self.mutex_send_flag = 1
+            self.rfmutex.release()
         except:
-            print self.slot_num, "finish RF"
-            self.ui_print('[state]RFMutex')
-            self.mutex_send_flag = 1            
+            print self.slot_num, "finish RF"  
+            self.rfmutex.release()            
             self.l_print(3,'get log fail')
             return 1, ''
             
@@ -1368,62 +1363,76 @@ class esp_testThread(QtCore.QThread):
             self.ser.close()
         except:
             pass
+        
+        if err_code == -1 and self.resflag==1: # not even sync
+            return
             
-        if self.thread_pause==0:
-            self.thread_pause = 2  # for rf test mutex
-            if self.resflag == 1:
-                #print self.slot_num, "finish RF"
-                #self.ui_print('[state]RFMutex')            # for rf test mutex
-                if self.position == 'cloud':
-                    if self.upload_server('fail', err_code) != 0:
-                        self.ui_print('[state]fail_record'+',0x04')
-                        self.ui_print('[state]upload-f')
-                        return
-                self.ui_print('[state]fail_record'+','+str(err_code))
-            else:
-                
-                if self.position == 'cloud':
-                    if self.upload_server('success', err_code) != 0:
-                        self.ui_print('[state]fail_record'+',0x04')
-                        self.ui_print('[state]upload-f')
-                        return
-                self.ui_print('[state]pass_record')
-
         if self.resflag == 1:
             self.esp_gen_rpt()
-            self.ui_print('[state]fail')
-        elif self.resflag==0:
+            if self.position == 'cloud':
+                if self.upload_server('fail', err_code) != 0:
+                    self.ui_print('[state]fail_record'+',0x04')
+                    self.ui_print('[state]upload-f')
+                else:
+                    self.ui_print('[state]fail_record'+','+str(err_code))
+            else:
+                self.ui_print('[state]fail_record'+','+str(err_code))
+        elif self.resflag == 0:
             self.l_print(0,'all item test passed')
-            self.ui_print('[state]pass')
             self.esp_gen_rpt()
+            if self.position == 'cloud':
+                if self.upload_server('success', err_code) != 0:
+                    self.ui_print('[state]fail_record'+',0x04')
+                    self.ui_print('[state]upload-f')
+                else:
+                    self.ui_print('[state]pass_record')
+            else:
+                self.ui_print('[state]pass_record')
         elif self.resflag==2:
             self.l_print(0,'already passed module')
-            self.ui_print('[state]passed')
+            self.ui_print('[state]passed')         
+
+        if self.resflag in (0,2):
+            self.msleep(3000)
+        else:
+            while not self.stop_flag:
+                if self.loadmode == 2:
+                    try:
+                        getmac_res=self.memory_download.esp_getmac(self.ser)
+                    except:
+                        break
+                    if getmac_res:
+                        temp_mac=self.memory_download.ESP_MAC.replace('0x','').replace('-','').replace(':','')
+                        if temp_mac != self.MAC:
+                            break
+                    else:
+                        break
+            
+                elif self.loadmode == 1:
+                    try:
+                        res = self.memory_download.get_mac()
+                    except:
+                        break
+                    if res == True:
+                        temp_mac=self.memory_download.ESP_MAC.replace('0x','').replace('-','').replace(':','')
+                        if temp_mac != self.MAC:
+                            break                        
+                    else:
+                        break
+                self.msleep(200)
 
     def stopthread(self):
         self.ui_print('[state]finish btn up')
         self.ui_print('[state]idle')
-
-        if self.thread_pause==0:
-            self.thread_pause = 2  # for rf test mutex
-            if self.mutex_send_flag == 0:
-                print self.slot_num, "finish RF"
-                self.ui_print('[state]RFMutex')            # for rf test mutex
         
-        if self.thread_pause==1: # into wait mode, and get stop signal
-            self.SIGNAL_RESUME.emit()
-        self.msleep(200)	
-
         try:
             self.ser.close()
         except:
             pass
         self.terminate()
 
-    def thread_resume(self):
-        self.thread_pause=0
-
     def ui_stop(self):
+        self.stop_flag = 1
         self.stopthread()
 
     def set_params(self,stdout_='',dutconfig='',testflow=''):

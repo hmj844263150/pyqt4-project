@@ -130,6 +130,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.run_queue=Queue.Queue(maxsize=4)
         self.run_flag = True
         self.mutex = threading.Lock()
+        self.rfmutex = threading.Lock()
         
         self.dut_config = {}
         self.CHIP_TYPE_NUM = self.cbChipType.count()
@@ -145,7 +146,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         for i in range(1,5):
             stdout_ = self._Print(self, eval("self.tbLog"+str(i)))
             self.dut_config['common_conf']['dut_num'] = str(i)
-            self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow)
+            self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow, self.rfmutex)
     
     def init_threshold(self):
         import openpyxl
@@ -246,18 +247,6 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 state = 'RUN'
                 style = "background-color: rgb(255, 255, 0);\n"
                 
-                # thread operation
-                if not self.run_queue.full():
-                    self.run_queue.put(self.esp_process[int(str(dut_num))],block=False)
-                else:
-                    print 'thread num error'
-                
-                if self.run_flag == True:
-                    if not self.run_queue.empty():
-                        esp_process=self.run_queue.get(block=False)
-                        esp_process.SIGNAL_RESUME.emit()
-                    self.run_flag = False
-                
             elif log.lower().find('passed') >= 0:
                 state = 'TESTED'
                 style = "background-color: rgb(0, 170, 0);\n"
@@ -283,15 +272,6 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 state_flag = False
                 eval('self.pbStart{}'.format(dut_num)).setDown(False)
                 eval('self.pbStart{}'.format(dut_num)).setEnabled(True)
-            elif log.lower().find('rfmutex') >= 0:
-                print "switch:{}".format(time.time())
-                state_flag = False
-                if not self.run_queue.empty():
-                    esp_process=self.run_queue.get(block=False)
-                    esp_process.SIGNAL_RESUME.emit()
-                    
-                if self.run_queue.empty():
-                    self.run_flag = True
                     
             else:
                 state_flag = False
@@ -383,7 +363,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     stdout_ = self._Print(self, eval("self.tbLog"+str(id)))
                     self.dut_config['common_conf']['dut_num'] = str(id)  
                     
-                    self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow)
+                    self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow, self.rfmutex)
                     self.esp_process[id].start()
                     eval('self.pbStart{}'.format(id)).setEnabled(False)
                     eval('self.pbStart{}'.format(id)).setDown(True)
@@ -397,9 +377,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         id = int(btn.objectName()[len(btn.objectName())-1])
         if id in (1,2,3,4):
             stdout_ = self._Print(self, eval("self.tbLog"+str(id)))
-            self.dut_config['common_conf']['dut_num'] = str(id)  
-            
-            self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow)
+            self.dut_config['common_conf']['dut_num'] = str(id)
+            self.esp_process[id]=esp_test.esp_testThread(stdout_, self.dut_config,self.test_flow, self.rfmutex)
             self.esp_process[id].start()
         else:
             print('error: get strat btn err')
@@ -411,14 +390,14 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     self.esp_process[id].SIGNAL_STOP.emit()
                 else:
                     self.signal_print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
-                    eval('self.lbMAC{}'.format(id)).setText('0x000000000000')
+                    eval('self.lbMAC{}'.format(id)).setText('000000000000')
             except:
                 self.signal_print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
-                eval('self.lbMAC{}'.format(id)).setText('0x000000000000')
+                eval('self.lbMAC{}'.format(id)).setText('000000000000')
     
     def button_single_stop(self, btn):
         id = int(btn.objectName()[len(btn.objectName())-1])
-        eval('self.lbMAC{}'.format(id)).setText('0x000000000000')
+        eval('self.lbMAC{}'.format(id)).setText('000000000000')
         if self.esp_process.has_key(id):
             # if self.esp_process[id].isRunning():
             try:
