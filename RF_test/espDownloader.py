@@ -851,7 +851,7 @@ class ESP8266Downloader(Downloader):
     \rREG3:%08X
     \r----------------
     \r"""%(reg0,reg1,reg2,reg3)
-        if mode == 1:
+        if mode == 1: # normal
             if not check_err_0 in [0xa,0xb]:
                 self.append_log("bit[79:76] error")
                 error_flg |= EFUSE_ERR_FLG
@@ -873,8 +873,8 @@ class ESP8266Downloader(Downloader):
         b5 = (reg3>>16)&0xff
         self.MAC = [b5, b4, b3, b2, b1, b0]
 
-        if mode == 0:
-            self.efuse_log+="""EFUSE FOR CUSTOMER:\r\n"""
+        if mode == 0: # for xiaomi
+            self.efuse_log+="""EFUSE FOR CUSTOMER(XM):\r\n"""
             id0 = (reg0>>4)&0xff
             id1 = (reg0>>12)&0xff
             id2 = (reg0>>20)&0xf | (reg1>>12)&0xf0
@@ -935,9 +935,9 @@ class ESP8266Downloader(Downloader):
                     self.efuse_log+="""EFUSE CRC ERROR..."""
 
 
-        elif mode == 1: #normal:
+        elif mode == 1: # normal:
             if((reg3>>24)&0x1) == 1:
-                self.efuse_log+="""EFUSE FOR CUSTOMER:\r\n"""
+                self.efuse_log+="""EFUSE WITH CUSTOM MAC:\r\n"""
                 if check_err_4 == 0xb:  #48bit mac
                     b0 = (efuse>>80)&0xff
                     b1 = (efuse>>68)&0xff
@@ -1046,6 +1046,7 @@ class ESP8266Downloader(Downloader):
             return False
         else:
             return self.efuse_specific_check(efuse)
+        
     def esp_getmac(self,ser):
         retry_times=3
         cal_crc=False
@@ -1056,8 +1057,8 @@ class ESP8266Downloader(Downloader):
         try:
             temp=ser.read(128)
             if temp is not '':
-                temp_list=temp.split(':')
-                reg_list=temp_list[1].split(',')
+                temp_list=temp.split(':')[-1]
+                reg_list=temp_list.split(',')
                 reg0=int(reg_list[0],16)
                 reg1=int(reg_list[1],16)
                 reg2=int(reg_list[2],16)
@@ -1524,10 +1525,13 @@ class ESP32Downloader(ESP8266Downloader):
     def efuse_check(self, reg0, reg1, reg2, reg3, reg4, reg5, reg6, mode=1):
         efuse = reg0 | (reg1<<32) | (reg2<<64) | (reg3<<96) | (reg4<<128) | (reg5<<160) | (reg6<<192)
         self.efuse = efuse
+        
+        flg_res = 0
 
         flg_32pad = (reg3>>2) & 0x1
         flg_ECO   = (reg3>>15)& 0x1
         flg_vers  = (reg3>>9) & 0x7
+        flg_disable_app_cpu = (reg3) & 0x1
 
         if not self.sub_chip == '':
             if flg_32pad == 1:
@@ -1566,6 +1570,11 @@ class ESP32Downloader(ESP8266Downloader):
                 if self.sub_chip.find('ESP32-PICO-D4XM') < 0:
                     print 'CHIP SELECT ERROR'
                     return False
+                
+            if flg_disable_app_cpu == 1:
+                if self.sub_chip.find('ESP32S0WD') <0 :
+                    print 'CHIP SELECT ERROR'
+                    return False                    
 
         if not self.sub_chip == '':
             if self.sub_chip.endswith('E'):
@@ -1586,11 +1595,41 @@ class ESP32Downloader(ESP8266Downloader):
         self.append_log("crc_read: {}\n".format(crc_read))
         if crc_read == crc_cal :
             self.append_log("ESP32 MAC CRC OK\n")
-            self.efuse_log = "ESP32 MAC CRC OK, EFUSE PASS!\n"
+            self.efuse_log = "ESP32 MAC CRC OK\n"
         else:
             self.append_log("ESP32 MAC CRC FAIL\n")
             self.efuse_log = "ESP32 MAC CRC FAIL, EFUSE ERROR!\n"
-
+            flg_res = 1
+            
+        byte = []
+        for i in xrange(28):
+            byte.append(efuse >> (i*8) & 0xff )
+        
+        self.append_log("ESP32 bit check result:\n")
+        if (byte[12]>>2 & 0x3) != 0:
+            self.append_log("bit error:B12[2-3]\n")
+            self.efuse_log = "bit error:B12[2-3]\n"            
+            flg_res = 1
+        if (byte[17]>>5 & 0x7) != 0:
+            self.append_log("bit error:B17[5-7]\n")
+            self.efuse_log = "bit error:B17[5-7]\n"            
+            flg_res = 1
+        if (byte[18]>>0 & 0x1) != 0:
+            self.append_log("bit error:B18[0]]\n")
+            self.efuse_log = "bit error:B18[0]\n"            
+            flg_res = 1
+        if (byte[24]>>3 & 0x1) != 0:
+            self.append_log("bit error:B24[3]\n")
+            self.efuse_log = "bit error:B24[3]\n"            
+            flg_res = 1
+            
+        if flg_res:
+            self.append_log("ESP32 EFUSE CHECK ERROR!!!\n")
+            self.efuse_log = "ESP32 EFUSE CHECK ERROR!!!\n"
+            return False
+        
+        self.append_log("ESP32 EFUSE CHECK OK\n")
+        self.efuse_log = "ESP32 EFUSE CHECK OK\n"        
         return True
 
     def get_mac(self):

@@ -6,14 +6,16 @@ mpn_no = 2018020004
 fac_sid = esp-own-test-FID-dbd42d01
 batch_sid = bf54c4adf0
 fac_plan = just-test
-cloud_no = tt1
 test_from = FLASH
-bin_path = D:/VM/share/new_factory_tools/fac_tool_UI/bin/RSP8266_module_test_vdd33_26m_remove_powerup_test.bin
+bin_path = 
+threshold_path = ./config/
 auto_start = 0
-tmp_server_ip = 192.168.16.186
+tmp_server_ip = 120.76.204.21
 tmp_server_port = 8000
 auto_login = 1
 auth_token = esp-own-test-FID-dbd42d01-86e0ee8a023b5b346115
+repeat_check = 1
+po_type = 0
 
 [DUT1]
 port1 = COM21
@@ -22,9 +24,9 @@ port2 = COM21
 rate2 = 115200
 
 [DUT2]
-port1 = COM18
+port1 = COM20
 rate1 = 115200
-port2 = COM18
+port2 = COM20
 rate2 = 115200
 
 [DUT3]
@@ -34,13 +36,13 @@ port2 = COM19
 rate2 = 115200
 
 [DUT4]
-port1 = COM20
+port1 = COM18
 rate1 = 115200
-port2 = COM20
+port2 = COM18
 rate2 = 115200
 
 [chip_conf]
 freq = 26M
-efuse_mode = 0
-chip_type = ESP-WROOM-02
+efuse_mode = 1
+chip_type = ESP8266EX
 

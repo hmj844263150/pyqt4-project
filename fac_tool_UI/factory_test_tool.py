@@ -152,7 +152,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.dut_config['common_conf']['threshold_path'] = os.getcwd().replace('\\','/')+self.dut_config['common_conf']['threshold_path']
         threshold_path = self.dut_config['common_conf']['threshold_path']
         
-        if str(self.cbChipType.currentText()).find('32')>=0 or str(self.cbChipType.currentText()).lower().find('wrover')>=0:
+        if str(self.cbChipType.currentText()).find('32')>=0:
             wb = openpyxl.load_workbook(threshold_path+'full_Threshold_8266.xlsx')
         else:
             wb = openpyxl.load_workbook(threshold_path+'full_Threshold_8266.xlsx')
@@ -183,7 +183,6 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.ui_update_testflow(flow_path)
         os.remove('./config/tmp_testFlow')
         
-    
     ### signal deal functions ###
     def _signal_testflow_check(self, item=None, index=None):
         def updateParentItem(item):
@@ -229,7 +228,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             if checkalbeChildCount <= 0:
                 updateParentItem(item)
                 
-    def signal_print_log(self, tb, log):
+    def signal_print_log(self, tb, log, err_code=0x0):
         show_flag = True
         log=str(log)
         state_flag = True
@@ -273,7 +272,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 state = 'FAIL'
                 style = "background-color: rgb(255, 0, 0);\n"
                 if log.find('record') >= 0:
-                    self._local_count('fail', dut_num)
+                    self._local_count('fail', dut_num, log.lower().split(',')[-1])
             elif log.lower().find('upload-f') >= 0:
                 state = 'upload-f'
                 style = "background-color: rgb(255, 0, 0);\n"
@@ -309,6 +308,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             tb.append(log)
     
     def button_testflow_reset(self, file_path='./config/testFlow'):
+        if self.dut_config['common_conf']['position'] == 'cloud':
+            file_path = './config/cloudTestFlow'
         parent = 'root'
         with open(file_path, 'r') as fd:
             rl = fd.readline()
@@ -329,6 +330,11 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     item = self.trwTestFlow.invisibleRootItem()
                     for i in xrange(1,len(level_index)):
                         tmp = item.text(0)
+                        if item.childCount() <= int(level_index[i]):
+                            tmp_child = QtGui.QTreeWidgetItem()
+                            tmp_child.setText(0,value)
+                            item.addChild(tmp_child)
+                            tmp_child.setHidden(True)
                         item = item.child(int(level_index[i]))
                     if editable == '1':
                         item.setText(0, value)
@@ -414,8 +420,11 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         id = int(btn.objectName()[len(btn.objectName())-1])
         eval('self.lbMAC{}'.format(id)).setText('0x000000000000')
         if self.esp_process.has_key(id):
-           # if self.esp_process[id].isRunning():
-            self.esp_process[id].SIGNAL_STOP.emit()
+            # if self.esp_process[id].isRunning():
+            try:
+                self.esp_process[id].SIGNAL_STOP.emit()
+            except:
+                pass
          
     def button_pop_log(self, index):
         log_path = self.logs_path
@@ -538,7 +547,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                             self.wgCloudConfig.setHidden(False)
                             self.wgCloudShow.setHidden(False)
                             self.pbCloudSync.setEnabled(True)
-                            self.twTestArea.widget(2).setEnabled(False)
+                            #self.twTestArea.widget(2).setEnabled(False)
+                            self.pbTFSubmit.setEnabled(False)
                             self.lbPosition.setText('Cloud')
                             self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 0);\n"
                                                                     "border-color: rgb(0, 255, 255);"))
@@ -610,11 +620,11 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             while(1):
                 if first_flag:
                     first_flag = False
-                    token,rst = QtGui.QInputDialog().getText(self, "Login", "Verify:",
-                                                              QtGui.QLineEdit().Normal, '')
+                    token,rst = QtGui.QInputDialog().getText(self, "Login", "Token:",
+                                                             QtGui.QLineEdit().Normal, '')
                 else:
-                    token,rst = QtGui.QInputDialog().getText(self, "Login", "Verify: (fail, retry!!)",
-                                                              QtGui.QLineEdit().Normal, '')
+                    token,rst = QtGui.QInputDialog().getText(self, "Login", "Token: (fail, retry!!)",
+                                                             QtGui.QLineEdit().Normal, '')
                 if rst:
                     try:
                         if self._try_login(token)==0:
@@ -623,7 +633,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                             self.wgCloudConfig.setHidden(False)
                             self.wgCloudShow.setHidden(False)
                             self.pbCloudSync.setEnabled(True)
-                            self.twTestArea.widget(2).setEnabled(False)
+                            #self.twTestArea.widget(2).setEnabled(False)
+                            self.pbTFSubmit.setEnabled(False)
                             self.lbPosition.setText('Cloud')
                             self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 255, 0);\n"
                                                                     "border-color: rgb(0, 255, 255);"))
@@ -645,7 +656,8 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.wgCloudShow.setHidden(True)
         self.maCloud.changed.connect(self.button_change_position) 
         self.pbCloudSync.setEnabled(False)
-        self.twTestArea.widget(2).setEnabled(True)
+        #self.twTestArea.widget(2).setEnabled(True)
+        self.pbTFSubmit.setEnabled(True)
         self.lbPosition.setText('Local')
         self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
                                                 "border-color: rgb(0, 255, 255);"))
@@ -671,6 +683,10 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             eval('self.lePortRate{}'.format(cb.objectName()[-3:])).setHidden(True)
      
     def combobox_chip_type_change(self, index):
+        ''' @new remove input module names operation
+        '''
+        if True:
+            return
         if index == self.CHIP_TYPE_NUM - 1:
             self.leChipType.setHidden(False)
         else:
@@ -720,7 +736,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         conf.set('chip_conf', 'FREQ', self.cbFREQ.currentText())
         conf.set('chip_conf', 'efuse_mode', self.cbEfuseMode.currentIndex())
         conf.set('common_conf', 'auto_start', '1' if self.cbAutoStart.checkState() else '0')
-        if self.cbChipType.currentIndex() < self.CHIP_TYPE_NUM - 1:
+        if self.cbChipType.currentIndex() < self.CHIP_TYPE_NUM:
             conf.set('chip_conf', 'CHIP_TYPE', self.cbChipType.currentText())
         else:
             conf.set('chip_conf', 'CHIP_TYPE', self.leChipType.text())
@@ -743,6 +759,9 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         conf.write(open(file_path, 'w'))
         
         self.button_dut_reset(file_path)
+        #conf.read(file_path)
+        #for i in conf.sections():
+            #self.dut_config[i] = dict(conf.items(i))
             
         if file_path=='./config/dutConfig':
             msg = QtGui.QMessageBox(QtGui.QMessageBox.NoIcon, '!!!','The DUT config update succ!!    ')
@@ -753,41 +772,47 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         leState.setText(state)
         leState.setStyleSheet(_fromUtf8(style+"color: rgb(255, 255, 255);"))
         
-    def _local_count(self, rst, dut_num):
+    def _local_count(self, rst, dut_num, err_code=0x0):
         self.mutex.acquire()
         # total, pass, fail, mac, time
         datas = [0,0,0,0,0]
         mac = eval("self.lbMAC{}".format(dut_num)).text()
-        with open('./config/localCount.txt', 'a+') as fd:
-            rls = fd.readlines()
-            
-            if len(rls) > 0:
-                for i in xrange(1, len(rls)+1 if len(rls)<3 else 4):
-                    if len(rls[-1 * i].split(',')) >= 4:
-                        datas = rls[-1].split(',')
-                        break
-                    
-            try:
-                total = int(datas[0])
-                pass_num = int(datas[1])
-                fail_num = int(datas[2])
-            except:
-                total = 0
-                pass_num = 0
-                fail_num = 0
-            
-            now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')[5:]
-            if rst == 'pass':
-                pass_num += 1
-            elif rst == 'fail':
-                fail_num += 1
-            total += 1
-            
-            fd.write(str(total)+','+str(pass_num)+','+str(fail_num)+','+str(mac)+','+now_time+"\n")
-            
-        with open('./mac_list/'+self.dut_config['common_conf']['fac_plan']+'_'+rst+'.csv', 'a') as fd:
-            fd.write(mac+'\n')
-            
+        try:
+            with open('./config/temp/'+self.dut_config['common_conf']['fac_plan']+'_count.txt', 'a+') as fd:
+                rls = fd.readlines()
+                
+                if len(rls) > 0:
+                    for i in xrange(1, len(rls)+1 if len(rls)<3 else 4):
+                        if len(rls[-1 * i].split(',')) >= 4:
+                            datas = rls[-1].split(',')
+                            break
+                        
+                try:
+                    total = int(datas[0])
+                    pass_num = int(datas[1])
+                    fail_num = int(datas[2])
+                except:
+                    total = 0
+                    pass_num = 0
+                    fail_num = 0
+                
+                now_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')[5:]
+                if rst == 'pass':
+                    pass_num += 1
+                elif rst == 'fail':
+                    fail_num += 1
+                total += 1
+                
+                fd.write(str(total)+','+str(pass_num)+','+str(fail_num)+','+str(mac)+','+now_time+"\n")
+        except:
+            print('open count file fail, please release it')
+        
+        try:   
+            with open('./mac_list/'+self.dut_config['common_conf']['fac_plan']+'_'+rst+'.csv', 'a') as fd:
+                fd.write(mac+','+str(err_code)+'\n')
+        except:
+            print('open mac_list file fail, please release it')
+        
         self.mutex.release()
         self.lbWorkStat.setText('pass:{}/ fail:{}'.format(pass_num, fail_num))
               

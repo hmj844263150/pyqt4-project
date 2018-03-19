@@ -57,27 +57,27 @@ class esp_testThread(QtCore.QThread):
         self.logpath=''
         self.esp_logstr=''
         self.set_params(_stdout,dutconfig,testflow)
-        self.thread_pause=1
+        self.thread_pause=2 # init:2, wait:1, pass:0
         self.MAC = '000000000000'
         self.set_mac_en=0    
         self.tool_ver='V0.0.1'
 
         self.rptstr='TESTITEM'+','+'TESTVALUE'+','+'SPEC_L'+','+'SPEC_H'+','+'RESULT'+'\n'
-        if(self.chip_type == "ESP32"):
+        if self.chip_type.find("ESP32")>=0:
             self.THRESHOLD_DICT=rl.get_threshold_dict('ATE', self.threshold_path+'full_Threshold_32.xlsx')
-        elif(self.chip_type=='ESP8266'):
+        elif self.chip_type.find('ESP8266')>=0 or self.chip_type.find('ESP8285')>=0:
             self.THRESHOLD_DICT=rl.get_threshold_dict('ATE', self.threshold_path+'full_Threshold_8266.xlsx')  
 
-            if self.chip_type=='ESP32':
-                self.memory_download= espDownloader.ESP32FACTORY(frame=self, port=self.COMPORT, baudrate=self.BAUDRATE,
-                                                                 name=self.user_fw_download_port,chip=self.chip_type,
-                                                                 sub_chip=self.sub_chip_type)
-            elif self.chip_type == 'ESP8285':
-                self.memory_download= espDownloader.ESP8285FACTORY(frame=self, port=self.COM_PORT_STR, baudrate=self.BAUDRATE,
-                                                                   name=self.user_fw_download_port,chip=self.chip_type)
-            elif (self.chip_type == 'ESP8266') or (self.chip_type == 'ESP8089'):
-                self.memory_download= espDownloader.ESP8266FACTORY(frame=self, port=self.COMPORT, baudrate=self.BAUDRATE,
-                                                                   name=self.user_fw_download_port,chip=self.chip_type)        
+        if self.chip_type.find("ESP32")>=0:
+            self.memory_download= espDownloader.ESP32FACTORY(frame=self, port=self.COMPORT, baudrate=self.BAUDRATE,
+                                                             name=self.user_fw_download_port,chip=self.chip_type,
+                                                             sub_chip=self.sub_chip_type)
+        elif self.chip_type == 'ESP8285':
+            self.memory_download= espDownloader.ESP8285FACTORY(frame=self, port=self.COM_PORT_STR, baudrate=self.BAUDRATE,
+                                                               name=self.user_fw_download_port,chip=self.chip_type)
+        elif (self.chip_type == 'ESP8266') or (self.chip_type == 'ESP8089'):
+            self.memory_download= espDownloader.ESP8266FACTORY(frame=self, port=self.COMPORT, baudrate=self.BAUDRATE,
+                                                               name=self.user_fw_download_port,chip=self.chip_type)        
 
 
     def run(self):
@@ -88,7 +88,7 @@ class esp_testThread(QtCore.QThread):
             except:
                 pass
             if self.autostartEn:
-                self.msleep(3000)
+                self.msleep(10000)
             else:
                 break
             
@@ -106,7 +106,7 @@ class esp_testThread(QtCore.QThread):
         self.memory_download.stopFlg=0
         self.tx_test_res=0
         self.rx_test_res=0
-        self.thread_pause=1
+        self.thread_pause=2 # init:2, wait:1, pass:0
         self.mutex_send_flag = 0
 
         self.logpath=''
@@ -114,12 +114,12 @@ class esp_testThread(QtCore.QThread):
         self.l_print(0,str(self.THRESHOLD_DICT))    
 
         err = 0
-        def CHECK(err, err_msg):
+        def CHECK(err, err_msg, err_code=0x0):
             if err == 0:
                 return
             self.resflag = err
             self.ui_print(err_msg)
-            self.STOPTEST()
+            self.STOPTEST(err_code)
             raise TestError(err_msg)
 
         CHECK(self.check_param(), 'PARAM READ ERROR')
@@ -135,13 +135,13 @@ class esp_testThread(QtCore.QThread):
         err, log=self.rf_test_catch_log()
         CHECK(err, 'GET TEST LOG FAIL')
         if(self.en_analog_test):
-            CHECK(self.rf_test_analogtest(log),' ANALOG TEST FAIL\nEND TEST SEQUENCE')
+            CHECK(self.rf_test_analogtest(log),' ANALOG TEST FAIL\nEND TEST SEQUENCE', 0x01)
         if(self.en_tx_test):
-            CHECK(self.rf_test_txtest(log), 'TX TEST FAIL\nEND TEST SEQUENCE')
+            CHECK(self.rf_test_txtest(log), 'TX TEST FAIL\nEND TEST SEQUENCE', 0x01)
         if(self.en_rx_test):
-            CHECK(self.rf_test_rxtest(log), 'RX TEST FAIL\nEND TEST SEQUENCE')
+            CHECK(self.rf_test_rxtest(log), 'RX TEST FAIL\nEND TEST SEQUENCE', 0x01)
 
-        CHECK(self.general_test_gpio(), 'GPIO TEST FAIL\nEND TEST SEQUENCE')        
+        CHECK(self.general_test_gpio(), 'GPIO TEST FAIL\nEND TEST SEQUENCE', 0x02)        
 
         if(self.loadmode==2):
             CHECK(self.esp_write_flash(), 'WRITE PASS INFO FAIL\nEND TEST SEQUENCE')
@@ -150,7 +150,7 @@ class esp_testThread(QtCore.QThread):
             self.ui_print('REBOOT OK')        
 
         if self.en_user_fw_check:
-            CHECK(self.general_test_fwcheck(), 'FIRMWARE CHECK FAIL\nEND TEST SEQUENCE')
+            CHECK(self.general_test_fwcheck(), 'FIRMWARE CHECK FAIL\nEND TEST SEQUENCE', 0x03)
 
         self.ui_print('ALL ITEM PASSED')
         self.STOPTEST()
@@ -286,7 +286,7 @@ class esp_testThread(QtCore.QThread):
                         #self.print_dbg(("test dlist fb rssi : ",dlist))
                         fb_rssi_v = [int(x) for x in dlist]
                         fb_rssi_flg = 0
-                        if self.chip_type == "ESP32":
+                        if self.chip_type.find("ESP32")>=0:
                             print "fb_rssi for ESP32"
                             fb_rssi_v = [ max(fb_rssi_v), ]
 
@@ -308,7 +308,7 @@ class esp_testThread(QtCore.QThread):
 
                         dut_rssi_v = [int(x) for x in dlist]
                         dut_rssi_flg = 0
-                        if self.chip_type == "ESP32":
+                        if self.chip_type.find("ESP32")>=0:
                             if DEBUG: print "dut_rssi for ESP32"
                             dut_rssi_v = [ max(dut_rssi_v), ]
 
@@ -386,7 +386,7 @@ class esp_testThread(QtCore.QThread):
 
         start=time.clock()
         if True:
-            if self.chip_type == "ESP32":
+            if self.chip_type.find("ESP32")>=0:
                 print "ESP32:"
                 values_dictlist=rl.read_log_data(self.logpath,'ESP32',block_num)
             else:
@@ -425,24 +425,32 @@ class esp_testThread(QtCore.QThread):
             1: get log fail
         '''
         print self.slot_num, "start wait"
+        self.thread_pause = 1
         while self.thread_pause:
             pass
 
         start=time.clock()
         self.l_print(0,'record serial print ')
 
-        retry = False
-        if self.chip_type == "ESP8089":
-            log=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','req_suc',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
-        elif self.chip_type == "ESP32":
-            log=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','MODULE_TEST EDN!!!',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
-        else:
-            log=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','MODULE_TEST END!!!',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
-
-        print self.slot_num, "finish RF"
-        self.ui_print('[state]RFMutex')
-        self.mutex_send_flag = 1        
-
+        try:
+            retry = False
+            if self.chip_type == "ESP8089":
+                log=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','req_suc',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
+            elif self.chip_type.find("ESP32")>=0:
+                log=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','MODULE_TEST EDN!!!',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
+            else:
+                log=spud.get_serial_line_id(self.ser,'MODULE_TEST START!!!','MODULE_TEST END!!!',retry = retry,chip_type = self.chip_type,mode=self.loadmode,wd=self) #'user code done')
+            
+            print self.slot_num, "finish RF"
+            self.ui_print('[state]RFMutex')
+            self.mutex_send_flag = 1
+        except:
+            print self.slot_num, "finish RF"
+            self.ui_print('[state]RFMutex')
+            self.mutex_send_flag = 1            
+            self.l_print(3,'get log fail')
+            return 1, ''
+            
         if '' in log:
             self.l_print(3,'seria print is null')
             return 1, log  
@@ -465,7 +473,7 @@ class esp_testThread(QtCore.QThread):
 
     ### GENERAL TEST -------------------------------- ###
     def general_test_gpio(self):
-        if(self.chip_type=='ESP8266'):
+        if(self.chip_type.find('ESP8266') >= 0):
             if self.en_gpio_8266_test:
                 return self.general_test_gpio_8266()
         elif(self.chip_type=='ESP32'):
@@ -722,7 +730,7 @@ class esp_testThread(QtCore.QThread):
             pass
         try:
             self.fwser=serial.Serial(port=self.user_fw_download_port, baudrate=self.user_fw_download_baud, 
-                                     timeout=3)
+                                     timeout=2)
         except:
             self.ui_print('OPEN FIRMWARE CHECK PORT ERROR')
             return 1
@@ -944,7 +952,7 @@ class esp_testThread(QtCore.QThread):
                         connect_status = 1
                         self.memory_download.esp._port.setDTR(False)
                         try:
-                            if not self.chip_type == "ESP32" and not self.chip_type == "ESP8089":
+                            if not (self.chip_type.find("ESP32")>=0) and not self.chip_type == "ESP8089":
                                 self.memory_download.set_higher_baud(1152000)
                         except:
                             sync_res = 0
@@ -1002,7 +1010,7 @@ class esp_testThread(QtCore.QThread):
         return 1
 
     def check_chip_ram(self):
-        if self.sub_chip_type == 'ESP3D2WD':
+        if self.sub_chip_type == 'ESP32D2WD':
             self.memory_download.esp_config_spi_mode()
         if self.en_tx_test>0 or self.en_rx_test > 0:
             if self.tester_con_flg==1: 
@@ -1208,13 +1216,16 @@ class esp_testThread(QtCore.QThread):
             
         self._stdout.write(log)
 
-    def upload_server(self, rst):
+    def upload_server(self, rst, err_code):
         no_err      = "0x00" 
         err_params  = "0x01"
         err_conn    = "0x02"
         err_upload  = "0x03"
         err_other   = "0xff"
-
+        
+        repeat_check = 'True' if self.dutconfig['common_conf']['repeat_check']=='1' else 'False'
+        po_type = self.dutconfig['common_conf']['po_type']
+        
         err_msg = {
             "err_code" : no_err,
             "err_info" : ''
@@ -1230,8 +1241,8 @@ class esp_testThread(QtCore.QThread):
                    "factory_sid":str(self.dutconfig['common_conf']['fac_sid']), 
                    "batch_sid":str(self.dutconfig['common_conf']['batch_sid']), 
                    "efuse":"", 
-                   "chk_repeat_flg":"False", 
-                   "po_type":"0"}
+                   "chk_repeat_flg":repeat_check, 
+                   "po_type":po_type}
 
         uploader = upload_to_server.Uploader(up_data)
         try:
@@ -1251,6 +1262,7 @@ class esp_testThread(QtCore.QThread):
         except:
             err_msg["err_code"] = err_conn
             err_msg["err_info"] = "tcp conn error"
+            self.l_print(3,'upload result:\n'+err_msg['err_code']+':'+err_msg["err_info"]+'\n')
             return 1
 
         print (err_msg)
@@ -1259,9 +1271,11 @@ class esp_testThread(QtCore.QThread):
             total= str(rsp['batch_cnt'])
             self.ui_print('[upload]'+index+'/'+total)
             self.ui_print('UPLOAD OK')
+            self.l_print(3,'upload result:\n'+err_msg['err_code']+':'+err_msg["err_info"]+'\n')
             return 0
         else:
-            self.ui_print('[state]upload-f')
+            print err_msg["err_info"]
+            self.l_print(3,'upload result:\n'+err_msg['err_code']+':'+err_msg["err_info"]+'\n')
             return 1
 
     def esp_write_flash(self):
@@ -1349,26 +1363,31 @@ class esp_testThread(QtCore.QThread):
         cmdstr='esp_set_flash_test_pass_info'+' '+cmdstr
         return cmdstr        
 
-    def STOPTEST(self):
-        if self.thread_pause==0:
-            self.thread_pause = 1  # for rf test mutex
-            if self.resflag == 1:
-                print self.slot_num, "finish RF"
-                self.ui_print('[state]RFMutex')            # for rf test mutex
-                self.ui_print('[state]fail_record')
-                if self.position == 'cloud':
-                    if self.upload_server('fail') != 0:
-                        return
-            else:
-                self.ui_print('[state]pass_record')
-                if self.position == 'cloud':
-                    if self.upload_server('success') != 0:
-                        return
-
+    def STOPTEST(self, err_code=0x0):
         try:
             self.ser.close()
         except:
-            self.l_print(0,'close port error1')
+            pass
+            
+        if self.thread_pause==0:
+            self.thread_pause = 2  # for rf test mutex
+            if self.resflag == 1:
+                #print self.slot_num, "finish RF"
+                #self.ui_print('[state]RFMutex')            # for rf test mutex
+                if self.position == 'cloud':
+                    if self.upload_server('fail', err_code) != 0:
+                        self.ui_print('[state]fail_record'+',0x04')
+                        self.ui_print('[state]upload-f')
+                        return
+                self.ui_print('[state]fail_record'+','+str(err_code))
+            else:
+                
+                if self.position == 'cloud':
+                    if self.upload_server('success', err_code) != 0:
+                        self.ui_print('[state]fail_record'+',0x04')
+                        self.ui_print('[state]upload-f')
+                        return
+                self.ui_print('[state]pass_record')
 
         if self.resflag == 1:
             self.esp_gen_rpt()
@@ -1377,11 +1396,6 @@ class esp_testThread(QtCore.QThread):
             self.l_print(0,'all item test passed')
             self.ui_print('[state]pass')
             self.esp_gen_rpt()
-            try:
-                self.ser.close()
-            except:
-                self.l_print(0,'close port error2')
-
         elif self.resflag==2:
             self.l_print(0,'already passed module')
             self.ui_print('[state]passed')
@@ -1391,12 +1405,13 @@ class esp_testThread(QtCore.QThread):
         self.ui_print('[state]idle')
 
         if self.thread_pause==0:
-            self.thread_pause = 1  # for rf test mutex
+            self.thread_pause = 2  # for rf test mutex
             if self.mutex_send_flag == 0:
                 print self.slot_num, "finish RF"
                 self.ui_print('[state]RFMutex')            # for rf test mutex
-
-        self.SIGNAL_RESUME.emit()
+        
+        if self.thread_pause==1: # into wait mode, and get stop signal
+            self.SIGNAL_RESUME.emit()
         self.msleep(200)	
 
         try:
@@ -1423,11 +1438,10 @@ class esp_testThread(QtCore.QThread):
             self.slot_num =self.dutconfig['common_conf']['dut_num']
             self.COMPORT=self.dutconfig['DUT'+self.slot_num]['port1']	
             self.BAUDRATE=int(self.dutconfig['DUT'+self.slot_num]['rate1'])
-            self.chip_type=self.dutconfig['chip_conf']['chip_type'] 
-            self.sub_chip_type=''
+            self.sub_chip_type=self.dutconfig['chip_conf']['chip_type'].replace('-','')
             self.autostartEn=int(self.dutconfig['common_conf']['auto_start'])
             self.loadmode=self.dutconfig['common_conf']['test_from']
-            self.efusemode=self.dutconfig['chip_conf']['efuse_mode']
+            self.efusemode=int(self.dutconfig['chip_conf']['efuse_mode'])
             self.user_fw_download_port=self.dutconfig['DUT'+self.slot_num]['port2']
             self.user_fw_download_baud=int(self.dutconfig['DUT'+self.slot_num]['rate2'])
             self.user_fw_download_delay=int(self.testflow['USER_FW_VER_DELAY(s)'])
@@ -1443,11 +1457,17 @@ class esp_testThread(QtCore.QThread):
         except:
             self.l_print(1,'read param error')
             self.param_read=0	        #check it before start test
-
+            
+        if self.sub_chip_type.find('ESP8266') >= 0:
+            self.chip_type = 'ESP8266'
+        elif self.sub_chip_type.find('ESP8285') >= 0:
+            self.chip_type = 'ESP8285'
+        elif self.sub_chip_type.find('ESP32') >= 0:
+            self.chip_type = 'ESP32'
+        
         try:
             cmd_list=self.fw_cmd_combin.replace('<',';').replace('>',';').strip(';').split(';;;')
             for cmd in cmd_list:
-
                 t_l=cmd.replace('"',',').split(',')
                 t_str=t_l[0]+','+t_l[2]+','+t_l[4]
                 self.cmd_group.append(t_str)
@@ -1461,13 +1481,7 @@ class esp_testThread(QtCore.QThread):
             self.loadmode=1
         elif(self.loadmode=='FLASH'):
             self.loadmode=2	
-        try:
-            if(self.chip_type=='ESP-WROOM-02'):
-                self.chip_type='ESP8266'
-            elif self.chip_type in ('ESP-WROOM-32',"ESP32-WROVER"):
-                self.chip_type='ESP32'
-        except:
-            self.l_print(0,'get chip type error')
+
         self.en_tx_test=1 if int(self.testflow['TX'])>0 else 0
         self.en_rx_test=1 if int(self.testflow['RX'])>0 else 0
         self.en_analog_test=1 if int(self.testflow['ANALOG'])>0 else 0

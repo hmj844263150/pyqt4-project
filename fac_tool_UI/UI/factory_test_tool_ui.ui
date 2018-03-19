@@ -23,11 +23,11 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>ESP_ModuleFactory_Test_Tool</string>
   </property>
   <property name="windowIcon">
-   <iconset>
-    <normaloff>C:/Users/Administrator/.designer/icon/logo.png</normaloff>C:/Users/Administrator/.designer/icon/logo.png</iconset>
+   <iconset resource="../icon/res.qrc">
+    <normaloff>:/icon/logo.png</normaloff>:/icon/logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="Line" name="line">
@@ -2486,22 +2486,27 @@ p, li { white-space: pre-wrap; }
          </property>
          <item>
           <property name="text">
-           <string>ESP-WROOM-02</string>
+           <string>ESP8266EX</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>ESP-WROOM-32</string>
+           <string>ESP8285</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>ESP32-WROVER</string>
+           <string>ESP32-D0WD</string>
           </property>
          </item>
          <item>
           <property name="text">
-           <string>other</string>
+           <string>ESP32-S0WD</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>ESP32-D2WD</string>
           </property>
          </item>
         </widget>
@@ -2953,14 +2958,6 @@ p, li { white-space: pre-wrap; }
        <item>
         <property name="text">
          <string>PSRAM_TEST</string>
-        </property>
-        <property name="checkState">
-         <enum>Checked</enum>
-        </property>
-       </item>
-       <item>
-        <property name="text">
-         <string>PVT_TEST</string>
         </property>
         <property name="checkState">
          <enum>Checked</enum>
@@ -3521,7 +3518,7 @@ p, li { white-space: pre-wrap; }
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/images/logo_m.jpg);</string>
+     <string notr="true">background-image: url(:/icon/logo_m.jpg);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -3875,7 +3872,7 @@ background-color: rgb(200, 200, 200);</string>
       </font>
      </property>
      <property name="text">
-      <string>WORKING</string>
+      <string>xx/xx</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_35">
@@ -3921,7 +3918,7 @@ background-color: rgb(200, 200, 200);</string>
       </font>
      </property>
      <property name="text">
-      <string>hehe</string>
+      <string>xxxxxxxxxx</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_39">
@@ -3967,7 +3964,7 @@ background-color: rgb(200, 200, 200);</string>
       </font>
      </property>
      <property name="text">
-      <string>c0392</string>
+      <string>xxxxxxxxxx</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_34">

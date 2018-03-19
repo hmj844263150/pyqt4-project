@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'factory_test_tool_ui.ui'
 #
-# Created: Thu Mar 08 16:48:55 2018
+# Created: Thu Mar 15 18:06:45 2018
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(1000, 686))
         MainWindow.setMaximumSize(QtCore.QSize(1000, 686))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8("C:/Users/Administrator/.designer/icon/logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8("../icon/logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
@@ -838,6 +838,7 @@ class Ui_MainWindow(object):
         self.cbChipType.addItem(_fromUtf8(""))
         self.cbChipType.addItem(_fromUtf8(""))
         self.cbChipType.addItem(_fromUtf8(""))
+        self.cbChipType.addItem(_fromUtf8(""))
         self.label_26 = QtGui.QLabel(self.wgSPConfig)
         self.label_26.setGeometry(QtCore.QRect(20, 80, 70, 21))
         sizePolicy = QtGui.QSizePolicy(QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Preferred)
@@ -932,8 +933,6 @@ class Ui_MainWindow(object):
         item_2.setFlags(QtCore.Qt.ItemIsSelectable|QtCore.Qt.ItemIsDragEnabled|QtCore.Qt.ItemIsEnabled)
         item_3 = QtGui.QTreeWidgetItem(item_2)
         item_3.setFlags(QtCore.Qt.ItemIsSelectable|QtCore.Qt.ItemIsEditable|QtCore.Qt.ItemIsDragEnabled|QtCore.Qt.ItemIsEnabled)
-        item_1 = QtGui.QTreeWidgetItem(item_0)
-        item_1.setCheckState(0, QtCore.Qt.Checked)
         item_1 = QtGui.QTreeWidgetItem(item_0)
         item_1.setCheckState(0, QtCore.Qt.Checked)
         item_1 = QtGui.QTreeWidgetItem(item_0)
@@ -1132,7 +1131,7 @@ class Ui_MainWindow(object):
         self.fraLogo = QtGui.QFrame(self.centralwidget)
         self.fraLogo.setGeometry(QtCore.QRect(2, 2, 246, 128))
         self.fraLogo.setAutoFillBackground(False)
-        self.fraLogo.setStyleSheet(_fromUtf8("background-image: url(:/images/logo_m.jpg);"))
+        self.fraLogo.setStyleSheet(_fromUtf8("background-image: url(:/icon/logo_m.jpg);"))
         self.fraLogo.setFrameShape(QtGui.QFrame.StyledPanel)
         self.fraLogo.setFrameShadow(QtGui.QFrame.Raised)
         self.fraLogo.setObjectName(_fromUtf8("fraLogo"))
@@ -1402,11 +1401,11 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuHelp.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.twTestArea.setCurrentIndex(1)
+        self.twTestArea.setCurrentIndex(2)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow", None))
+        MainWindow.setWindowTitle(_translate("MainWindow", "ESP_ModuleFactory_Test_Tool", None))
         self.textBrowser_4.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
@@ -1599,10 +1598,11 @@ class Ui_MainWindow(object):
         self.cbEfuseMode.setItemText(1, _translate("MainWindow", "normal", None))
         self.cbAutoStart.setText(_translate("MainWindow", "AUTOSTART", None))
         self.label_20.setText(_translate("MainWindow", "Chip Type", None))
-        self.cbChipType.setItemText(0, _translate("MainWindow", "ESP-WROOM-02", None))
-        self.cbChipType.setItemText(1, _translate("MainWindow", "ESP-WROOM-32", None))
-        self.cbChipType.setItemText(2, _translate("MainWindow", "ESP32-WROVER", None))
-        self.cbChipType.setItemText(3, _translate("MainWindow", "other", None))
+        self.cbChipType.setItemText(0, _translate("MainWindow", "ESP8266EX", None))
+        self.cbChipType.setItemText(1, _translate("MainWindow", "ESP8285", None))
+        self.cbChipType.setItemText(2, _translate("MainWindow", "ESP32-D0WD", None))
+        self.cbChipType.setItemText(3, _translate("MainWindow", "ESP32-S0WD", None))
+        self.cbChipType.setItemText(4, _translate("MainWindow", "ESP32-D2WD", None))
         self.label_26.setText(_translate("MainWindow", "Fac-Plan", None))
         self.twTestArea.setTabText(self.twTestArea.indexOf(self.tab_2), _translate("MainWindow", "Dut Config", None))
         self.trwTestFlow.headerItem().setText(0, _translate("MainWindow", "Test Option", None))
@@ -1649,7 +1649,6 @@ class Ui_MainWindow(object):
         self.trwTestFlow.topLevelItem(1).child(4).setText(0, _translate("MainWindow", "FLASH_RW_CHECK", None))
         self.trwTestFlow.topLevelItem(1).child(5).setText(0, _translate("MainWindow", "ADC_TEST", None))
         self.trwTestFlow.topLevelItem(1).child(6).setText(0, _translate("MainWindow", "PSRAM_TEST", None))
-        self.trwTestFlow.topLevelItem(1).child(7).setText(0, _translate("MainWindow", "PVT_TEST", None))
         self.trwTestFlow.topLevelItem(2).setText(0, _translate("MainWindow", "FUNCTION", None))
         self.trwTestFlow.topLevelItem(2).child(0).setText(0, _translate("MainWindow", "USER_FW_DOWNLOAD", None))
         self.trwTestFlow.topLevelItem(2).child(0).child(0).setText(0, _translate("MainWindow", "USER_FW_DOWNLOAD_PORT", None))
@@ -1736,11 +1735,11 @@ class Ui_MainWindow(object):
         self.label_41.setText(_translate("MainWindow", "Local Status :", None))
         self.lbWorkStat.setText(_translate("MainWindow", "xx/xxx", None))
         self.label_36.setText(_translate("MainWindow", "Total Status  :", None))
-        self.lbTotalStatus.setText(_translate("MainWindow", "WORKING", None))
+        self.lbTotalStatus.setText(_translate("MainWindow", "xx/xx", None))
         self.label_35.setText(_translate("MainWindow", "MPN No        :", None))
-        self.lbMPNNo.setText(_translate("MainWindow", "hehe", None))
+        self.lbMPNNo.setText(_translate("MainWindow", "xxxxxxxxxx", None))
         self.label_39.setText(_translate("MainWindow", "Batch ID        :", None))
-        self.lbPoNo.setText(_translate("MainWindow", "c0392", None))
+        self.lbPoNo.setText(_translate("MainWindow", "xxxxxxxxxx", None))
         self.label_34.setText(_translate("MainWindow", "PO Number  :", None))
         self.lbBatchId.setText(_translate("MainWindow", "XXXX", None))
         self.menu.setTitle(_translate("MainWindow", "File", None))
