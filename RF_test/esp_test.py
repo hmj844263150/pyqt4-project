@@ -857,7 +857,9 @@ class esp_testThread(QtCore.QThread):
         '''
         self.ui_print('[state]SYNC')
         if(self.loadmode==1):	# ram test mode
-            return self.try_sync_ram()
+            rst = self.try_sync_ram()
+            if rst == -1: # open serial fail should not try any more
+                self.stop_flag = 1            
         elif self.loadmode == 2:    # flash test mode 
             rst = self.try_sync_flash()
             if rst == -1: # open serial fail should not try any more
@@ -932,7 +934,7 @@ class esp_testThread(QtCore.QThread):
             self.ser=self.memory_download.esp._port
             self.l_print(0,'conncet result is %d'%connect_res)
         except serial.SerialException:
-            return 1
+            return -1
 
         if connect_res:
             self.memory_download.ESP_SET_BOOT_MODE(0)   #try outside io control boot mode
@@ -1387,6 +1389,7 @@ class esp_testThread(QtCore.QThread):
                 if self.upload_server('fail', err_code) != 0:
                     self.ui_print('[state]fail_record'+',0x04')
                     self.ui_print('[state]upload-f')
+                    self.stop_flag = 1
                 else:
                     self.ui_print('[state]fail_record'+','+str(err_code))
             else:
@@ -1398,6 +1401,7 @@ class esp_testThread(QtCore.QThread):
                 if self.upload_server('success', err_code) != 0:
                     self.ui_print('[state]fail_record'+',0x04')
                     self.ui_print('[state]upload-f')
+                    self.stop_flag = 1
                 else:
                     self.ui_print('[state]pass_record')
             else:
