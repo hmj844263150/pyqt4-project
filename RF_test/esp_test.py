@@ -116,7 +116,8 @@ class esp_testThread(QtCore.QThread):
             if err == 0:
                 return
             self.resflag = err
-            self.stop_flag = fatal_stop
+            if err_code != -1:
+                self.stop_flag = fatal_stop
             self.ui_print(err_msg)
             self.STOPTEST(err_code)
             raise TestError(err_msg)
@@ -858,12 +859,13 @@ class esp_testThread(QtCore.QThread):
         self.ui_print('[state]SYNC')
         if(self.loadmode==1):	# ram test mode
             rst = self.try_sync_ram()
-            if rst == -1: # open serial fail should not try any more
-                self.stop_flag = 1            
+            if rst == -1:
+                self.stop_flag = 1
+            return rst
         elif self.loadmode == 2:    # flash test mode 
             rst = self.try_sync_flash()
-            if rst == -1: # open serial fail should not try any more
-                self.stop_flag = 1
+            if rst == -1:
+                self.stop_flag = 1            
             try:
                 self.ser.close()
             except:
