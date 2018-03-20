@@ -725,7 +725,7 @@ class esp_testThread(QtCore.QThread):
             pass
         try:
             self.fwser=serial.Serial(port=self.user_fw_download_port, baudrate=self.user_fw_download_baud, 
-                                     timeout=2)
+                                     timeout=0.5)
         except:
             self.ui_print('OPEN FIRMWARE CHECK PORT ERROR')
             return 1
@@ -1419,7 +1419,6 @@ class esp_testThread(QtCore.QThread):
                         break
                 else:
                     break
-            
                 self.msleep(300)
 
     def stopthread(self):

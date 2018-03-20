@@ -1055,6 +1055,7 @@ class ESP8266Downloader(Downloader):
         cal_crc=False
         cmd='esp_read_efuse_128bit\r'
         ser.write(cmd)
+        ser.timeout = 0.5
         #self.esp._port.write(cmd)
         
         try:
