@@ -1054,21 +1054,26 @@ class ESP8266Downloader(Downloader):
         retry_times=3
         cal_crc=False
         cmd='esp_read_efuse_128bit\r'
-        ser.write(cmd)
-        ser.timeout = 1
+        old_timeout = ser.timeout
+        ser.timeout = 0.3
         #self.esp._port.write(cmd)
         
         try:
-            temp=ser.read(128)
-            if temp is not '':
-                temp_list=temp.split(':')[-1]
-                reg_list=temp_list.split(',')
-                reg0=int(reg_list[0],16)
-                reg1=int(reg_list[1],16)
-                reg2=int(reg_list[2],16)
-                reg3=int(reg_list[3],16)
-            else:
-                return False
+            while retry_times:
+                retry_times -= 1
+                ser.write(cmd)
+                temp=ser.read(128)
+                if temp.find('cmd not exist') >= 0:
+                    continue
+                if temp is not '':
+                    temp_list=temp.split(':')[-1]
+                    reg_list=temp_list.split(',')
+                    reg0=int(reg_list[0],16)
+                    reg1=int(reg_list[1],16)
+                    reg2=int(reg_list[2],16)
+                    reg3=int(reg_list[3],16)
+                else:
+                    return False
         except:
             print "read reg error"
             self.append_log("read reg error\n")
@@ -1089,6 +1094,7 @@ class ESP8266Downloader(Downloader):
         self.BIT_FLG  = bit_flg
         self.CHIP_FLG = chip_flg
         self.MAC_FLG = 0
+        ser.timeout = old_timeout
         return self.set_mac(self.BIT_FLG)    
         
     def get_mac(self):
