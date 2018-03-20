@@ -966,7 +966,7 @@ class ESP8266Downloader(Downloader):
                     crc8_result = crc.esp_crc8(crc_data)
                     crc8_mac_reg = (reg0>>8)&0xff
                     if(crc8_result == crc8_mac_reg):
-                        print("EFUSE CHECK PASS!")
+                        #print("EFUSE CHECK PASS!")
                         return True
                     else:
                         print("EFUSE CHECK FAIL!")
@@ -1142,7 +1142,7 @@ class ESP8266Downloader(Downloader):
                 self.logger.error("mac_flg: {}".format(self.MAC_FLG))
                 return False
         else:
-            print "48bit mac"
+            #print "48bit mac"
             mac_sta = ("%02X-%02X-%02X-%02X-%02X-%02X"%(self.MAC[0],self.MAC[1],self.MAC[2],self.MAC[3],self.MAC[4],self.MAC[5])).upper()
             mac_0_tmp = self.MAC[0] & 0x7
             if mac_0_tmp == 0:
@@ -1329,7 +1329,7 @@ class ESP8285Downloader(ESP8266Downloader):
                     crc8_result = crc.esp_crc8(crc_data)
                     crc8_mac_reg = (reg0>>8)&0xff
                     if(crc8_result == crc8_mac_reg):
-                        print("EFUSE CHECK PASS!")
+                        #print("EFUSE CHECK PASS!")
                         return True
                     else:
                         print("EFUSE CHECK FAIL!")

@@ -859,6 +859,8 @@ class esp_testThread(QtCore.QThread):
             return self.try_sync_ram()
         elif self.loadmode == 2:    # flash test mode 
             rst = self.try_sync_flash()
+            if rst == -1: # open serial fail should not try any more
+                self.stop_flag = 1
             try:
                 self.ser.close()
             except:
@@ -1358,12 +1360,23 @@ class esp_testThread(QtCore.QThread):
         cmdstr='esp_set_flash_test_pass_info'+' '+cmdstr
         return cmdstr        
 
-    def STOPTEST(self, err_code=0x0):
-        try:
-            self.ser.close()
-        except:
-            pass
-        
+    def serial_operation(func):
+        def wrapper(*args, **kwargs):
+            try:
+                ser = args[0].ser
+                if not ser.isOpen():
+                    ser.open()
+            except:
+                pass
+            func(*args, **kwargs)
+            try:
+                ser.close()
+            except:
+                pass
+        return wrapper
+    
+    @serial_operation
+    def STOPTEST(self, err_code=0x0):        
         if err_code == -1 and self.resflag==1: # not even sync
             return
             
@@ -1396,30 +1409,18 @@ class esp_testThread(QtCore.QThread):
             self.msleep(3000)
         else:
             while not self.stop_flag:
-                if self.loadmode == 2:
-                    try:
-                        getmac_res=self.memory_download.esp_getmac(self.ser)
-                    except:
+                try:
+                    getmac_res=self.memory_download.esp_getmac(self.ser)
+                except:
+                    break
+                if getmac_res:
+                    temp_mac=self.memory_download.ESP_MAC.replace('0x','').replace('-','').replace(':','')
+                    if temp_mac != self.MAC:
                         break
-                    if getmac_res:
-                        temp_mac=self.memory_download.ESP_MAC.replace('0x','').replace('-','').replace(':','')
-                        if temp_mac != self.MAC:
-                            break
-                    else:
-                        break
+                else:
+                    break
             
-                elif self.loadmode == 1:
-                    try:
-                        res = self.memory_download.get_mac()
-                    except:
-                        break
-                    if res == True:
-                        temp_mac=self.memory_download.ESP_MAC.replace('0x','').replace('-','').replace(':','')
-                        if temp_mac != self.MAC:
-                            break                        
-                    else:
-                        break
-                self.msleep(200)
+                self.msleep(300)
 
     def stopthread(self):
         self.ui_print('[state]finish btn up')

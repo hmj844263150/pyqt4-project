@@ -754,10 +754,19 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     def _local_count(self, rst, dut_num, err_code=0x0):
         self.mutex.acquire()
         # total, pass, fail, mac, time
-        datas = [0,0,0,0,0]
+        datas = [0,0,0,0,0,0]
         mac = eval("self.lbMAC{}".format(dut_num)).text()
+        count_path = './config/temp/'+self.dut_config['common_conf']['fac_plan']+'_count.txt'
         try:
-            with open('./config/temp/'+self.dut_config['common_conf']['fac_plan']+'_count.txt', 'a+') as fd:
+            if not os.path.exists(count_path):
+                try:
+                    f=open(count_path, 'w')
+                    f.close()
+                except:
+                    print 'create count file fail'
+                    return
+                    
+            with open(count_path, 'a+') as fd:
                 rls = fd.readlines()
                 
                 if len(rls) > 0:
@@ -782,15 +791,15 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     fail_num += 1
                 total += 1
                 
-                fd.write(str(total)+','+str(pass_num)+','+str(fail_num)+','+str(mac)+','+now_time+"\n")
+                fd.write(str(total)+','+str(pass_num)+','+str(fail_num)+','+str(mac)+','+now_time+','+err_code+"\n")
         except:
-            print('open count file fail, please release it')
+            print 'open count file fail, please release it'
         
         try:   
             with open('./mac_list/'+self.dut_config['common_conf']['fac_plan']+'_'+rst+'.csv', 'a') as fd:
                 fd.write(mac+','+str(err_code)+'\n')
         except:
-            print('open mac_list file fail, please release it')
+            print 'open mac_list fail, please release it'
         
         self.mutex.release()
         self.lbWorkStat.setText('pass:{}/ fail:{}'.format(pass_num, fail_num))
