@@ -112,20 +112,20 @@ class esp_testThread(QtCore.QThread):
         self.logpath=''
         self.esp_logstr=''
         err = 0
-        def CHECK(err, err_msg, err_code=0x0, force_stop=0):
+        def CHECK(err, err_msg, err_code=0x0, fatal_stop=0):
             if err == 0:
                 return
             self.resflag = err
-            self.stop_flag = force_stop
+            self.stop_flag = fatal_stop
             self.ui_print(err_msg)
             self.STOPTEST(err_code)
             raise TestError(err_msg)
 
-        CHECK(self.check_param(), 'PARAMS READ ERROR', force_stop=1)
-        CHECK(self.try_sync(), 'SYNC FAIL', -1)
+        CHECK(self.check_param(), 'PARAMS READ ERROR', fatal_stop=1)
+        CHECK(self.try_sync(), 'SYNC FAIL', err_code=-1)
         self.ui_print('CHIP SYCN OK')
         self.l_print(0,str(self.THRESHOLD_DICT))   
-        CHECK(self.check_chip(), 'CHIP CHECK FAIL', force_stop=1)
+        CHECK(self.check_chip(), 'CHIP CHECK FAIL', fatal_stop=1)
 
         if self.loadmode == 1:  # need load bin on ram mode 
             CHECK(self.load_to_ram(self.IMGPATH), 'LOAD RAM FAIL')
@@ -135,13 +135,13 @@ class esp_testThread(QtCore.QThread):
         err, log=self.rf_test_catch_log()
         CHECK(err, 'GET TEST LOG FAIL')
         if(self.en_analog_test):
-            CHECK(self.rf_test_analogtest(log),' ANALOG TEST FAIL\nEND TEST SEQUENCE', 0x01)
+            CHECK(self.rf_test_analogtest(log),' ANALOG TEST FAIL\nEND TEST SEQUENCE', err_code=0x01)
         if(self.en_tx_test):
-            CHECK(self.rf_test_txtest(log), 'TX TEST FAIL\nEND TEST SEQUENCE', 0x01)
+            CHECK(self.rf_test_txtest(log), 'TX TEST FAIL\nEND TEST SEQUENCE', err_code=0x01)
         if(self.en_rx_test):
-            CHECK(self.rf_test_rxtest(log), 'RX TEST FAIL\nEND TEST SEQUENCE', 0x01)
+            CHECK(self.rf_test_rxtest(log), 'RX TEST FAIL\nEND TEST SEQUENCE', err_code=0x01)
 
-        CHECK(self.general_test_gpio(), 'GPIO TEST FAIL\nEND TEST SEQUENCE', 0x02)        
+        CHECK(self.general_test_gpio(), 'GPIO TEST FAIL\nEND TEST SEQUENCE', err_code=0x02)        
 
         if(self.loadmode==2):
             CHECK(self.esp_write_flash(), 'WRITE PASS INFO FAIL\nEND TEST SEQUENCE')
@@ -150,7 +150,7 @@ class esp_testThread(QtCore.QThread):
             self.ui_print('REBOOT OK')        
 
         if self.en_user_fw_check:
-            CHECK(self.general_test_fwcheck(), 'FIRMWARE CHECK FAIL\nEND TEST SEQUENCE', 0x03)
+            CHECK(self.general_test_fwcheck(), 'FIRMWARE CHECK FAIL\nEND TEST SEQUENCE', err_code=0x03, fatal_stop=1)
 
         self.ui_print('ALL ITEM PASSED')
         self.STOPTEST()
@@ -1407,7 +1407,7 @@ class esp_testThread(QtCore.QThread):
             self.ui_print('[state]passed')         
 
         if self.resflag in (0,2):
-            self.msleep(3000)
+            self.msleep(5000)
         else:
             while not self.stop_flag:
                 try:
@@ -1506,7 +1506,6 @@ class esp_testThread(QtCore.QThread):
                 return 1
 
         return 0
-
 
 
 if __name__=='__main':

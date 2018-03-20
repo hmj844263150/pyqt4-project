@@ -321,6 +321,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                         self.test_flow[parent] = value
                     if checkable >= 0:
                         item.setCheckState(0, checkable)
+                        self.test_flow[value] = checkable
                 
                 parent = value
                 rl = fd.readline()
@@ -451,12 +452,6 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.ui_update_dut()
         self.pbCloudSync.setEnabled(True)
         self.pbCloudSync.setDown(False)
-        
-        #url = 'https://{}:{}/mpn/'.format(ip, port)
-        #data = '{}"mpnSid":"{}", "data":"{}"{}'.format("{", "tt3", "88888888", "}")
-        #rsp = requests.post(url=url, verify=False).json()
-        #print rsp
-        
         return
 
         
@@ -622,6 +617,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                             conf.set('common_conf', 'auth_token', str(token))
                             conf.write(open('./config/dutConfig', 'w'))
                             self.ui_update_dut()
+                            self.button_testflow_reset(file_path='./config/cloudTestFlow')
                             return
                         else:
                             print ('login fail')
@@ -641,6 +637,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.tePosition.setStyleSheet(_fromUtf8("background-color: rgb(255, 170, 127);\n"
                                                 "border-color: rgb(0, 255, 255);"))
         self.ui_update_dut()
+        self.button_testflow_reset()
     
     def button_showFileDialog(self):
         filename = QtGui.QFileDialog.getOpenFileName(None, 'Open file', './bin/', filter='firmware(*.bin);;all(*.*)', selectedFilter='firmware(*.bin)')
