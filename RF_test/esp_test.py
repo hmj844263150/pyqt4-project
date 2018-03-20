@@ -112,19 +112,20 @@ class esp_testThread(QtCore.QThread):
         self.logpath=''
         self.esp_logstr=''
         err = 0
-        def CHECK(err, err_msg, err_code=0x0):
+        def CHECK(err, err_msg, err_code=0x0, force_stop=0):
             if err == 0:
                 return
             self.resflag = err
+            self.stop_flag = force_stop
             self.ui_print(err_msg)
             self.STOPTEST(err_code)
             raise TestError(err_msg)
 
-        CHECK(self.check_param(), 'PARAM READ ERROR')
+        CHECK(self.check_param(), 'PARAMS READ ERROR', force_stop=1)
         CHECK(self.try_sync(), 'SYNC FAIL', -1)
         self.ui_print('CHIP SYCN OK')
         self.l_print(0,str(self.THRESHOLD_DICT))   
-        CHECK(self.check_chip(), 'CHIP CHECK FAIL')
+        CHECK(self.check_chip(), 'CHIP CHECK FAIL', force_stop=1)
 
         if self.loadmode == 1:  # need load bin on ram mode 
             CHECK(self.load_to_ram(self.IMGPATH), 'LOAD RAM FAIL')
@@ -725,7 +726,7 @@ class esp_testThread(QtCore.QThread):
             pass
         try:
             self.fwser=serial.Serial(port=self.user_fw_download_port, baudrate=self.user_fw_download_baud, 
-                                     timeout=0.5)
+                                     timeout=1)
         except:
             self.ui_print('OPEN FIRMWARE CHECK PORT ERROR')
             return 1
