@@ -1072,8 +1072,8 @@ class ESP8266Downloader(Downloader):
                     reg1=int(reg_list[1],16)
                     reg2=int(reg_list[2],16)
                     reg3=int(reg_list[3],16)
-                else:
-                    return False
+            if temp == '':
+                return False
         except:
             print "read reg error"
             self.append_log("read reg error\n")

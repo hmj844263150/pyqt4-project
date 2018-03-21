@@ -119,6 +119,7 @@ def get_serial_line_id(ser,start_flg,end_flg,sta_num=-1,retry=False,chip_type = 
         #ser=serial.Serial(com_num,baudrate,timeout=1.2)
     #ser = com_num
     ser.baudrate = 115200
+    ser.timeout = 1
     if ser.isOpen() == False:
         ser.open()
     

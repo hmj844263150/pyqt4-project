@@ -30,6 +30,20 @@ sys.path.append('../')
 import upload_to_server.upload_to_server as upload_to_server
 
 
+def serial_operation(func):
+    def wrapper(*args, **kwargs):
+        try:
+            ser = args[0].ser
+        except:
+            pass
+        rst = func(*args, **kwargs)
+        try:
+            ser.close()
+        except:
+            pass
+        return rst
+    return wrapper 
+
 class TestError(RuntimeError):
     """
     Wrapper class for runtime errors that caused any error in test
@@ -48,20 +62,7 @@ class TestError(RuntimeError):
 
 class esp_testThread(QtCore.QThread):
     SIGNAL_STOP = QtCore.pyqtSignal()
-    def serial_operation(func):
-        def wrapper(*args, **kwargs):
-            try:
-                ser = args[0].ser
-            except:
-                pass
-            rst = func(*args, **kwargs)
-            try:
-                ser.close()
-            except:
-                pass
-            return rst
-        return wrapper    
-    
+       
     def __init__(self,_stdout,dutconfig,testflow, rfmutex):
         super(esp_testThread,self).__init__(parent=None)
         self.rfmutex = rfmutex
@@ -435,6 +436,7 @@ class esp_testThread(QtCore.QThread):
 
         self.t_dataprocess=time.clock()-start    
 
+    @serial_operation
     def rf_test_catch_log(self):
         '''
         get the module self calibration and test result via uart
@@ -442,6 +444,7 @@ class esp_testThread(QtCore.QThread):
             0: get log success
             1: get log fail
         '''
+        self.ser.timeout = 1
         print self.slot_num, "start wait"
         self.rfmutex.acquire()
 
@@ -675,58 +678,7 @@ class esp_testThread(QtCore.QThread):
 
         return 0	    
 
-    def _test_item(self, test_name, test_cmd, break_str = None, timeout = None):
-        """
-        Common method of sending a serial command and get response
-        """
-        i=0
-        self.send_count=1
-        #send command  more times when test adc 
-        self.l_print(3,'test item is %s'%test_name)
-
-        self.msleep(50)
-        timeout_ori = self.ser.timeout
-        if timeout == None:
-            self.ser.timeout = 0.8
-        else:
-            self.ser.timeout = timeout
-        ser_temp = self.ser
-        ser_temp.baudrate = 115200
-        if not ser_temp.isOpen():
-            ser_temp.open()
-        ser_temp.flush()
-        ser_temp.flushInput()
-        self.l_print(0,("%s test cmd: %s" %(test_name, test_cmd)))
-
-        while(i<self.send_count):
-            ser_temp.write(test_cmd)
-            res_line = []
-            read_flag=0
-            while True:
-                temp = ser_temp.readline()
-                if temp == '':
-                    break
-                elif break_str != None:
-                    if break_str in temp:
-                        res_line.append(temp)
-                        self.l_print(3,'%s:%s'%(break_str,temp))
-                        read_flag=1
-                        break
-                    res_line.append(temp)
-                    self.l_print(3,'breakstr non-inside,value:%s'%temp)		    
-                else:
-                    res_line.append(temp)
-                    self.l_print(3,'none breakstr,value:%s'%temp)
-                    read_flag=1
-
-            if(read_flag==1):
-                self.l_print(3,'test sucess')
-
-                break
-            i+=1
-
-        return res_line     
-    
+    @serial_operation
     def general_test_fwcheck(self):
         if(self.loadmode==1):
             return self.general_test_fwcheck_ram()
@@ -865,7 +817,6 @@ class esp_testThread(QtCore.QThread):
         pass
 
     ### COMMON TEST -------------------------------- ###
-    @serial_operation
     def try_sync(self):
         self.ui_print('[state]SYNC')
         if(self.loadmode==1):	# ram test mode
@@ -874,9 +825,13 @@ class esp_testThread(QtCore.QThread):
             rst = self.try_sync_flash()
         else:
             rst = -1
+        try:
+            self.ser.close()
+        except:
+            pass
         return rst
 
-    def try_sync_flash(self, ser):
+    def try_sync_flash(self):
         '''
         try synchronous the chip with flash jump mode via uart, the program need deal with follow 4 case, within most 5 seconds
         case 1: (chip already power on and running in test mode, serial baudrate in 115200) 
@@ -971,7 +926,10 @@ class esp_testThread(QtCore.QThread):
                 sync_res = 0
                 return 1
 
+    @serial_operation
     def check_chip(self):
+        self.ser.baudrate = 115200
+        self.ser.timeout = 0.3
         if self.loadmode == 2:
             return self.check_chip_flash()
         elif self.loadmode == 1:
@@ -984,9 +942,8 @@ class esp_testThread(QtCore.QThread):
         getmac_res=0
         self.memory_download.disconnect()
         try:
-            self.ser = serial.Serial(port=self.COMPORT, baudrate=self.BAUDRATE,timeout=0.5)
-            self.l_print(0,'serial open ok')
-            self.ui_print('SER OPEN OK')
+            if not self.ser.isOpen():
+                self.ser.open()
         except serial.SerialException:
             self.ui_print('SERIAL PORT EXCEPTION')
             return 1
