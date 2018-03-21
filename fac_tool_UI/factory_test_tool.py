@@ -789,7 +789,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     fail_num += 1
                 total += 1
                 
-                fd.write(str(total)+','+str(pass_num)+','+str(fail_num)+','+str(mac)+','+now_time+','+err_code+"\n")
+                fd.write(str(total)+','+str(pass_num)+','+str(fail_num)+','+str(mac)+','+now_time+','+str(err_code)+"\n")
         except:
             print 'open count file fail, please release it'
         
