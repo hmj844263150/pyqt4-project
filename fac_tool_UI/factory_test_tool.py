@@ -70,9 +70,6 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.init_parameters()    # initial the settings for production test
         self.init_signal() # add signal for need
         
-        tmp_path = os.getcwd().replace('\\', '//')
-        self.logs_path = tmp_path[:tmp_path.find(tmp_path.split('//')[len(tmp_path.split('//'))-1])] + 'logs//'        
-        
     ### init functions ###
     def init_ui(self):
         self.twTestArea.setCurrentIndex(0)
@@ -133,6 +130,11 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.rfmutex = threading.Lock()
         
         self.dut_config = {}
+        
+        tmp_path = os.getcwd().replace('\\', '//')
+        self.path_logs = tmp_path[:tmp_path.find(tmp_path.split('//')[len(tmp_path.split('//'))-1])] + 'logs//'
+        self.path_threshold = tmp_path + '//config//'
+        
         self.CHIP_TYPE_NUM = self.cbChipType.count()
         self.BAUD_NUM = self.cbPortRate1_1.count()
         self.button_dut_reset(file_path='./config/dutConfig', try_login=True) 
@@ -150,13 +152,12 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     
     def init_threshold(self):
         import openpyxl
-        self.dut_config['common_conf']['threshold_path'] = os.getcwd().replace('\\','/')+self.dut_config['common_conf']['threshold_path']
-        threshold_path = self.dut_config['common_conf']['threshold_path']
+        self.dut_config['common_conf']['threshold_path'] = self.path_threshold
         
         if str(self.cbChipType.currentText()).find('32')>=0:
-            wb = openpyxl.load_workbook(threshold_path+'full_Threshold_8266.xlsx')
+            wb = openpyxl.load_workbook(self.path_threshold+'full_Threshold_8266.xlsx')
         else:
-            wb = openpyxl.load_workbook(threshold_path+'full_Threshold_8266.xlsx')
+            wb = openpyxl.load_workbook(self.path_threshold+'full_Threshold_8266.xlsx')
 
         sheet = wb.get_sheet_by_name(wb.sheetnames[0])
         
@@ -407,11 +408,11 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 pass
          
     def button_pop_log(self, index):
-        log_path = self.logs_path
+        log_path = self.path_logs
         if index in (1,2,3,4):       
             if self.esp_process[index] != None:
                 log_path = self.esp_process[index].logpath.split('//')[-1]
-                log_path = self.logs_path + log_path
+                log_path = self.path_logs + log_path
             try:
                 os.startfile(log_path)
             except:
