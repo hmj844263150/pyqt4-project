@@ -48,6 +48,20 @@ class TestError(RuntimeError):
 
 class esp_testThread(QtCore.QThread):
     SIGNAL_STOP = QtCore.pyqtSignal()
+    def serial_operation(func):
+        def wrapper(*args, **kwargs):
+            try:
+                ser = args[0].ser
+            except:
+                pass
+            rst = func(*args, **kwargs)
+            try:
+                ser.close()
+            except:
+                pass
+            return rst
+        return wrapper    
+    
     def __init__(self,_stdout,dutconfig,testflow, rfmutex):
         super(esp_testThread,self).__init__(parent=None)
         self.rfmutex = rfmutex
@@ -116,14 +130,17 @@ class esp_testThread(QtCore.QThread):
             if err == 0:
                 return
             self.resflag = err
-            if err_code != -1:
-                self.stop_flag = fatal_stop
+            self.stop_flag = fatal_stop
             self.ui_print(err_msg)
             self.STOPTEST(err_code)
             raise TestError(err_msg)
 
         CHECK(self.check_param(), 'PARAMS READ ERROR', fatal_stop=1)
-        CHECK(self.try_sync(), 'SYNC FAIL', err_code=-1)
+        err = self.try_sync()
+        if err == -1:
+            CHECK(err, 'SYNC FAIL', err_code=1, fatal_stop=1)
+        else:
+            CHECK(err, 'SYNC FAIL', err_code=1, fatal_stop=0)
         self.ui_print('CHIP SYCN OK')
         self.l_print(0,str(self.THRESHOLD_DICT))   
         CHECK(self.check_chip(), 'CHIP CHECK FAIL', fatal_stop=1)
@@ -136,13 +153,13 @@ class esp_testThread(QtCore.QThread):
         err, log=self.rf_test_catch_log()
         CHECK(err, 'GET TEST LOG FAIL')
         if(self.en_analog_test):
-            CHECK(self.rf_test_analogtest(log),' ANALOG TEST FAIL\nEND TEST SEQUENCE', err_code=0x01)
+            CHECK(self.rf_test_analogtest(log),' ANALOG TEST FAIL\nEND TEST SEQUENCE', err_code=2)
         if(self.en_tx_test):
-            CHECK(self.rf_test_txtest(log), 'TX TEST FAIL\nEND TEST SEQUENCE', err_code=0x01)
+            CHECK(self.rf_test_txtest(log), 'TX TEST FAIL\nEND TEST SEQUENCE', err_code=2)
         if(self.en_rx_test):
-            CHECK(self.rf_test_rxtest(log), 'RX TEST FAIL\nEND TEST SEQUENCE', err_code=0x01)
+            CHECK(self.rf_test_rxtest(log), 'RX TEST FAIL\nEND TEST SEQUENCE', err_code=2)
 
-        CHECK(self.general_test_gpio(), 'GPIO TEST FAIL\nEND TEST SEQUENCE', err_code=0x02)        
+        CHECK(self.general_test_gpio(), 'GPIO TEST FAIL\nEND TEST SEQUENCE', err_code=2)        
 
         if(self.loadmode==2):
             CHECK(self.esp_write_flash(), 'WRITE PASS INFO FAIL\nEND TEST SEQUENCE')
@@ -151,7 +168,7 @@ class esp_testThread(QtCore.QThread):
             self.ui_print('REBOOT OK')        
 
         if self.en_user_fw_check:
-            CHECK(self.general_test_fwcheck(), 'FIRMWARE CHECK FAIL\nEND TEST SEQUENCE', err_code=0x03, fatal_stop=1)
+            CHECK(self.general_test_fwcheck(), 'FIRMWARE CHECK FAIL\nEND TEST SEQUENCE', err_code=3, fatal_stop=1)
 
         self.ui_print('ALL ITEM PASSED')
         self.STOPTEST()
@@ -848,36 +865,18 @@ class esp_testThread(QtCore.QThread):
         pass
 
     ### COMMON TEST -------------------------------- ###
+    @serial_operation
     def try_sync(self):
-        '''
-        try sycn with chip
-        Returns:
-            0: sync success
-            1: fail
-            2: already tested
-        '''
         self.ui_print('[state]SYNC')
         if(self.loadmode==1):	# ram test mode
             rst = self.try_sync_ram()
-            if rst == -1:
-                self.stop_flag = 1
-            return rst
         elif self.loadmode == 2:    # flash test mode 
             rst = self.try_sync_flash()
-            if rst == -1:
-                self.stop_flag = 1            
-            try:
-                self.ser.close()
-            except:
-                pass
-            if rst < 0:
-                return 1
-            elif rst == 1:
-                return 2
-            elif rst==0:
-                return 0
+        else:
+            rst = -1
+        return rst
 
-    def try_sync_flash(self):
+    def try_sync_flash(self, ser):
         '''
         try synchronous the chip with flash jump mode via uart, the program need deal with follow 4 case, within most 5 seconds
         case 1: (chip already power on and running in test mode, serial baudrate in 115200) 
@@ -913,7 +912,7 @@ class esp_testThread(QtCore.QThread):
             except:
                 return -4 # error cause read from serial
             if rl.find('pass flag res:1') >= 0:
-                return 1 # into normal mode, and already test pass
+                return 2 # into normal mode, and already test pass
             elif rl.find('pass flag res:0') >= 0:
                 return -2 # into normal mode without test pass
             elif rl.find('jump to run test bin') >= 0:
@@ -1364,22 +1363,7 @@ class esp_testThread(QtCore.QThread):
         cmdstr=cmdstr+'\r'
         cmdstr='esp_set_flash_test_pass_info'+' '+cmdstr
         return cmdstr        
-
-    def serial_operation(func):
-        def wrapper(*args, **kwargs):
-            try:
-                ser = args[0].ser
-                if not ser.isOpen():
-                    ser.open()
-            except:
-                pass
-            func(*args, **kwargs)
-            try:
-                ser.close()
-            except:
-                pass
-        return wrapper
-    
+ 
     @serial_operation
     def STOPTEST(self, err_code=0x0):        
         if err_code == -1 and self.resflag==1: # not even sync
