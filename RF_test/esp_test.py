@@ -1397,7 +1397,8 @@ class esp_testThread(QtCore.QThread):
             self.ui_print('[state]passed')         
 
         if self.resflag in (0,2):
-            self.msleep(5000)
+            if self.autostartEn:
+                self.msleep(5000)
         else:
             while not self.stop_flag:
                 try:
