@@ -428,7 +428,6 @@ class esp_testThread(QtCore.QThread):
 
         self.t_dataprocess=time.clock()-start    
 
-
     def rf_test_catch_log(self):
         '''
         get the module self calibration and test result via uart
@@ -467,6 +466,8 @@ class esp_testThread(QtCore.QThread):
         return 0, log
 
     def load_to_ram(self, image_path="image/init_data.bin"):
+        if not self.ser.isOpen():
+            self.ser.open()
         self.l_print(0,'target bin is %s'%image_path)
         self.ui_print('UART DOWNLOADing...')
         self.l_print(3,("Start UartDownload...,%s"%image_path))
@@ -1005,7 +1006,7 @@ class esp_testThread(QtCore.QThread):
             connect_res=0
             self.memory_download.stopFlg=1
             self.l_print(0,'read reg failed : reset connect_res and sync_res..')
-            if self.testflow.set_mac_en==1:
+            if self.set_mac_en==1:
                 pass
             else:
                 self.ui_print('GET MAC FAILED')
@@ -1017,7 +1018,7 @@ class esp_testThread(QtCore.QThread):
             self.memory_download.stopFlg=1
 
             self.l_print(0,'EFUSE CHECK ERROR...')
-            if self.testflow.set_mac_en==1:
+            if self.set_mac_en==1:
                 pass
             else:
                 self.l_print(3,"CHIP EFUSE CHECK ERROR!!! FAIL")
@@ -1371,6 +1372,10 @@ class esp_testThread(QtCore.QThread):
             self.ser.close()
         except:
             pass
+        try:
+            self.rfmutex.release()
+        except:
+            pass
         self.msleep(300)
         self.terminate()
 
@@ -1406,10 +1411,12 @@ class esp_testThread(QtCore.QThread):
             self.fw_targetstr=self.testflow['USER_FW_VER_STR']
             self.fw_cmd_combin=self.testflow['USER_TEST_CMD<cmd,rsp,tmo>']
             self.threshold_path = self.dutconfig['common_conf']['threshold_path']
+            self.set_mac_en = int(self.testflow['CUSTOM_MAC'])
         except:
             self.l_print(1,'read param error')
             self.param_read=0	        #check it before start test
-            
+        
+        
         if self.sub_chip_type.find('ESP8266') >= 0:
             self.chip_type = 'ESP8266'
         elif self.sub_chip_type.find('ESP8285') >= 0:
