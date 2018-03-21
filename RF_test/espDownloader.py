@@ -1048,6 +1048,7 @@ class ESP8266Downloader(Downloader):
             return self.efuse_specific_check(efuse)
         
     def esp_getmac(self,ser):
+             
         if not ser.isOpen():
             ser.open()
             
@@ -1055,7 +1056,8 @@ class ESP8266Downloader(Downloader):
         cal_crc=False
         cmd='esp_read_efuse_128bit\r'
         old_timeout = ser.timeout
-        ser.timeout = 0.3
+        ser.baudrate = 115200
+        ser.timeout = 0.3   
         #self.esp._port.write(cmd)
         
         try:

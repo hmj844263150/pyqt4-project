@@ -436,7 +436,7 @@ class esp_testThread(QtCore.QThread):
 
         self.t_dataprocess=time.clock()-start    
 
-    @serial_operation
+
     def rf_test_catch_log(self):
         '''
         get the module self calibration and test result via uart
@@ -678,7 +678,7 @@ class esp_testThread(QtCore.QThread):
 
         return 0	    
 
-    @serial_operation
+
     def general_test_fwcheck(self):
         if(self.loadmode==1):
             return self.general_test_fwcheck_ram()
@@ -926,10 +926,10 @@ class esp_testThread(QtCore.QThread):
                 sync_res = 0
                 return 1
 
-    @serial_operation
+
     def check_chip(self):
-        self.ser.baudrate = 115200
-        self.ser.timeout = 0.3
+        if not self.ser.isOpen():
+            self.ser.open()
         if self.loadmode == 2:
             return self.check_chip_flash()
         elif self.loadmode == 1:
@@ -1241,6 +1241,8 @@ class esp_testThread(QtCore.QThread):
         cmdstr=self.time2cmdstr()
         print cmdstr
         try:
+            if not self.ser.isOpen():
+                self.ser.open()
             self.ser.flushInput()
             self.ser.flushOutput()
             self.msleep(100)
