@@ -256,7 +256,6 @@ class esp_testThread(QtCore.QThread):
 
                 elif self.tx_test_res==0:
                     self.l_print(0,'TX TEST FAIL')
-                    self.ui_print('TX TEST FAIL')
                     return 1
 
             else:
@@ -294,15 +293,9 @@ class esp_testThread(QtCore.QThread):
                 fb_rssi = -1
 
                 for log_tmp in log_tx_rx[-20:]:
-                    #self.print_dbg(( "log_tmp :",log_tmp))
-                    #self.print_dbg("test : in rssi test")
 
                     if 'fb_rxrssi' in log_tmp:
-                        #print "test log tmp:",log_tmp
                         dlist = log_tmp.split(':')[1].split(',')[:-1]
-                        #print "&&&&&&&&&&&&&&&&&&&&&&&&&"
-                        #print "test dlist:",dlist
-                        #self.print_dbg(("test dlist fb rssi : ",dlist))
                         fb_rssi_v = [int(x) for x in dlist]
                         fb_rssi_flg = 0
                         if self.chip_type.find("ESP32")>=0:
@@ -378,8 +371,7 @@ class esp_testThread(QtCore.QThread):
                     self.ui_print('RX TEST OK')
                     return 0
                 elif(self.rx_test_res==0):
-                    self.l_print(0,'RX TEST NOK')
-                    self.l_print('RX TEST NOK')		    
+                    self.l_print(0,'RX TEST NOK')	    
                     return 1
 
             else:
@@ -1375,11 +1367,11 @@ class esp_testThread(QtCore.QThread):
     def stopthread(self):
         self.ui_print('[state]finish btn up')
         self.ui_print('[state]idle')
-        
         try:
             self.ser.close()
         except:
             pass
+        self.msleep(300)
         self.terminate()
 
     def ui_stop(self):
