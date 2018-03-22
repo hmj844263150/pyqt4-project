@@ -845,29 +845,35 @@ class esp_testThread(QtCore.QThread):
         except:
             self.ui_print('open serial fail')
             return -1 # open serial fail
-        cmd='esp_read_efuse_128bit\r'
-        self.ser.write(cmd)
-        rst = self.ser.readline()
-        if rst.find('esp_read_efuse_128bit:') >= 0:
-            return 0
-
-        timeout = 5
-        if self.dutconfig['chip_conf']['freq'] == '26M':
-            self.ser.baudrate = 74880
-        t = time.time()
-        while time.time()-t < timeout and not self.stop_flag_ui:
-            try:
-                rl = self.ser.readline()
-            except:
-                return -4 # error cause read from serial
-            if rl.find('pass flag res:1') >= 0:
-                return 2 # into normal mode, and already test pass
-            elif rl.find('pass flag res:0') >= 0:
-                return -2 # into normal mode without test pass
-            elif rl.find('jump to run test bin') >= 0:
-                return 0 # into test mode
-            if len(rl)>1: 
-                if DEBUG: print rl
+        
+        retry = 3
+        timeout = 3
+        
+        while retry>0:
+            retry -= 1
+            t = time.time()
+            
+            cmd='esp_read_efuse_128bit\r'
+            self.ser.write(cmd)
+            rst = self.ser.readline()
+            if rst.find('esp_read_efuse_128bit:') >= 0:
+                return 0
+            
+            if self.dutconfig['chip_conf']['freq'] == '26M':
+                self.ser.baudrate = 74880            
+            while time.time()-t < timeout and not self.stop_flag_ui:
+                try:
+                    rl = self.ser.readline()
+                except:
+                    return -4 # error cause read from serial
+                if rl.find('pass flag res:1') >= 0:
+                    return 2 # into normal mode, and already test pass
+                elif rl.find('pass flag res:0') >= 0:
+                    return -2 # into normal mode without test pass
+                elif rl.find('jump to run test bin') >= 0:
+                    return 0 # into test mode
+                if len(rl)>1: 
+                    if DEBUG: print rl
 
         return -3 # sync timeout 
 

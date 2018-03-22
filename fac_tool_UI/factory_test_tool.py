@@ -465,6 +465,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             # set dut_config
             for i in conf.sections():
                 self.dut_config[i] = dict(conf.items(i))
+            self.dut_config['common_conf']['threshold_path'] = self.path_threshold
                 
             index = self.cbChipType.findText(self.dut_config['chip_conf']['chip_type'])
             if index >= 0:
