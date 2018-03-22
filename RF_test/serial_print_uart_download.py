@@ -108,16 +108,6 @@ def get_serial_line_id(ser,start_flg,end_flg,sta_num=-1,retry=False,chip_type = 
     _id=''
     sleep_start=0
     sleep_flg=0
-    #print("test point 1...")
-    #print "debug : delay 0.2s"
-    #time.sleep(0.2)
-    #print "read baud:",baudrate
-    
-    #try:
-        #ser=serial.Serial(com_num-1,baudrate,timeout=1.2)
-    #except:
-        #ser=serial.Serial(com_num,baudrate,timeout=1.2)
-    #ser = com_num
     ser.baudrate = 115200
     ser.timeout = 1
     if ser.isOpen() == False:

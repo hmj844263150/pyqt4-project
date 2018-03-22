@@ -11,6 +11,8 @@ import Queue
 import win32api
 import requests
 import json
+import inspect  
+import ctypes
 from memory_profiler import profile
 from my_widget import *
 from io import StringIO
@@ -39,6 +41,8 @@ except AttributeError:
         return QtGui.QApplication.translate(context, text, disambig)
     
     
+
+
 
 
 class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
@@ -388,11 +392,9 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     def button_all_stop(self):
         for id in (1,2,3,4):
             try:
-                if self.esp_process[id].isRunning():
-                    self.esp_process[id].SIGNAL_STOP.emit()
-                else:
-                    self.signal_print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
-                    eval('self.lbMAC{}'.format(id)).setText('000000000000')
+                self.esp_process[id].SIGNAL_STOP.emit()
+                self.signal_print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
+                eval('self.lbMAC{}'.format(id)).setText('000000000000')
             except:
                 self.signal_print_log(eval('self.tbLog{}'.format(id)), '[state]idle')
                 eval('self.lbMAC{}'.format(id)).setText('000000000000')

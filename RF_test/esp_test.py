@@ -66,7 +66,8 @@ class esp_testThread(QtCore.QThread):
     def __init__(self,_stdout,dutconfig,testflow, rfmutex):
         super(esp_testThread,self).__init__(parent=None)
         self.rfmutex = rfmutex
-        self.stop_flag = 0
+        self.stop_flag_test = 0
+        self.stop_flag_ui = 0
         self.SIGNAL_STOP.connect(self.ui_stop)
         self.param_read=1
         self.logpath=''
@@ -95,7 +96,7 @@ class esp_testThread(QtCore.QThread):
 
 
     def run(self):
-        while not self.stop_flag:
+        while not self.stop_flag_test and not self.stop_flag_ui:
             self.ui_print("[state]idle clear")
             try:
                 self.main_test()
@@ -117,7 +118,7 @@ class esp_testThread(QtCore.QThread):
         self.ui_print('[state]finish btn up')
 
     def main_test(self):
-        self.stop_flag = 0
+        self.stop_flag_test = 0
         self.resflag = 0
         self.tester_con_flg=1
         self.memory_download.stopFlg=0
@@ -131,7 +132,7 @@ class esp_testThread(QtCore.QThread):
             if err == 0:
                 return
             self.resflag = err
-            self.stop_flag = fatal_stop
+            self.stop_flag_test = fatal_stop
             self.ui_print(err_msg)
             self.STOPTEST(err_code)
             raise TestError(err_msg)
@@ -854,7 +855,7 @@ class esp_testThread(QtCore.QThread):
         if self.dutconfig['chip_conf']['freq'] == '26M':
             self.ser.baudrate = 74880
         t = time.time()
-        while time.time()-t < timeout:
+        while time.time()-t < timeout and not self.stop_flag_ui:
             try:
                 rl = self.ser.readline()
             except:
@@ -887,12 +888,12 @@ class esp_testThread(QtCore.QThread):
 
         if connect_res:
             self.memory_download.ESP_SET_BOOT_MODE(0)   #try outside io control boot mode
-            while(sync_count<=20):
+            while(sync_count<=20) and not self.stop_flag_ui:
 
                 sync_count+=1
                 self.l_print(3,("sync_count is : %d "%sync_count))
                 self.ui_print("sync_count is : %d "%sync_count)
-                self.msleep(300)      #delay to run uart_connect() again , if shorter than 0.2, fail to connect again
+                self.msleep(300)      #delay to run uart_connect() again , if shorter than 0.2s, fail to connect again
 
                 try:
                     sync_res = self.memory_download.device_sync()
@@ -1327,7 +1328,7 @@ class esp_testThread(QtCore.QThread):
                 if self.upload_server('fail', err_code) != 0:
                     self.ui_print('[state]fail_record'+',0x04')
                     self.ui_print('[state]upload-f')
-                    self.stop_flag = 1
+                    self.stop_flag_test = 1
                 else:
                     self.ui_print('[state]fail_record'+','+str(err_code))
             else:
@@ -1339,7 +1340,7 @@ class esp_testThread(QtCore.QThread):
                 if self.upload_server('success', err_code) != 0:
                     self.ui_print('[state]fail_record'+',0x04')
                     self.ui_print('[state]upload-f')
-                    self.stop_flag = 1
+                    self.stop_flag_test = 1
                 else:
                     self.ui_print('[state]pass_record')
             else:
@@ -1352,7 +1353,7 @@ class esp_testThread(QtCore.QThread):
             if self.autostartEn:
                 self.msleep(5000)
         else:
-            while not self.stop_flag:
+            while not self.stop_flag_test:
                 try:
                     getmac_res=self.memory_download.esp_getmac(self.ser)
                 except:
@@ -1376,11 +1377,12 @@ class esp_testThread(QtCore.QThread):
             self.rfmutex.release()
         except:
             pass
-        self.msleep(300)
-        self.terminate()
+        #self.msleep(200)
+        self.quit()
+        #self.terminate()
 
     def ui_stop(self):
-        self.stop_flag = 1
+        self.stop_flag_ui = 1
         self.stopthread()
 
     def set_params(self,stdout_='',dutconfig='',testflow=''):
@@ -1415,7 +1417,6 @@ class esp_testThread(QtCore.QThread):
         except:
             self.l_print(1,'read param error')
             self.param_read=0	        #check it before start test
-        
         
         if self.sub_chip_type.find('ESP8266') >= 0:
             self.chip_type = 'ESP8266'
