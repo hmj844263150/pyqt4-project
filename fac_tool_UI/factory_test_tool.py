@@ -13,6 +13,7 @@ import requests
 import json
 import inspect  
 import ctypes
+import res_rc
 from memory_profiler import profile
 from my_widget import *
 from io import StringIO

@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'factory_test_tool_ui.ui'
 #
-# Created: Tue Mar 20 12:19:17 2018
+# Created: Fri Mar 23 10:14:25 2018
 #      by: PyQt4 UI code generator 4.11.3
 #
 # WARNING! All changes made in this file will be lost!
@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
         MainWindow.setMinimumSize(QtCore.QSize(1000, 686))
         MainWindow.setMaximumSize(QtCore.QSize(1000, 686))
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/icon/logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(_fromUtf8(":/icon/icon/logo.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         self.centralwidget = QtGui.QWidget(MainWindow)
         self.centralwidget.setObjectName(_fromUtf8("centralwidget"))
@@ -1131,7 +1131,7 @@ class Ui_MainWindow(object):
         self.fraLogo = QtGui.QFrame(self.centralwidget)
         self.fraLogo.setGeometry(QtCore.QRect(2, 2, 246, 128))
         self.fraLogo.setAutoFillBackground(False)
-        self.fraLogo.setStyleSheet(_fromUtf8("background-image: url(:/icon/logo_m.jpg);"))
+        self.fraLogo.setStyleSheet(_fromUtf8("background-image: url(:/icon/icon/logo_m.png);"))
         self.fraLogo.setFrameShape(QtGui.QFrame.StyledPanel)
         self.fraLogo.setFrameShadow(QtGui.QFrame.Raised)
         self.fraLogo.setObjectName(_fromUtf8("fraLogo"))

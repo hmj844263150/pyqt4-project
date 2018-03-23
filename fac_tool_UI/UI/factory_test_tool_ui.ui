@@ -26,8 +26,8 @@
    <string>ESP_ModuleFactory_Test_Tool</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="../icon/res.qrc">
-    <normaloff>:/icon/logo.png</normaloff>:/icon/logo.png</iconset>
+   <iconset resource="../res.qrc">
+    <normaloff>:/icon/icon/logo.png</normaloff>:/icon/icon/logo.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="Line" name="line">
@@ -2151,18 +2151,6 @@ background-color: rgb(200, 200, 200);</string>
           <string>SYNC by MPN</string>
          </property>
         </widget>
-        <zorder>label_23</zorder>
-        <zorder>leMPNNo</zorder>
-        <zorder>label_25</zorder>
-        <zorder>label_22</zorder>
-        <zorder>leBatchId</zorder>
-        <zorder>leFacId</zorder>
-        <zorder>label_27</zorder>
-        <zorder>lePoNo</zorder>
-        <zorder>textBrowser_30</zorder>
-        <zorder>lbSyncState</zorder>
-        <zorder>pbCloudSync</zorder>
-        <zorder>wgSPConfig</zorder>
        </widget>
        <widget class="QComboBox" name="cbPortRate3_2">
         <property name="geometry">
@@ -2556,7 +2544,6 @@ p, li { white-space: pre-wrap; }
         <zorder>cbFREQ</zorder>
         <zorder>cbEfuseMode</zorder>
         <zorder>cbAutoStart</zorder>
-        <zorder>wgSPConfig_2</zorder>
         <zorder>label_20</zorder>
         <zorder>cbChipType</zorder>
         <zorder>leChipType</zorder>
@@ -3518,7 +3505,7 @@ p, li { white-space: pre-wrap; }
      <bool>false</bool>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-image: url(:/icon/logo_m.jpg);</string>
+     <string notr="true">background-image: url(:/icon/icon/logo_m.png);</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -4141,7 +4128,7 @@ background-color: rgb(200, 200, 200);</string>
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../icon/res.qrc"/>
+  <include location="../res.qrc"/>
  </resources>
  <connections/>
 </ui>
