@@ -494,12 +494,13 @@ class esp_testThread(QtCore.QThread):
 
     def general_test_gpio_8266(self):
         i=0
+        self.gpio_test_res = 1
         self.gpio_02_test_pin=self.testflow['GPIO_8266_TEST_PIN']
         self.gpio_02_test_value=self.testflow['GPIO_8266_TEST_VAL']
         self.gpio_02_read_en=int(self.testflow['GPIO_8266_TEST_READ_EN'])
         self.gpio_02_target_testvalue=self.testflow['GPIO_8266_TEST_VAL_TARGET']
         self.l_print(0,'start 02 gpio test')
-        self.msleep(200)
+        #self.msleep(200)
 
         serTestRes = self.ser
         if not serTestRes.isOpen():
@@ -507,33 +508,35 @@ class esp_testThread(QtCore.QThread):
         serTestRes.flush()
         self.l_print(2,'gpio test pin is:%s'%self.gpio_02_test_pin)
         self.l_print(2,'gpio test value is:%s'%self.gpio_02_test_value)
-        self.l_print(2,'gpio test read en?%d'%self.gpio_02_read_en)
+        self.l_print(2,'gpio test read en:%d'%self.gpio_02_read_en)
         self.l_print(2,'gpio test target value is:%s'%self.gpio_02_target_testvalue)
 
         gpio_cmd = "gpio_test %s %s %s\n\r"%(self.gpio_02_test_pin,self.gpio_02_test_value,self.gpio_02_test_value)
-        serTestRes.write(gpio_cmd)
         gpio_log = ''
+
         while True:
-            res_line = serTestRes.readline()
+            serTestRes.write(gpio_cmd)
+            res_line = serTestRes.read(128)
             if "PASS" in res_line:
                 self.l_print(3,'read res:%s'%res_line)
                 self.l_print(3,'GPIO TEST 1 PASS')
+                break
 
-                self.gpio_test_res1 = 1
-                break;
             elif "FAIL" in res_line:
                 self.l_print(3,'read res:%s'%res_line)
                 self.l_print(3,'GPIO TEST 1 FAIL')
-
                 self.gpio_test_res = 0
-                break;
+                break
             else:
                 self.l_print(0,'step1,read gpio test return value exception,count is %d'%i)
-                self.gpio_test_res=0
+                #self.gpio_test_res=0
                 i+=1
+                if i>=3:
+                    return 1
+
 
         if self.gpio_02_read_en == 1:
-            i=0
+
             serTestRes.flushInput()
             serTestRes.flushOutput()
 
@@ -548,56 +551,57 @@ class esp_testThread(QtCore.QThread):
 
 
                 if val_rd&val_tgt == val_tgt:
-                    self.gpio_test_res2=1
+                    #self.gpio_test_res2=1
                     self.l_print(3,("{}".format(res_line)))
                     self.l_print(0,'pass')
-
                 else:
                     self.l_print(0,'fail')
                     self.l_print(3,("\r\ngpio_read1 fail:"+res_line+";target:"+self.gpio_02_target_testvalue+"\r\n"))
                     self.gpio_test_res = 0
             else:
                 self.l_print(3,'step2,read gpio value exception')
-                self.gpio_test_res=0
+                #self.gpio_test_res=0
 
         gpio_v = int(self.gpio_02_test_value,16)
         gpio_v = hex(0xffff^gpio_v)
         gpio_cmd = "gpio_test %s %s %s\n\r"%(self.gpio_02_test_pin,gpio_v,self.gpio_02_test_value)
-        serTestRes.write(gpio_cmd)
 
+        i=0
         while True:
-            res_line = serTestRes.readline()
+            serTestRes.write(gpio_cmd)
+            res_line = serTestRes.read(128)
             if "PASS" in res_line:
                 self.l_print(3,("log:%s"%res_line))
                 self.l_print(3,'GPIO TEST 2 PASS')
-                self.gpio_test_res3 = 1
-                break;
+                #self.gpio_test_res3 = 1
+                break
             elif "FAIL" in res_line:
                 self.l_print(3,(("log:%s"%res_line)))
                 self.l_print(3,'GPIO TEST 2 FAIL')
                 self.gpio_test_res = 0
-                break;
+                break
             else:
-
                 self.gpio_test_res=0
                 self.l_print(0,'step3,read gpio return str exception,count is %d'%i)
                 i+=1
+                if i>=3:
+                    return 1                
 
         if self.gpio_02_read_en == 1:
 
             serTestRes.flushInput()
             serTestRes.flushOutput()
             serTestRes.write("gpio_read\n\r")
-            res_line = serTestRes.readline()
+            res_line = serTestRes.read(128)
             if "GPIO_READ" in res_line:
 
                 val_rd = int(res_line.strip("\r\n").split(',')[1],16)
-                val_tgt = int(self.window.gpio_8266_target_val,16)
-                self.l_print(3,("val_rd:%x" %hex(val_rd)))
-                self.l_print(3,("val_tgt:%x"%hex(val_tgt)))
+                val_tgt = int(self.gpio_02_target_testvalue,16)
+                self.l_print(3,("val_rd:%s" %hex(val_rd)))
+                self.l_print(3,("val_tgt:%s"%hex(val_tgt)))
 
                 if val_rd&val_tgt == 0:
-                    self.gpio_test_res4=1
+                    #self.gpio_test_res4=1
                     self.l_print(3,'step4 pass')
 
                 else:
@@ -614,22 +618,27 @@ class esp_testThread(QtCore.QThread):
             return 1
         else:
             try:
-                if self.gpio_02_read_en:
-                    if(self.gpio_test_res1) and (self.gpio_test_res2) and (self.gpio_test_res3) and (self.gpio_test_res4):
-                        self.l_print(0,'general_test_gpio_8266 test pass')
-                        self.ui_print('GPIO_02 TEST PASS')
-                        self.gpio_test_res=1
-                else:
-                    self.l_print(3,'gpio02 read en=0')
-                    if(self.gpio_test_res1) and (self.gpio_test_res3):
-                        self.l_print(0,'general_test_gpio_8266 test pass')
-                        self.ui_print('GPIO_02 TEST PASS')
-                        self.gpio_test_res=1
+
+                #if self.gpio_02_read_en:
+                                #if(self.gpio_test_res1) and (self.gpio_test_res2) and (self.gpio_test_res3) and (self.gpio_test_res4):
+                                                #self.l_print(0,'general_test_gpio_8266 test pass')
+                                                #self.ui_print('GPIO_02 TEST PASS')
+                                                #self.gpio_test_res=1
+                #else:
+                                #self.l_print(3,'gpio02 read en=0')
+                                #if(self.gpio_test_res1) and (self.gpio_test_res3):
+                                                #self.l_print(0,'general_test_gpio_8266 test pass')
+                                                #self.ui_print('GPIO_02 TEST PASS')
+                                                #self.gpio_test_res=1
+                #return 0
+
+                self.l_print(0,'general_test_gpio_8266 test pass')
+                self.ui_print('GPIO_02 TEST PASS')
                 return 0
             except:
                 self.l_print(3,'gpio test fail,please check the which step err')
                 self.gpio_test_res=0
-                return 1
+                return 1    
             
 
     def general_test_gpio_32(self):

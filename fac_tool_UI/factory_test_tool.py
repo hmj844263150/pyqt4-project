@@ -129,7 +129,6 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
     
     def init_parameters(self):
         self.esp_process={1:None, 2:None, 3:None, 4:None}
-        self.run_queue=Queue.Queue(maxsize=4)
         self.run_flag = True
         self.mutex = threading.Lock()
         self.rfmutex = threading.Lock()
@@ -305,7 +304,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     continue
                 rl = rl.strip().strip('[').strip(']')
                 if len(rl.split(self._SP_SIGN)) < 5:
-                    print 'config file is broken, please re-generate'
+                    print('config file is broken, please re-generate')
                     return -1
                 level_index, childCount, checkable, editable, value = rl.split(self._SP_SIGN)
                 checkable = int(checkable.strip())
@@ -351,7 +350,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             first_flag = False
             if rst:       
                 try:
-                    print verify
+                    print(verify)
                     if int(verify) == (y+(m+d+h))%10000:
                         self.ui_update_testflow(pop_msg=True)
                         print ('verify pass')
@@ -419,7 +418,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             try:
                 os.startfile(log_path)
             except:
-                print 'error path'
+                print('error path')
         else:
             print('error: get log btn err')
     
@@ -561,7 +560,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
             first_flag = False
             if rst:       
                 try:
-                    print verify
+                    print(verify)
                     if int(verify) == (y+(m+d+h))%10000:
                         print ('verify pass')
                         self.ui_update_dut()
@@ -582,14 +581,14 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         headers = {'token':token}
         try:
             rsp = requests.get(url=url, headers=headers, verify=False, timeout=3).json()
-            print rsp
+            print(rsp)
             if rsp['status'] == 200:
                 return 0
             else:
-                print 'login fail'
+                print('login fail')
                 return 1
         except:
-            print 'login fail'
+            print('login fail')
             return 1
     
     def button_change_position(self):
@@ -653,7 +652,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         port_list = list(serial.tools.list_ports.comports())
         cb_port.clear()
         for port in port_list:
-            print port[0]
+            print(port[0])
             cb_port.addItem(_fromUtf8(port[0]))
         cb_port.showPopup()
     
@@ -765,7 +764,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                     f=open(count_path, 'w')
                     f.close()
                 except:
-                    print 'create count file fail'
+                    print('create count file fail')
                     return
                     
             with open(count_path, 'a+') as fd:
@@ -795,13 +794,13 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
                 
                 fd.write(str(total)+','+str(pass_num)+','+str(fail_num)+','+str(mac)+','+now_time+','+str(err_code)+"\n")
         except:
-            print 'open count file fail, please release it'
+            print('open count file fail, please release it')
         
         try:   
             with open('./mac_list/'+self.dut_config['common_conf']['fac_plan']+'_'+rst+'.csv', 'a') as fd:
                 fd.write(mac+','+str(err_code)+'\n')
         except:
-            print 'open mac_list fail, please release it'
+            print('open mac_list fail, please release it')
         
         self.mutex.release()
         self.lbWorkStat.setText('pass:{}/ fail:{}'.format(pass_num, fail_num))
