@@ -75,6 +75,7 @@ class FactoryToolUI(Ui_MainWindow, QtGui.QMainWindow):
         self.init_parameters()    # initial the settings for production test
         self.init_signal() # add signal for need
         
+        
     ### init functions ###
     def init_ui(self):
         self.twTestArea.setCurrentIndex(0)
