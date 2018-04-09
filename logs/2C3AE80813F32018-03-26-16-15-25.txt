@@ -1,0 +1,37 @@
+********************-----ESP MODULE TEST LOG-----********************
+TEST TOOL VERSION:V0.0.1
+CHIP TYPE:ESP8266
+FACTORY:esp-own-test-FID-dbd42d01
+conncet result is 1
+[debug]:sync_count is : 1 
+[debug]:chip sync Nok,re-sync again
+[debug]:sync_count is : 2 
+[debug]:chip sync Nok,re-sync again
+[debug]:sync_count is : 3 
+[debug]:chip sync Nok,re-sync again
+[debug]:sync_count is : 4 
+[para_out]:sync res is 1
+chip sync ok
+{u'vdd33': [[0.0, 0.0, -40.0], [4000.0, 180.0, 0.0]], u'TXP_RES': [[80.0, 80.0], [98.0, 98.0]], u'TXIQ': [[-12.0, -25.0], [12.0, 25.0]], u'RXIQ': [[-13.0, -27.0], [13.0, 27.0]], u'RXDC': [[128.0], [384.0]], u'TX_POWER_BACKOFF': [[0.0, 0.0, 0.0, 0.0], [8.0, 8.0, 8.0, 8.0]], u'BT_TXDC': [[221.0, 231.0, 241.0, 251.0], [220.0, 230.0, 240.0, 250.0]], u'dut_rx_num': [[48.0], [98.0]], u'TOUT': [[-50.0], [50.0]], u'TXDC': [[3.0], [124.0]], u'FREQ_OFFSET': [[-15.0, -15.0, -15.0, -15.0], [15.0, 15.0, 15.0, 15.0]], u'RX_PATH_GAIN': [[45.0], [60.0]], u'dut_rxrssi': [[30.0, 30.0, 30.0, 30.0, 30.0, 30.0], [70.0, 70.0, 70.0, 70.0, 70.0, 70.0]], u'rssi_diff': [[-15.0], [15.0]], u'fb_rxrssi': [[30.0, 30.0, 30.0, 30.0, 30.0, 30.0], [70.0, 70.0, 70.0, 70.0, 70.0, 70.0]], u'VDD33': [[0.0, 0.0, -40.0], [4000.0, 180.0, 0.0]], u'RX_NOISEFLOOR': [[-395.0], [-345.0]], u'TX_VDD33_DIFF': [[-300.0], [300.0]], u'fb_rx_num': [[48.0], [98.0]], u'RXDC_RFRX_WIFI': [[241.0, 341.0], [240.0, 340.0]], u'BT_TXIQ': [[11.0, 21.0], [10.0, 20.0]], u'RXDC_RXBB_WIFI': [[101.0, 201.0], [100.0, 200.0]], u'txp_result': [[48.0, 48.0], [98.0, 98.0]], u'RXDC_RFRX_BT': [[201.0, 301.0], [200.0, 300.0]], u'RX_PATH_SNR': [[15.0], [5000.0]]}
+[debug]:flash detected
+[debug]:mac sta: 2C-3A-E8-08-13-F3
+log path is ..//logs//2C3AE80813F32018-03-26-16-15-25.txt
+target bin is D:/VM/share/new_factory_tools/fac_tool_UI/bin/RSP8266_module_test_vdd33_26m_remove_powerup_test.bin
+[debug]:Start UartDownload...,D:/VM/share/new_factory_tools/fac_tool_UI/bin/RSP8266_module_test_vdd33_26m_remove_powerup_test.bin
+record serial print 
+start 02 gpio test
+[para_out]:gpio test pin is:0x3030
+[para_out]:gpio test value is:0x1010
+[para_out]:gpio test read en:0
+[para_out]:gpio test target value is:0x3030
+[debug]:read res:GPIO_OUT=0x3030,  GPIO_IN=0x3030
+GPIO_OUT=0x0,  GPIO_IN=0x0
+GPIO_TEST=0, PASS!!!, GPIO, test_en:0x3030, out:0x1010, out_en:0x1
+[debug]:GPIO TEST 1 PASS
+[debug]:log:010
+GPIO_OUT=0x3030,  GPIO_IN=0x3030
+GPIO_OUT=0x0,  GPIO_IN=0x0
+GPIO_TEST=0, PASS!!!, GPIO, test_en:0x3030, out:0xefef, out_e
+[debug]:GPIO TEST 2 PASS
+general_test_gpio_8266 test pass
+all item test passed
